@@ -1,17 +1,32 @@
 <ion-header>
   <ion-navbar>
     <ion-title>Home</ion-title>
+    <ion-buttons right>
+        <button ion-button icon-only (click)="openPopover($event)">
+           <ion-icon name="md-more"></ion-icon>
+        </button>
+      </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <h2>Welcome to Ionic!</h2>
-  <p>
-    This starter project comes with simple tabs-based layout for apps
-    that are going to primarily use a Tabbed UI.
-  </p>
-  <p>
-    Take a look at the <code>src/pages/</code> directory to add or change tabs,
-    update any existing page or create new pages.
-  </p>
+<ion-content>
+  <div id="lifeLog" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+    <div *ngFor="let year of data.years">
+      <ion-card #lastEvent> <!-- data.years -->
+        <ion-card-header>
+          <b>{{year.year}} years old</b>
+        </ion-card-header>
+        {{lastEvent.scrollIntoView()}}
+        <ion-card-content *ngFor="let event of year.events">
+          {{event}}
+          {{lastEvent.scrollIntoView()}}
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
 </ion-content>
+<ion-footer no-shadow>
+    <ion-toolbar position="bottom">
+        <button ion-button full round (click)="age(data)" id="ageButton">Age <ion-icon id="clockIcon" name="md-clock"></ion-icon></button>
+    </ion-toolbar>
+  </ion-footer>

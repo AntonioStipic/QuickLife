@@ -1,0 +1,192 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Me
+    </ion-title>
+    <ion-buttons right>
+      <button ion-button icon-only (click)="openPopover($event)">
+        <ion-icon name="md-more"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+  <div>
+    <ion-segment [(ngModel)]="meTabs">
+      <ion-segment-button value="Info">
+        Info
+      </ion-segment-button>
+      <ion-segment-button value="Finance">
+        Finance
+      </ion-segment-button>
+      <ion-segment-button value="Misc">
+        Misc
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div [ngSwitch]="meTabs">
+    <ion-list *ngSwitchCase="'Info'">
+      <ion-card>
+
+        <!-- <ion-card-header>
+          <b>Personal Info</b>
+        </ion-card-header> -->
+
+        <ion-card-content>
+          <ion-list>
+            <div ion-item>
+              <label>Name: {{data.name}} {{data.surname}}</label>
+            </div>
+
+            <div ion-item>
+              <label>Gender: {{capitalize(data.genderFull)}}</label>
+            </div>
+
+            <div ion-item>
+              <label>Age: {{data.age}}</label>
+            </div>
+
+            <div ion-item>
+              <label>Nationality: {{data.nationality}}</label>
+            </div>
+
+            <!-- <div ion-item>
+                    <label>Sexuality: {{data.sexuality}}</label>
+                  </div> -->
+
+            <ion-item>
+              <ion-label class="ion-select-text">Sexuality</ion-label>
+              <ion-select [(ngModel)]="data.sexuality" interface="popover" (ionChange)="sexualityChanged(data, selectedSexuality.value)"
+                #selectedSexuality disabled="{{data.age < 12}}">
+                <ion-option value="Heterosexual">Heterosexual</ion-option>
+                <ion-option value="Bisexual">Bisexual</ion-option>
+                <ion-option value="Homosexual">Homosexual</ion-option>
+                <ion-option value="Asexual">Asexual</ion-option>
+              </ion-select>
+            </ion-item>
+
+            <div ion-item>
+              <label>Appearance: {{data.appearance}}%
+                <br>
+                <div class="progressBar">
+                  <div class="progress-bar">
+                    <span class="progress-bar-fill" [ngStyle]="{'width': data.appearance + '%'}"></span>
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            <div ion-item>
+              <label>Intelligence: {{data.intelligence.toFixed(0)}}%
+                <br>
+                <div class="progressBar">
+                  <div class="progress-bar">
+                    <span class="progress-bar-fill" [ngStyle]="{'width': data.intelligence + '%'}"></span>
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            <div ion-item>
+              <label>Fitness: {{data.fitness.toFixed(0)}}%
+                <br>
+                <div class="progressBar">
+                  <div class="progress-bar">
+                    <span class="progress-bar-fill" [ngStyle]="{'width': data.fitness + '%'}"></span>
+                  </div>
+                </div>
+              </label>
+            </div>
+
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'Finance'">
+      <!-- <ion-item>
+
+        <h2>Your finance: {{data.shareService.formatMoney(data.finance)}}$</h2>
+      </ion-item> -->
+      <ion-list>
+
+        <ion-item>
+          <ion-label class="ion-select-text"><b>Account balance:</b></ion-label>
+          <ion-input value="${{data.shareService.formatMoney(data.finance)}}" disabled></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="ion-select-text">Monthly income:</ion-label>
+          <ion-input value="${{data.shareService.formatMoney(data.income)}}" disabled></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="ion-select-text">Monthly outcome:</ion-label>
+          <ion-input value="${{data.shareService.formatMoney(data.outcome)}}" disabled></ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label class="ion-select-text">Country tax:</ion-label>
+            <ion-input value="{{data.tax * 100}}%" disabled></ion-input>
+          </ion-item>
+
+      </ion-list>
+
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'Misc'">
+      <ion-item-group>
+        <ion-item-divider color="light">Activities</ion-item-divider>
+        <!-- <button ion-item (click)="logout()">
+              <ion-icon name="log-out"></ion-icon>
+              Learning
+          </button> -->
+        <!-- <ion-item>
+          <ion-icon name="leaf" item-start></ion-icon>
+          Herbology
+          <ion-icon name="rose" item-end></ion-icon>
+        </ion-item> -->
+        <ion-item>
+          <ion-label>
+            <ion-icon name="md-bookmarks" class="miscListIcon"></ion-icon> Learning</ion-label>
+          <ion-toggle [(ngModel)]="data.isLearning" disabled="{{data.age < 6}}" (ionChange)="data.shareService.learningChanged(data)"></ion-toggle>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <ion-icon name="md-book" class="miscListIcon"></ion-icon> Reading books</ion-label>
+          <ion-toggle [(ngModel)]="data.isReadingBooks" disabled="{{data.age < 9}}" (ionChange)="data.shareService.readingChanged(data)"></ion-toggle>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <ion-icon name="ios-body" class="miscListIcon"></ion-icon> Go to gym (50$/mo)</ion-label>
+          <ion-toggle [(ngModel)]="data.goingToGym" disabled="{{data.age < 12}}" (ionChange)="data.shareService.gymChanged(data)"></ion-toggle>
+        </ion-item>
+
+        <ion-list>
+          <ion-item>
+            <ion-label class="ion-select-text">
+              <ion-icon name="ios-musical-notes" class="miscListIcon"></ion-icon> Play instrument (100$/mo each)</ion-label>
+            <ion-select [(ngModel)]="data.instruments" multiple="true" cancelText="Dismiss" okText="Ok" disabled="{{data.age < 3 || data.inDebt == 1}}"
+              (ionChange)="data.shareService.instrumentsChanged(data)">
+              <ion-option value="guitar">Guitar</ion-option>
+              <ion-option value="bass guitar">Bass guitar</ion-option>
+              <ion-option value="piano">Piano</ion-option>
+              <ion-option value="drums">Drums</ion-option>
+              <ion-option value="trumpet">Trumpet</ion-option>
+              <ion-option value="saxophone">Saxophone</ion-option>
+              <ion-option value="cello">Cello</ion-option>
+              <ion-option value="flute">Flute</ion-option>
+              <ion-option value="clarinet">Clarinet</ion-option>
+            </ion-select>
+          </ion-item>
+
+
+        </ion-list>
+      </ion-item-group>
+
+    </ion-list>
+  </div>
+</ion-content>

@@ -1,0 +1,5 @@
+{
+    "male": ["Antonio", "Ivan", "Josip", "Saša", "Dino", "Matija", "Marko", "Filip", "Patrik"],
+    "female": ["Ivana", "Marija", "Petra", "Ana", "Leonarda", "Lucija", "Sara", "Lara", "Danijela"],
+    "surname": ["Marković", "Grubišić", "Horvat", "Kovačević", "Marić", "Babić", "Novak", "Jurić", "Vuković", "Knežević"]
+}

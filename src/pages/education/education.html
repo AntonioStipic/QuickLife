@@ -1,0 +1,119 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Education
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <!-- <ion-card>
+    
+    <ion-card-content> -->
+  <ion-card>
+    <ion-card-content>
+      <table>
+        <tr>
+          <td>
+            <b>School</b>
+          </td>
+          <td>
+            <b>Grade</b>
+          </td>
+          <td>
+            <b>Finished</b>
+          </td>
+
+        </tr>
+      </table>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-content>
+      <table>
+        <tr>
+          <td>Elementary</td>
+          <td>{{data.elementaryGrade}}</td>
+          <td>
+            <ion-icon [name]="(data.passed.elementary == 1) ? 'md-checkmark' : 'md-close'">
+            </ion-icon>
+          </td>
+        </tr>
+      </table>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-content>
+      <table>
+        <tr>
+          <td>High school</td>
+          <td>{{data.highSchoolGrade}}</td>
+          <td>
+            <!-- {{data.passed.highschool}} -->
+            <ion-icon [name]="(data.passed.highschool == 1) ? 'md-checkmark' : 'md-close'">
+            </ion-icon>
+          </td>
+        </tr>
+        <tr>
+            <td><button ion-button small class="educationEnrollButton" [disabled]="data.shareService.enrollHighSchoolButton(data)" (click)="data.shareService.enrollHighSchool(data)">Enroll</button></td>
+            <td><button ion-button color="danger" small class="educationEnrollButton" [disabled]="data.shareService.dropoutHighSchoolButton(data)" (click)="data.shareService.dropoutHighSchool(data)">Dropout</button></td>
+            <!-- [disabled]="data.goingToHighSchool && (data.age < 14 || data.age > 18)" -->
+        </tr>
+      </table>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-content>
+      <table>
+        <tr>
+          <td>College</td>
+          <td>None</td>
+          <td>
+            <!-- {{data.passed.highschool}} -->
+            <ion-icon [name]="(data.passed.college == 1) ? 'md-checkmark' : 'md-close'">
+            </ion-icon>
+          </td>
+        </tr>
+      </table>
+    </ion-card-content>
+  </ion-card>
+  <!-- <table>
+    <tr>
+      <td class="school">School</ion-card-content></ion-card></td>
+      <td><ion-card><ion-card-content>Grade</ion-card-content></ion-card></td>
+      <td><ion-card><ion-card-content>Finished</ion-card-content></ion-card></td>
+      
+    </tr>
+    <tr>
+      <td class="school">Elementary</td>
+      <td>{{data.elementaryGrade}}</td>
+      <td>{{data.passed.elementary}} <ion-icon name="md-checkmark"></ion-icon></td>
+    </tr>
+  </table> -->
+  <!-- <ion-card>
+    <ion-card-content>
+      <ion-col>
+        <b>School</b>
+      </ion-col>
+      <ion-col>
+        <b>Grade</b>
+      </ion-col>
+      <ion-col>
+        <b>Finished</b>
+      </ion-col>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-content>
+      <ion-col>Elementary</ion-col>
+      <ion-col>{{data.elementaryGrade}}</ion-col>
+      <ion-col>{{data.passed.elementary}}</ion-col>
+    </ion-card-content>
+  </ion-card> -->
+
+  <!--</ion-card-content>
+
+  </ion-card>  -->
+
+</ion-content>

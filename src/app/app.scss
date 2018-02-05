@@ -14,3 +14,30 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+.miscListIcon {
+    margin-right: 5vw;
+}
+
+.labelText {
+    padding-left: 5vw;
+}
+
+.active {
+    //color: #000!important;
+    //color: red!important;
+}
+
+.ion-select-text {
+    color: #000!important;
+}
+
+.educationEnrollButton {
+    margin: 0;
+}
+
+#menuPopover {
+    height: auto!important;
+    //padding-bottom: 0;
+    margin-bottom: 0;
+}

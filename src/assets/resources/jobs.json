@@ -1,0 +1,48 @@
+{
+    "companies": ["Hypercentage", "Johnson Controls", "OMV Global Solutions", "DB Schenker Global Services", "Takko Fashion", "Electronic Arts", "Oracle", "Nestle", "Tiriac Auto", "Futurestep", "Ancer Recruitment LTD", "CPL Healthcare", "Workforce People Solutions Ltd", "Bluemarine Services"],
+    "jobs": [
+        {   
+            "title": "Junior sales representative",
+            "salary": "18-26",
+            "experience": 0,
+            "education": 2,
+            "skills": []
+        },
+        {
+            "title": "Language Coordinator",
+            "salary": "21-30",
+            "experience": 0,
+            "education": 2,
+            "skills": []
+        },
+        {
+            "title": "Economist",
+            "salary": "15-25",
+            "experience": 0,
+            "education": 1,
+            "skills": []
+        },
+        {
+            "title": "HR Manager",
+            "salary": "15-20",
+            "experience": 0,
+            "education": 1,
+            "skills": []
+        },
+        {
+            "title": "HR Administrator",
+            "salary": "21-25",
+            "experience": 5,
+            "education": 2,
+            "skills": []
+        },
+        {
+            "title": "Mechanical Engineer",
+            "salary": "21-25",
+            "experience": 0,
+            "education": 2,
+            "skills": []
+        }
+
+    ]
+}

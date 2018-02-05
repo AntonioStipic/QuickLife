@@ -1,3 +1,46 @@
 page-home {
 
 }
+
+ion-card-content {
+    padding-top: 0.4em!important;
+    padding-bottom: 0.4em!important;
+}
+
+#clockIcon {
+    margin-left: 8pt;
+}
+
+.progressBar {
+    width: 100%;
+    display: inline-block;
+}
+
+.progress-bar {
+    width: 100%;
+    background-color: #e0e0e0;
+    padding: 3px;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2);
+}
+
+.progress-bar-fill {
+    display: block;
+    height: 22px;
+    background-color: #659cef;
+    border-radius: 3px;
+    
+    transition: width 500ms ease-in-out;
+}
+
+#ageButton {
+    /* width: 70%;
+    margin-left: 15%; */
+}
+
+ion-card {
+    width: 97vw!important;
+    margin-left: 1.5vw!important;
+    margin-right: 1.5vw!important;
+    padding-left: 0!important;
+}
