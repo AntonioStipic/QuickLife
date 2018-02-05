@@ -180,6 +180,7 @@ export class ShareService {
           
           //console.log(this.names["male"]);
         } */
+        
         var nameNum = data.shareService.randomAtoB(0, names[data.genderFull].length - 1);
         data.name = names[data.genderFull][nameNum];
 
@@ -192,39 +193,96 @@ export class ShareService {
         data.nationality = "Croatian";
         data.appearance = this.random1to100();
         data.intelligence = this.random1to100();
-        //data.intelligence = 98;
         data.fitness = this.random1to100();
+        
+        // Balance player has at the beggining of game
         data.finance = 100;
+
+        // Player is none sexuality until 12th yo
         data.sexuality = "None";
+
+        // Number of years player has been learning while attending elementary
         data.learnedElementary = 1;
+
+        // Grade from elementary
         data.elementaryGrade = "None";
+
+        // Boolean to indicate if player is going to elementary
         data.goingToElementary = 0;
+
+        // Number of years player has been learning while attending high school
         data.learnedHighSchool = 0;
+
+        // Boolean to indicate if player is going to high school
         data.goingToHighSchool = 0;
+
+        // Number of years in a row player is going to school
         data.goingToHighSchoolYears = 0;
+
+        // Grade with which player finished high school
         data.highSchoolGrade = "None";
+
+        // Boolean to indicate if player is in debt
         data.inDebt = 0;
+
+        // Calculated income and outcome to show to player in Finance tab
         data.income = 0;
         data.outcome = 0;
+
+        // Number of jobs to be listed
         data.numOfJobs = 25;
+
+        // For every year of work this counts up
         data.workExperience = 0;
+
+        // -1 = No school, 0 = Elementary, 1 = High school, 2 = College
         data.educationLevel = -1;
+
+        // This counts how many years has player worked at current job
+        data.jobService = 0;
+
+        // List of finished courses at college
         data.mySkills = [];
+
+        // Empty job object
         data.myJob = ["", { "title": "", "salary": "", "experience": 0, "education": 0, "skills": [] }, ""];
+        
+        // Boolean to indicate if player is currently working
         data.isWorking = 0;
+
+        // Country tax
         data.tax = 0.25;
         //data.listedJobs = {"company": [], "job": [], "salary": [], "education": []};
+
+        // Object which will contain list of jobs to be displayed in list
         data.listedJobs = [];
+
+        // Boolean indicators for passing elementary and high school
         data.passed = { "elementary": 0, "highschool": 0 };
+        
+        // Boolan is player currently learning
         data.isLearning = 0;
+
+        // Boolan is player currently reading books
         data.isReadingBooks = 0;
+
+        // Boolan is player currently going to gym
         data.goingToGym = 0;
+
+        // List with instruments player played before a change has been made
         data.oldInstruments = [];
+
+        // List with instruments including the ones player has added
         data.instruments = [];
+
+        // Empty log
         data.years = [{ "year": 0, "events": ["You have been born as " + data.name + " " + data.surname + ".", " You are " + data.nationality + ", " + data.genderFull + "."] }];
+        
         return data;
     }
 
+    // This function is adjusted for generating appearance and intelligence
+    // (Lowered chances of getting numbers under 20)
     random1to100() {
         if (Math.random() < 0.2) {
             return Math.floor(Math.random() * 99) + 1;
@@ -233,6 +291,7 @@ export class ShareService {
         }
     }
 
+    // Generates random gender
     randomGender(data) {
         var num = Math.random(), gender = "";
         if (num > 0.5) {
@@ -245,6 +304,8 @@ export class ShareService {
         return gender;
     }
 
+
+    // This function is called when player is in debt
     inDebt(data) {
         data.years[data.age].events.push("I'm in debt.");
         if (data.goingToGym == 1) {
@@ -259,10 +320,12 @@ export class ShareService {
         }
     }
 
+    // Generate random number in range A to B
     randomAtoB(A, B) {
         return Math.floor(Math.random() * (B - A + 1) + A);
     }
 
+    // Converts education level to string
     numToSchool(lvl) {
         if (lvl == 2) {
             return "College";
@@ -272,6 +335,8 @@ export class ShareService {
             return "Elementary school";
         }
     }
+
+    // Update jobs list
     updateJobs(data, jobs) {
         //console.log(jobs);
         //data.listedJobs["company"] = [];
@@ -345,6 +410,7 @@ export class ShareService {
         }
     }
 
+    // Quit job
     quitJob(data) {
         data.income -= (data.myJob[2] / 12 * 1000) * (1 - data.tax);
         data.years[data.age].events.push("I quit my job as " + data.myJob[1]["title"] + ".");
