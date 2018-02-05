@@ -39,6 +39,11 @@
             </ion-icon>
           </td>
         </tr>
+        <tr>
+          <td></td>
+          <td><button ion-button color="danger" small class="educationEnrollButton" [disabled]="data.shareService.dropoutElementaryButton(data)" (click)="data.shareService.dropoutElementary(data)">Dropout</button></td>
+          <!-- [disabled]="data.goingToHighSchool && (data.age < 14 || data.age > 18)" -->
+      </tr>
       </table>
     </ion-card-content>
   </ion-card>

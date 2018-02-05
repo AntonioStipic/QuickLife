@@ -34,6 +34,9 @@
             <label>Education needed: {{data.shareService.numToSchool(data.myJob[1]["education"])}}</label>
             <br>
             <label>Qualifications: None</label>
+            <br>
+
+            <button ion-button color="danger" small (click)="data.shareService.quitJob(data)">Quit</button>
           </ion-card-content>
         </div>
 

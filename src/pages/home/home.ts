@@ -55,7 +55,7 @@ export class HomePage {
     });
   }
 
-  
+
 
   age(data) {
     data.age += 1;
@@ -90,7 +90,7 @@ export class HomePage {
 
     if (data.goingToHighSchoolYears == 4) {
       var percentH = ((data.learnedHighSchool / 1.2) + (data.intelligence / 12)) / 12;
-      console.log(data.learnedHighSchool);
+      //console.log(data.learnedHighSchool);
       if (percentH < 0.1) {
         data.highSchoolGrade = "F";
         data.passed.highschool = 0;
@@ -110,7 +110,7 @@ export class HomePage {
         data.highSchoolGrade = "A+";
         data.passed.highschool = 1;
       }
-      console.log("High School", percentH);
+      //console.log("High School", percentH);
 
       if (data.passed.highschool == 1) {
         data.educationLevel += 1;
@@ -147,39 +147,43 @@ export class HomePage {
       data.years[data.age].events.push("I started going to kindergarten.");
     } else if (data.age == 6) {
       data.kindergarten = 1;
+      data.goingToElementary = 1;
       data.years[data.age].events.push("I started going to school.");
     } else if (data.age == 12) {
       this.checkSexuality(data);
     } else if (data.age == 14) {
-      var percent = ((data.learnedElementary / 2) + (data.intelligence / 10)) / 12;
-      console.log(data.learnedElementary);
-      if (percent < 0.1) {
-        data.elementaryGrade = "F";
-        data.passed.elementary = 0;
-      } else if (percent < 0.3) {
-        data.elementaryGrade = "D";
-        data.passed.elementary = 1;
-      } else if (percent < 0.5) {
-        data.elementaryGrade = "C";
-        data.passed.elementary = 1;
-      } else if (percent < 0.7) {
-        data.elementaryGrade = "B";
-        data.passed.elementary = 1;
-      } else if (percent < 1) {
-        data.elementaryGrade = "A";
-        data.passed.elementary = 1;
-      } else if (percent >= 1) {
-        data.elementaryGrade = "A+";
-        data.passed.elementary = 1;
-      }
-      console.log("Elementary", percent);
-      if (data.passed.elementary == 1) {
-        data.educationLevel += 1;
-        data.goingtoElementary = 0;
-        data.years[data.age].events.push("I graduated from elementary school at grade " + data.elementaryGrade + ".");
-        this.checkGoToHighSchool(data);
-      } else {
-        data.years[data.age].events.push("I failed from elementary school. I was kicked out of it.");
+
+      if (data.goingToElementary == 1) {
+        var percent = ((data.learnedElementary / 2) + (data.intelligence / 10)) / 12;
+        //console.log(data.learnedElementary);
+        if (percent < 0.1) {
+          data.elementaryGrade = "F";
+          data.passed.elementary = 0;
+        } else if (percent < 0.3) {
+          data.elementaryGrade = "D";
+          data.passed.elementary = 1;
+        } else if (percent < 0.5) {
+          data.elementaryGrade = "C";
+          data.passed.elementary = 1;
+        } else if (percent < 0.7) {
+          data.elementaryGrade = "B";
+          data.passed.elementary = 1;
+        } else if (percent < 1) {
+          data.elementaryGrade = "A";
+          data.passed.elementary = 1;
+        } else if (percent >= 1) {
+          data.elementaryGrade = "A+";
+          data.passed.elementary = 1;
+        }
+        //console.log("Elementary", percent);
+        if (data.passed.elementary == 1) {
+          data.educationLevel += 1;
+          data.goingToElementary = 0;
+          data.years[data.age].events.push("I graduated from elementary school at grade " + data.elementaryGrade + ".");
+          this.checkGoToHighSchool(data);
+        } else {
+          data.years[data.age].events.push("I failed from elementary school. I was kicked out of it.");
+        }
       }
 
       //you have got enough qualifications to go to high school. Will you go?

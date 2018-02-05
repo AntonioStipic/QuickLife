@@ -121,7 +121,7 @@ export class ShareService {
             } else {
                 return false;
             }
-        } else if (data.goingToHighSchool == 0) {
+        } else if (data.goingToHighSchool == 0 && data.passed.elementary == 1) {
             return false;
         } else {
             return true;
@@ -136,10 +136,26 @@ export class ShareService {
         }
     }
 
+    dropoutElementaryButton(data) {
+        //console.log("Elem", data)
+        if (data.goingToElementary == 1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     dropoutHighSchool(data) {
         data.goingToHighSchool = 0;
         data.goingToHighSchoolYears = 0;
         data.years[data.age].events.push("I dropped out of high school.");
+    }
+
+    dropoutElementary(data) {
+        data.goingToElementary = 0;
+        data.goingToElementaryYears = 0;
+        //this.dropoutElementaryButton(data, 'true');
+        data.years[data.age].events.push("I dropped out of elementary school.");
     }
 
     enrollHighSchool(data) {
@@ -182,7 +198,7 @@ export class ShareService {
         data.sexuality = "None";
         data.learnedElementary = 1;
         data.elementaryGrade = "None";
-        data.goingtoElementary = 0;
+        data.goingToElementary = 0;
         data.learnedHighSchool = 0;
         data.goingToHighSchool = 0;
         data.goingToHighSchoolYears = 0;
@@ -288,7 +304,7 @@ export class ShareService {
     }
 
     applyForJob(data, job) {
-        console.log(job);
+        //console.log(job);
         if (job[1]["education"] <= data.educationLevel) {
             var remainingSkills = job[1]["skills"].filter(item => data.mySkills.indexOf(item) < 0);
             if (remainingSkills.length == 0) {
@@ -299,6 +315,10 @@ export class ShareService {
                         text: 'Ok',
                         handler: () => {
                             //data.shareService.inDebt(data);
+                            if (data.isWorking == 1) {
+                                this.quitJob(data);
+                            }
+
                             data.myJob = job;
                             data.isWorking = 1;
                             data.years[data.age].events.push("I started working as " + job[1]["title"] + " at " + job[0] + ".");
@@ -308,8 +328,8 @@ export class ShareService {
                 });
                 alert.present();
             }
-            console.log(remainingSkills);
-            console.log("Qualified!");
+            //console.log(remainingSkills);
+            //console.log("Qualified!");
         } else {
             let alert = this.alertCtrl.create({
                 title: 'Bad news...',
@@ -323,6 +343,13 @@ export class ShareService {
             });
             alert.present();
         }
+    }
+
+    quitJob(data) {
+        data.income -= (data.myJob[2] / 12 * 1000) * (1 - data.tax);
+        data.years[data.age].events.push("I quit my job as " + data.myJob[1]["title"] + ".");
+        data.myJob = ["", { "title": "", "salary": "", "experience": 0, "education": 0, "skills": [] }, ""];
+        data.isWorking = 0;
     }
 
     /* arr_diff(a1, a2) {
