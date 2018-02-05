@@ -1,5 +1,5 @@
 {
-    "male": ["Antonio", "Ivan", "Josip", "Saša", "Dino", "Matija", "Marko", "Filip", "Patrik"],
-    "female": ["Ivana", "Marija", "Petra", "Ana", "Leonarda", "Lucija", "Sara", "Lara", "Danijela"],
-    "surname": ["Marković", "Grubišić", "Horvat", "Kovačević", "Marić", "Babić", "Novak", "Jurić", "Vuković", "Knežević"]
+    "male": ["Antonio", "Ivan", "Josip", "Saša", "Dino", "Matija", "Marko", "Filip", "Patrik", "Marin", "Luka", "Matko", "Fran", "Jakov", "Zvonimir"],
+    "female": ["Ivana", "Marija", "Petra", "Ana", "Leonarda", "Lucija", "Sara", "Lara", "Danijela", "Mia", "Lana", "Petra", "Marta", "Lea", "Tea"],
+    "surname": ["Marković", "Grubišić", "Horvat", "Kovačević", "Marić", "Babić", "Novak", "Jurić", "Vuković", "Knežević", "Petrović", "Bošnjak", "Martinović", "Mihaljević"]
 }

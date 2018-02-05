@@ -34,16 +34,20 @@
         <tr>
           <td>Elementary</td>
           <td>{{data.elementaryGrade}}</td>
-          <td>
+          <td class="center">
             <ion-icon [name]="(data.passed.elementary == 1) ? 'md-checkmark' : 'md-close'">
             </ion-icon>
           </td>
         </tr>
         <tr>
-          <td></td>
-          <td><button ion-button color="danger" small class="educationEnrollButton" [disabled]="data.shareService.dropoutElementaryButton(data)" (click)="data.shareService.dropoutElementary(data)">Dropout</button></td>
+          <td>
+              <button ion-button color="danger" small class="educationEnrollButton" [disabled]="data.shareService.dropoutElementaryButton(data)"
+              [hidden]="!data.goingToElementary" (click)="data.shareService.dropoutElementary(data)">Dropout</button>
+          </td>
+          <td>
+          </td>
           <!-- [disabled]="data.goingToHighSchool && (data.age < 14 || data.age > 18)" -->
-      </tr>
+        </tr>
       </table>
     </ion-card-content>
   </ion-card>
@@ -53,35 +57,48 @@
         <tr>
           <td>High school</td>
           <td>{{data.highSchoolGrade}}</td>
-          <td>
+          <td class="center">
             <!-- {{data.passed.highschool}} -->
             <ion-icon [name]="(data.passed.highschool == 1) ? 'md-checkmark' : 'md-close'">
             </ion-icon>
           </td>
         </tr>
         <tr>
-            <td><button ion-button small class="educationEnrollButton" [disabled]="data.shareService.enrollHighSchoolButton(data)" (click)="data.shareService.enrollHighSchool(data)">Enroll</button></td>
-            <td><button ion-button color="danger" small class="educationEnrollButton" [disabled]="data.shareService.dropoutHighSchoolButton(data)" (click)="data.shareService.dropoutHighSchool(data)">Dropout</button></td>
-            <!-- [disabled]="data.goingToHighSchool && (data.age < 14 || data.age > 18)" -->
+          <td>
+            <button ion-button small class="educationEnrollButton" [disabled]="data.shareService.enrollHighSchoolButton(data)" (click)="data.shareService.enrollHighSchool(data)" [hidden]="data.shareService.enrollHighSchoolButton(data)">Enroll</button>
+            <button ion-button color="danger" small class="educationEnrollButton" [disabled]="data.shareService.dropoutHighSchoolButton(data)"
+            [hidden]="!data.goingToHighSchool" (click)="data.shareService.dropoutHighSchool(data)">Dropout</button>
+          </td>
+          <td>
+            
+          </td>
+          <!-- [disabled]="data.goingToHighSchool && (data.age < 14 || data.age > 18)" -->
         </tr>
       </table>
     </ion-card-content>
   </ion-card>
+
+  <br><br>
+
   <ion-card>
     <ion-card-content>
       <table>
         <tr>
-          <td>College</td>
-          <td>None</td>
           <td>
-            <!-- {{data.passed.highschool}} -->
-            <ion-icon [name]="(data.passed.college == 1) ? 'md-checkmark' : 'md-close'">
-            </ion-icon>
+            <b>College</b>
           </td>
+          <td>
+            <b>Course</b>
+          </td>
+          <td>
+            <b>Finished</b>
+          </td>
+
         </tr>
       </table>
     </ion-card-content>
   </ion-card>
+
   <!-- <table>
     <tr>
       <td class="school">School</ion-card-content></ion-card></td>

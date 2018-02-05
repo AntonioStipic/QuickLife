@@ -215,7 +215,7 @@ export class ShareService {
         data.tax = 0.25;
         //data.listedJobs = {"company": [], "job": [], "salary": [], "education": []};
         data.listedJobs = [];
-        data.passed = { "elementary": "No", "highschool": "No" };
+        data.passed = { "elementary": 0, "highschool": 0 };
         data.isLearning = 0;
         data.isReadingBooks = 0;
         data.goingToGym = 0;
