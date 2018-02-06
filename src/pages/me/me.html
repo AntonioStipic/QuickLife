@@ -161,6 +161,7 @@
             <ion-icon name="md-book" class="miscListIcon"></ion-icon> Reading books</ion-label>
           <ion-toggle [(ngModel)]="data.isReadingBooks" disabled="{{data.age < 9}}" (ionChange)="data.shareService.readingChanged(data)"></ion-toggle>
         </ion-item>
+        
         <ion-item>
           <ion-label>
             <ion-icon name="ios-body" class="miscListIcon"></ion-icon> Go to gym (50$/mo)</ion-label>

@@ -68,8 +68,8 @@
       </ion-list> -->
 
 
-      <div *ngFor="let job of data.listedJobs">
-        <ion-card>
+      <div *ngFor="let job of data.listedJobs; let i = index">
+        <ion-card [hidden]="i == data.gotJobNum">
           <ion-card-header>
             <b>{{job[1]["title"]}}</b>
             <br> at {{job[0]}}
@@ -84,7 +84,7 @@
             <label>Qualifications: None</label>
             <br>
             <!-- Float the icon left -->
-            <button ion-button color="secondary" [disabled]="data.age < 16" small (click)="data.shareService.applyForJob(data, job)">
+            <button ion-button color="secondary" [disabled]="data.age < 16" small (click)="data.shareService.applyForJob(data, job, i)">
               Apply
             </button>
 

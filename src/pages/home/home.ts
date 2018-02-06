@@ -51,7 +51,7 @@ export class HomePage {
   openPopover(myEvent) {
     let popover = this.popoverCtrl.create(PopoverContentPage);
     popover.present({
-      ev: myEvent
+      ev: myEvent,
     });
   }
 
@@ -60,6 +60,7 @@ export class HomePage {
   age(data) {
     data.age += 1;
     data.years.push({ "year": data.age, "events": [] });
+    data.gotJobNum = -1;
 
     this.data["shareService"].updateJobs(this.data, this.jobs);
 

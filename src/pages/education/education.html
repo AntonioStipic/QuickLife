@@ -87,6 +87,9 @@
   <br>
   <br>
 
+
+  <button ion-button small class="collegeEnrollButton" (click)="data.shareService.enrollCollege(data)"
+              [hidden]="!data.passed.highschool">Enroll</button>
   <ion-card>
     <ion-card-content>
       <table>
@@ -95,7 +98,7 @@
             <b>College</b>
           </td>
           <td>
-            <b>Course</b>
+            <b>Degree</b>
           </td>
           <td>
             <b>Finished</b>

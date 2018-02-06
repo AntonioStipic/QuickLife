@@ -162,6 +162,80 @@ export class ShareService {
         this.goToHighSchool(data);
     }
 
+    shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    }
+
+    enrollCollege(data) {
+        var majors = this.shuffle([{
+            type: 'radio',
+            label: 'Biomedical Engineering',
+            value: 'biomedical engineering'
+        }, {
+            type: 'radio',
+            label: 'Public Health',
+            value: 'public health'
+        }, {
+            type: 'radio',
+            label: 'Nursing',
+            value: 'nursing'
+        }, {
+            type: 'radio',
+            label: 'Biology',
+            value: 'biology'
+        }, {
+            type: 'radio',
+            label: 'Chemistry',
+            value: 'chemistry'
+        }, {
+            type: 'radio',
+            label: 'Software Engineering',
+            value: 'software engineering'
+        }, {
+            type: 'radio',
+            label: 'Geology',
+            value: 'geology'
+        }])
+        majors[0]["checked"] = true;
+        
+        let alert = this.alertCtrl.create({
+            inputs: majors
+        });
+        alert.setTitle('College Degree');
+
+        /* alert.addInput({
+            type: 'radio',
+            label: 'Blue',
+            value: 'blue',
+            checked: true
+        }); ?/
+        */
+        alert.addButton('Cancel');
+        alert.addButton({
+            text: 'OK',
+            handler: data => {
+                /* this.testRadioOpen = false;
+                this.testRadioResult = data; */
+            }
+        });
+        alert.present();
+    }
+
     goToHighSchool(data) {
         data.goingToHighSchool = 1;
         data.years[data.age].events.push("I started high school.");
@@ -195,7 +269,7 @@ export class ShareService {
         data.appearance = this.random1to100();
         data.intelligence = this.random1to100();
         data.fitness = this.random1to100();
-        
+
         // Balance player has at the beggining of game
         data.finance = 100;
 
@@ -247,7 +321,7 @@ export class ShareService {
 
         // Empty job object
         data.myJob = ["", { "title": "", "salary": "", "experience": 0, "education": 0, "skills": [] }, ""];
-        
+
         // Boolean to indicate if player is currently working
         data.isWorking = 0;
 
@@ -258,9 +332,12 @@ export class ShareService {
         // Object which will contain list of jobs to be displayed in list
         data.listedJobs = [];
 
+        // Index of the job the player has got, used to hide card with that job
+        data.gotJobNum = -1;
+
         // Boolean indicators for passing elementary and high school
         data.passed = { "elementary": 0, "highschool": 0 };
-        
+
         // Boolan is player currently learning
         data.isLearning = 0;
 
@@ -278,7 +355,7 @@ export class ShareService {
 
         // Empty log
         data.years = [{ "year": 0, "events": ["You have been born as " + data.name + " " + data.surname + ".", " You are " + data.nationality + ", " + data.genderFull + "."] }];
-        
+
         return data;
     }
 
@@ -369,8 +446,8 @@ export class ShareService {
         //data.name = this.names[data.genderFull][nameNum];
     }
 
-    applyForJob(data, job) {
-        //console.log(job);
+    applyForJob(data, job, index) {
+        //console.log(index);
         if (job[1]["education"] <= data.educationLevel) {
             var remainingSkills = job[1]["skills"].filter(item => data.mySkills.indexOf(item) < 0);
             if (remainingSkills.length == 0) {
@@ -380,6 +457,7 @@ export class ShareService {
                     buttons: [{
                         text: 'Ok',
                         handler: () => {
+                            data.gotJobNum = index;
                             //data.shareService.inDebt(data);
                             if (data.isWorking == 1) {
                                 this.quitJob(data);
@@ -403,6 +481,7 @@ export class ShareService {
                 buttons: [{
                     text: 'Ok',
                     handler: () => {
+                        data.gotJobNum = index;
                         //data.shareService.inDebt(data);
                     }
                 }]
