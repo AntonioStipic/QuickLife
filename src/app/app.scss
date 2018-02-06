@@ -1,6 +1,4 @@
 // http://ionicframework.com/docs/theming/
-
-
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These
@@ -14,47 +12,49 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
-
 .miscListIcon {
-    margin-right: 5vw;
+  margin-right: 5vw;
 }
 
 .labelText {
-    padding-left: 5vw;
+  padding-left: 5vw;
 }
 
 .active {
-    //color: #000!important;
-    //color: red!important;
+  //color: #000!important;
+  //color: red!important;
 }
 
 .ion-select-text {
-    color: #000!important;
+  color: #000 !important;
 }
 
 .educationEnrollButton {
-    margin: 0;
+  margin: 0;
 }
 
 .collegeEnrollButton {
-    margin-left: 2%;
+  margin-left: 2%;
 }
 
 #menuPopover {
-    height: auto!important;
-    //padding-bottom: 0;
-    margin-bottom: 0;
+  height: auto !important; //padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 .center {
-    padding-left: 5%;
+  padding-left: 5%;
 }
 
 ion-list {
-    //border:3px solid red!important;
-    //border-top: 1px solid #000!important;
+  //border:3px solid red!important;
+  //border-top: 1px solid #000!important;
 }
 
 ion-item {
-    border-bottom: 0px solid red!important;
+  border-bottom: 0px solid red !important;
+}
+
+.alert-wrapper {
+  min-width: 90%;
 }

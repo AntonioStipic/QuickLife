@@ -156,7 +156,8 @@ export class ShareService {
     dropoutCollege(data) {
         data.goingToCollege = 0;
         data.goingToCollegeYears = 0;
-        data.years[data.age].events.push("I stopped studying high school.");
+        data.years[data.age].events.push("I stopped studying " + data.currentCollegeMajor + ".");
+        data.currentCollegeMajor = "";
     }
 
     dropoutHighSchool(data) {
@@ -224,7 +225,37 @@ export class ShareService {
             type: 'radio',
             label: 'Geology',
             value: 'Geology'
-        }])
+        }, {
+            type: 'radio',
+            label: 'Behavior, Cognition, and Neuroscience',
+            value: 'Behavior, Cognition, and Neuroscience'
+        }, {
+            type: 'radio',
+            label: 'Economics',
+            value: 'Economics'
+        }, {
+            type: 'radio',
+            label: 'Mathematics',
+            value: 'Mathematics'
+        }, {
+            type: 'radio',
+            label: 'Neuroscience',
+            value: 'Neuroscience'
+        }, {
+            type: 'radio',
+            label: 'Physics',
+            value: 'Physics'
+        }, {
+            type: 'radio',
+            label: 'Teaching',
+            value: 'Teaching'
+        }, {
+            type: 'radio',
+            label: 'Sociology',
+            value: 'Sociology'
+        }
+        
+    ])
         for (var e = 0; e < data.listOfColleges.length; e++) {
             for (var i = 0; i < majors.length; i++)
             if (majors[i].value === data.listOfColleges[e]) {
