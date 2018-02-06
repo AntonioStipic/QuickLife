@@ -9,20 +9,22 @@
       </button>
     </ion-buttons>
   </ion-navbar>
+  <!-- <ion-toolbar> -->
+    <div id="jobSegmentToolbar">
+      <ion-segment [(ngModel)]="jobTabs">
+        <ion-segment-button value="Current">
+          Current
+        </ion-segment-button>
+        <ion-segment-button value="Available">
+          Available
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+  <!-- </ion-toolbar> -->
 </ion-header>
 
 <ion-content>
-  <div>
-    <ion-segment [(ngModel)]="jobTabs">
-      <ion-segment-button value="Current">
-        Current
-      </ion-segment-button>
-      <ion-segment-button value="Available">
-        Available
-      </ion-segment-button>
-    </ion-segment>
-  </div>
-
   <div [ngSwitch]="jobTabs">
     <ion-list *ngSwitchCase="'Current'">
       <ion-card>
