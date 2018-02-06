@@ -153,6 +153,12 @@ export class ShareService {
         }
     }
 
+    dropoutCollege(data) {
+        data.goingToCollege = 0;
+        data.goingToCollegeYears = 0;
+        data.years[data.age].events.push("I stopped studying high school.");
+    }
+
     dropoutHighSchool(data) {
         data.goingToHighSchool = 0;
         data.goingToHighSchoolYears = 0;
@@ -255,7 +261,7 @@ export class ShareService {
     goToCollege(data) {
         data.goingToCollege = 1;
         data.listOfColleges.push(data.currentCollegeMajor);
-        console.log(data.listOfColleges)
+        //console.log(data.listOfColleges)
         data.myMajors[data.currentCollegeMajor] = 0;
         //console.log(data.listOfColleges);
         data.years[data.age].events.push("I'm studying " + data.currentCollegeMajor + ".");
