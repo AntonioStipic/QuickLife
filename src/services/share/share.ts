@@ -128,6 +128,14 @@ export class ShareService {
         }
     }
 
+    enrollCollegeButton(data) {
+        if (data.passed.highschool == 1 && data.goingToCollege == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     dropoutHighSchoolButton(data) {
         if (data.goingToHighSchool == 1) {
             return false;
@@ -185,31 +193,31 @@ export class ShareService {
         var majors = this.shuffle([{
             type: 'radio',
             label: 'Biomedical Engineering',
-            value: 'biomedical engineering'
+            value: 'Biomedical Engineering'
         }, {
             type: 'radio',
             label: 'Public Health',
-            value: 'public health'
+            value: 'Public Health'
         }, {
             type: 'radio',
             label: 'Nursing',
-            value: 'nursing'
+            value: 'Nursing'
         }, {
             type: 'radio',
             label: 'Biology',
-            value: 'biology'
+            value: 'Biology'
         }, {
             type: 'radio',
             label: 'Chemistry',
-            value: 'chemistry'
+            value: 'Chemistry'
         }, {
             type: 'radio',
             label: 'Software Engineering',
-            value: 'software engineering'
+            value: 'Software Engineering'
         }, {
             type: 'radio',
             label: 'Geology',
-            value: 'geology'
+            value: 'Geology'
         }])
         majors[0]["checked"] = true;
         
@@ -228,12 +236,17 @@ export class ShareService {
         alert.addButton('Cancel');
         alert.addButton({
             text: 'OK',
-            handler: data => {
-                /* this.testRadioOpen = false;
-                this.testRadioResult = data; */
+            handler: selectedMajor => {
+                data.currentCollegeMajor = selectedMajor;
+                this.goToCollege(data);
             }
         });
         alert.present();
+    }
+
+    goToCollege(data) {
+        data.goingToCollege = 1;
+        data.years[data.age].events.push("I'm studying " + data.currentCollegeMajor + ".");
     }
 
     goToHighSchool(data) {
@@ -293,6 +306,12 @@ export class ShareService {
 
         // Number of years in a row player is going to school
         data.goingToHighSchoolYears = 0;
+
+        // Boolean to indicate if player is going to college
+        data.goingToCollege = 0;
+
+        // Current major that player is learning for
+        data.currentCollegeMajor = "";
 
         // Grade with which player finished high school
         data.highSchoolGrade = "None";

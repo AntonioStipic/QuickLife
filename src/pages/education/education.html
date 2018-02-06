@@ -88,8 +88,8 @@
   <br>
 
 
-  <button ion-button small class="collegeEnrollButton" (click)="data.shareService.enrollCollege(data)"
-              [hidden]="!data.passed.highschool">Enroll</button>
+  <button ion-button small class="collegeEnrollButton" (click)="data.shareService.enrollCollege(data)" [hidden]="data.shareService.enrollCollegeButton(data)">Enroll</button>
+  <button ion-button color="danger" class="collegeEnrollButton" small [hidden]="!data.goingToCollege" (click)="data.shareService.dropoutHighSchool(data)">Dropout</button>
   <ion-card>
     <ion-card-content>
       <table>
