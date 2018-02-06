@@ -91,6 +91,19 @@ export class HomePage {
       data.goingToHighSchoolYears += 1;
     }
 
+    if (data.goingToCollege == 1) {
+      data.goingToCollegeYears += 1;
+    }
+
+    if (data.goingToCollegeYears == 3) {
+      data.educationLevel = 2;
+      data.goingToCollege = 0;
+      data.goingToCollegeYears = 0;
+      data.myMajors[data.currentCollegeMajor] = 1;
+      data.years[data.age].events.push("I graduated from college in " + data.currentCollegeMajor + ".");
+      data.currentCollegeMajor = "";
+    }
+
     if (data.goingToHighSchoolYears == 4) {
       var percentH = ((data.learnedHighSchool / 1.2) + (data.intelligence / 12)) / 12;
       //console.log(data.learnedHighSchool);
@@ -116,10 +129,11 @@ export class HomePage {
       //console.log("High School", percentH);
 
       if (data.passed.highschool == 1) {
-        data.educationLevel += 1;
+        data.educationLevel = 1;
         data.goingToHighSchool = 0;
         data.goingToHighSchoolYears = 0;
         data.years[data.age].events.push("I graduated from high school at grade " + data.highSchoolGrade + ".");
+        this.checkGoToCollege(data);
         //this.checkGoToHighSchool(data);
       } else {
         data.years[data.age].events.push("I failed from high school. I was kicked out of it.");
@@ -208,6 +222,28 @@ export class HomePage {
           handler: () => {
             //console.log("I started High School");
             data.shareService.goToHighSchool(data);
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  checkGoToCollege(data) {
+    let alert = this.alertCtrl.create({
+      enableBackdropDismiss: false,
+      title: 'Next step',
+      message: 'You have got enough qualifications to go to college. Will you go?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            //console.log("I started High School");
+            data.shareService.enrollCollege(data);
           }
         },
         {

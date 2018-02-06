@@ -219,8 +219,16 @@ export class ShareService {
             label: 'Geology',
             value: 'Geology'
         }])
+        for (var e = 0; e < data.listOfColleges.length; e++) {
+            for (var i = 0; i < majors.length; i++)
+            if (majors[i].value === data.listOfColleges[e]) {
+                majors.splice(i, 1);
+                break;
+            }
+        }
+
         majors[0]["checked"] = true;
-        
+
         let alert = this.alertCtrl.create({
             inputs: majors
         });
@@ -246,6 +254,10 @@ export class ShareService {
 
     goToCollege(data) {
         data.goingToCollege = 1;
+        data.listOfColleges.push(data.currentCollegeMajor);
+        console.log(data.listOfColleges)
+        data.myMajors[data.currentCollegeMajor] = 0;
+        //console.log(data.listOfColleges);
         data.years[data.age].events.push("I'm studying " + data.currentCollegeMajor + ".");
     }
 
@@ -307,11 +319,20 @@ export class ShareService {
         // Number of years in a row player is going to school
         data.goingToHighSchoolYears = 0;
 
+        // Number of years in a row player is going to college
+        data.goingToCollegeYears = 0;
+
         // Boolean to indicate if player is going to college
         data.goingToCollege = 0;
 
         // Current major that player is learning for
         data.currentCollegeMajor = "";
+
+        // Object with finished colleges
+        data.myMajors = {};
+
+        // Colleges idk
+        data.listOfColleges = [];
 
         // Grade with which player finished high school
         data.highSchoolGrade = "None";

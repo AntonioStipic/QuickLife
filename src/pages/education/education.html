@@ -95,15 +95,26 @@
       <table>
         <tr>
           <td>
-            <b>College</b>
-          </td>
-          <td>
             <b>Degree</b>
           </td>
           <td>
             <b>Finished</b>
           </td>
 
+        </tr>
+      </table>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngFor="let major of data.listOfColleges; let i = index">
+    <ion-card-content>
+      <table>
+        <tr>
+          <td>{{major}}</td>
+          <td class="center">
+            <!-- {{data.passed.highschool}} -->
+            <ion-icon [name]="(data.myMajors[major] == 1) ? 'md-checkmark' : 'md-close'">
+            </ion-icon>
+          </td>
         </tr>
       </table>
     </ion-card-content>
