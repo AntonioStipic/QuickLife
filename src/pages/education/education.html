@@ -3,6 +3,11 @@
     <ion-title>
       Education
     </ion-title>
+    <ion-buttons right>
+      <button ion-button icon-only (click)="openPopover($event)">
+        <ion-icon name="md-more"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -41,7 +46,7 @@
         </tr>
         <tr>
           <td>
-              <button ion-button color="danger" small class="educationEnrollButton" [disabled]="data.shareService.dropoutElementaryButton(data)"
+            <button ion-button color="danger" small class="educationEnrollButton" [disabled]="data.shareService.dropoutElementaryButton(data)"
               [hidden]="!data.goingToElementary" (click)="data.shareService.dropoutElementary(data)">Dropout</button>
           </td>
           <td>
@@ -65,12 +70,13 @@
         </tr>
         <tr>
           <td>
-            <button ion-button small class="educationEnrollButton" [disabled]="data.shareService.enrollHighSchoolButton(data)" (click)="data.shareService.enrollHighSchool(data)" [hidden]="data.shareService.enrollHighSchoolButton(data)">Enroll</button>
+            <button ion-button small class="educationEnrollButton" [disabled]="data.shareService.enrollHighSchoolButton(data)" (click)="data.shareService.enrollHighSchool(data)"
+              [hidden]="data.shareService.enrollHighSchoolButton(data)">Enroll</button>
             <button ion-button color="danger" small class="educationEnrollButton" [disabled]="data.shareService.dropoutHighSchoolButton(data)"
-            [hidden]="!data.goingToHighSchool" (click)="data.shareService.dropoutHighSchool(data)">Dropout</button>
+              [hidden]="!data.goingToHighSchool" (click)="data.shareService.dropoutHighSchool(data)">Dropout</button>
           </td>
           <td>
-            
+
           </td>
           <!-- [disabled]="data.goingToHighSchool && (data.age < 14 || data.age > 18)" -->
         </tr>
@@ -78,7 +84,8 @@
     </ion-card-content>
   </ion-card>
 
-  <br><br>
+  <br>
+  <br>
 
   <ion-card>
     <ion-card-content>

@@ -167,10 +167,11 @@ export class ShareService {
         data.years[data.age].events.push("I started high school.");
     }
 
+    // Turns out I don't need this function, all taken care of in popover.ts close() function
     newLife(data) {
         //console.log(data.jsonJobs)
-        this.createMe(data, this.names);
-        this.updateJobs(data, data.jsonJobs);
+        /* this.createMe(data, this.names);
+        this.updateJobs(data, data.jsonJobs); */
     }
 
     createMe(data, names) {
@@ -180,7 +181,7 @@ export class ShareService {
           
           //console.log(this.names["male"]);
         } */
-        
+
         var nameNum = data.shareService.randomAtoB(0, names[data.genderFull].length - 1);
         data.name = names[data.genderFull][nameNum];
 
@@ -413,6 +414,7 @@ export class ShareService {
     // Quit job
     quitJob(data) {
         data.income -= (data.myJob[2] / 12 * 1000) * (1 - data.tax);
+        data.jobService = 0;
         data.years[data.age].events.push("I quit my job as " + data.myJob[1]["title"] + ".");
         data.myJob = ["", { "title": "", "salary": "", "experience": 0, "education": 0, "skills": [] }, ""];
         data.isWorking = 0;

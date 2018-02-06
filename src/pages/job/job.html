@@ -3,6 +3,11 @@
     <ion-title>
       Job
     </ion-title>
+    <ion-buttons right>
+      <button ion-button icon-only (click)="openPopover($event)">
+        <ion-icon name="md-more"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -29,6 +34,8 @@
           <ion-card-content>
             <label>Salary: ${{data.shareService.formatMoney(data.myJob[2] / 12 * 1000)}}/mo</label>
             <br>
+            <label>Years in service: {{data.jobService}}</label>
+            <br>
             <label>Work experience needed: {{data.myJob[1]["experience"]}}+ years</label>
             <br>
             <label>Education needed: {{data.shareService.numToSchool(data.myJob[1]["education"])}}</label>
@@ -45,7 +52,7 @@
             <b>You have no job!</b>
           </ion-card-header>
           <ion-card-content>
-            
+
           </ion-card-content>
         </div>
 

@@ -65,6 +65,8 @@ export class HomePage {
 
     if (data.isWorking == 1) {
       data.finance += (data.myJob[2] * 1000) * (1 - data.tax);
+      data.workExperience += 1;
+      data.jobService += 1;
     }
 
     if (data.finance < 0) {
