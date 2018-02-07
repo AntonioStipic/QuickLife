@@ -330,11 +330,9 @@ export class ShareService {
           //console.log(this.names["male"]);
         } */
 
-        var nameNum = data.shareService.randomAtoB(0, names[data.genderFull].length - 1);
-        data.name = names[data.genderFull][nameNum];
+        data.name = this.randomName(data, data.genderFull);
 
-        var surnameNum = data.shareService.randomAtoB(0, names["surname"].length - 1);
-        data.surname = names["surname"][surnameNum];
+        data.surname = this.randomSurname(data);
 
         data.age = 0;
         //data.name = "Antonio";
@@ -443,10 +441,45 @@ export class ShareService {
         // List with instruments including the ones player has added
         data.instruments = [];
 
-        // Empty log
-        data.years = [{ "year": 0, "events": ["You have been born as " + data.name + " " + data.surname + ".", " You are " + data.nationality + ", " + data.genderFull + "."] }];
+        data.father = this.createParent(data, "male");
+        data.mother = this.createParent(data, "female");
 
+        // Empty log
+        data.years = [{ "year": 0, "events": ["You have been born as " + data.name + " " + data.surname + ".", " You are " + data.nationality + ", " + data.genderFull + ".", "Your parents are:<br>" + data.father.name + " " + data.surname + " (" + data.father.age + " years old),<br>" + data.mother.name + " " + data.surname + " (" + data.mother.age + " years old)."] }];
         return data;
+    }
+
+    createParent(data, gender) {
+        var name = this.randomName(data, gender);
+        var age = this.randomAtoB(16, 45);
+       
+        if (gender == "female") {
+            var fatherAge = data.father.age;
+            var variety = this.randomAtoB(0, 6);
+            var upOrDown = this.randomAtoB(0, 2);
+            if (upOrDown == 0) {
+                age = fatherAge - variety;
+            } else {
+                age = fatherAge + variety;
+            }
+        }
+
+        return {name: name, age: age};
+        //console.log(name, age);
+    }
+
+    randomName(data, gender) {
+        var nameNum = this.randomAtoB(0, this.names[gender].length - 1);
+        var newName = this.names[gender][nameNum];
+        
+        return newName;
+    }
+
+    randomSurname(data) {
+        var surnameNum = this.randomAtoB(0, this.names["surname"].length - 1);
+        var newSurname = this.names["surname"][surnameNum];
+        
+        return newSurname;
     }
 
     // This function is adjusted for generating appearance and intelligence
@@ -471,7 +504,6 @@ export class ShareService {
         }
         return gender;
     }
-
 
     // This function is called when player is in debt
     inDebt(data) {

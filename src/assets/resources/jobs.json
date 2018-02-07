@@ -1,5 +1,6 @@
 {
-    "companies": ["Hypercentage", "Johnson Controls", "OMV Global Solutions", "DB Schenker Global Services", "Takko Fashion", "Electronic Arts", "Oracle", "Nestle", "Tiriac Auto", "Futurestep", "Ancer Recruitment LTD", "CPL Healthcare", "Workforce People Solutions Ltd", "Bluemarine Services"],
+    "companies": ["Hypercentage", "Johnson Controls", "OMW Oil Co.", "DB Schenker Global Services", "Takko Fashion", "Electro Art", "Oracle", "Nestel", "Tiriac Auto", "Futurestep", "Ancer Recruitment LTD", "CPL Healthcare", "Workforce People Solutions Ltd", "Bluemarine Services", "Apple Networks", "Gorilla Acoustics", "Tucan Softwares", "Solsticetems", "Tuliproductions", "Beedlectrics", "Canics", "Twilightcoms", "Gembooks", "Woodshine", "Hog Motors", "Crystal Foods", "Primal Records", "Leopardworks", "Nightelligence", "Gorillacoustics", "Starecords", "Nemohut", "Wonderworks", "Hammerbit" ,"Soul Industries"],
+    
     "jobs": [
         {   
             "title": "Junior sales representative",

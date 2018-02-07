@@ -16,7 +16,7 @@
           Parents
         </ion-segment-button>
         <ion-segment-button value="SO">
-          Significant Other
+          Partner
         </ion-segment-button>
       </ion-segment>
     </div>
@@ -27,10 +27,13 @@
   <ion-content>
     <div [ngSwitch]="familyTabs">
       <ion-list *ngSwitchCase="'Parents'">
+        <h2>Father:</h2>
+        <p>{{data.father.name}}</p>
+        <p>{{data.father.age}}</p><br>
         
-        <p>
-            Parents
-        </p>
+        <h2>Mother:</h2>
+        <p>{{data.mother.name}}</p>
+        <p>{{data.mother.age}}</p><br>
       </ion-list>
   
       <ion-list *ngSwitchCase="'SO'">

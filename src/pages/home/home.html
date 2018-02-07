@@ -18,7 +18,10 @@
         </ion-card-header>
         {{lastEvent.scrollIntoView()}}
         <ion-card-content *ngFor="let event of year.events">
-          {{event}}
+          <!-- {{event}} -->
+          <div [innerHtml]="event">
+
+          </div>
           {{lastEvent.scrollIntoView()}}
         </ion-card-content>
       </ion-card>
