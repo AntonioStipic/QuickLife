@@ -5,6 +5,7 @@ import { MePage } from '../me/me';
 import { EducationPage } from '../education/education';
 import { HomePage } from '../home/home';
 import { JobPage } from '../job/job';
+import { FamilyPage } from '../family/family';
 
 @Component({
   templateUrl: 'tabs.html'
@@ -15,6 +16,7 @@ export class TabsPage {
   tab2Root = MePage;
   tab3Root = EducationPage;
   tab4Root = JobPage;
+  tab5Root = FamilyPage;
 
   constructor() {
 

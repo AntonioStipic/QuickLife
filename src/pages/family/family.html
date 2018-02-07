@@ -1,0 +1,55 @@
+<ion-header>
+    <ion-navbar color="primary">
+      <ion-title>
+        Family
+      </ion-title>
+      <ion-buttons right>
+        <button ion-button icon-only (click)="openPopover($event)">
+          <ion-icon name="md-more"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-navbar>
+    <!-- <ion-toolbar> -->
+    <div>
+      <ion-segment [(ngModel)]="familyTabs">
+        <ion-segment-button value="Parents">
+          Parents
+        </ion-segment-button>
+        <ion-segment-button value="SO">
+          Significant Other
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+  
+    <!-- </ion-toolbar> -->
+  </ion-header>
+  
+  <ion-content>
+    <div [ngSwitch]="familyTabs">
+      <ion-list *ngSwitchCase="'Parents'">
+        
+        <p>
+            Parents
+        </p>
+      </ion-list>
+  
+      <ion-list *ngSwitchCase="'SO'">
+        <!-- <ion-list>
+          <button ion-item *ngFor="let job of data.listedJobs.company">
+            {{ job }}
+          </button>
+        </ion-list> -->
+  
+  
+        <p>
+            SO
+        </p>
+  
+  
+  
+  
+  
+      </ion-list>
+    </div>
+  </ion-content>
+  

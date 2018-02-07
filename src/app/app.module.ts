@@ -5,6 +5,7 @@ import { MyApp } from './app.component';
 
 import { MePage } from '../pages/me/me';
 import { JobPage } from '../pages/job/job';
+import { FamilyPage } from '../pages/family/family';
 import { EducationPage } from '../pages/education/education';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
@@ -27,6 +28,7 @@ import { HttpModule }      from '@angular/http';
     TabsPage,
     MePage,
     JobPage,
+    FamilyPage,
     PopoverContentPage
   ],
   imports: [
@@ -43,6 +45,7 @@ import { HttpModule }      from '@angular/http';
     TabsPage,
     MePage,
     JobPage,
+    FamilyPage,
     PopoverContentPage
   ],
   providers: [
