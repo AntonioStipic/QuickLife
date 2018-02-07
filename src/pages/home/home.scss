@@ -24,6 +24,10 @@ ion-card-content {
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2);
 }
 
+.progress-bar .progress-bar-fill {
+    height: 0.2em;
+}
+
 .progress-bar-fill {
     display: block;
     height: 22px;

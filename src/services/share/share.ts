@@ -257,15 +257,23 @@ export class ShareService {
             type: 'radio',
             label: 'Botanics',
             value: 'Botanics'
+        }, {
+            type: 'radio',
+            label: 'History',
+            value: 'History'
+        }, {
+            type: 'radio',
+            label: 'Modern Languages',
+            value: 'Modern Languages'
         }
-        
-    ])
+
+        ])
         for (var e = 0; e < data.listOfColleges.length; e++) {
             for (var i = 0; i < majors.length; i++)
-            if (majors[i].value === data.listOfColleges[e]) {
-                majors.splice(i, 1);
-                break;
-            }
+                if (majors[i].value === data.listOfColleges[e]) {
+                    majors.splice(i, 1);
+                    break;
+                }
         }
 
         majors[0]["checked"] = true;
@@ -335,6 +343,7 @@ export class ShareService {
         data.appearance = this.random1to100();
         data.intelligence = this.random1to100();
         data.fitness = this.random1to100();
+        data.musicality = this.random1to100();
 
         // Balance player has at the beggining of game
         data.finance = 100;
@@ -528,7 +537,7 @@ export class ShareService {
     }
 
     applyForJob(data, job, index) {
-        //console.log(index);
+
         if (job[1]["education"] <= data.educationLevel) {
             var remainingSkills = job[1]["skills"].filter(item => data.mySkills.indexOf(item) < 0);
             if (remainingSkills.length == 0) {
@@ -548,6 +557,19 @@ export class ShareService {
                             data.isWorking = 1;
                             data.years[data.age].events.push("I started working as " + job[1]["title"] + " at " + job[0] + ".");
                             data.income += (job[2] / 12 * 1000) * (1 - data.tax);
+                        }
+                    }]
+                });
+                alert.present();
+            } else {
+                let alert = this.alertCtrl.create({
+                    title: 'Bad news...',
+                    subTitle: '<br>You didn\'t get the job because you don\'t have enough qualifications.',
+                    buttons: [{
+                        text: 'Ok',
+                        handler: () => {
+                            data.gotJobNum = index;
+                            //data.shareService.inDebt(data);
                         }
                     }]
                 });

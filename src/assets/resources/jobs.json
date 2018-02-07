@@ -13,14 +13,21 @@
             "salary": "21-30",
             "experience": 0,
             "education": 2,
+            "skills": ["Modern Languages"]
+        },
+        {
+            "title": "Economist",
+            "salary": "15-18",
+            "experience": 0,
+            "education": 1,
             "skills": []
         },
         {
             "title": "Economist",
-            "salary": "15-22",
+            "salary": "17-24",
             "experience": 0,
-            "education": 1,
-            "skills": []
+            "education": 2,
+            "skills": ["Economics"]
         },
         {
             "title": "HR Manager",

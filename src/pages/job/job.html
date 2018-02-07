@@ -10,16 +10,16 @@
     </ion-buttons>
   </ion-navbar>
   <!-- <ion-toolbar> -->
-    <div id="jobSegmentToolbar">
-      <ion-segment [(ngModel)]="jobTabs">
-        <ion-segment-button value="Current">
-          Current
-        </ion-segment-button>
-        <ion-segment-button value="Available">
-          Available
-        </ion-segment-button>
-      </ion-segment>
-    </div>
+  <div>
+    <ion-segment [(ngModel)]="jobTabs">
+      <ion-segment-button value="Current">
+        Current
+      </ion-segment-button>
+      <ion-segment-button value="Available">
+        Available
+      </ion-segment-button>
+    </ion-segment>
+  </div>
 
   <!-- </ion-toolbar> -->
 </ion-header>
@@ -37,12 +37,6 @@
             <label>Salary: ${{data.shareService.formatMoney(data.myJob[2] / 12 * 1000)}}/mo</label>
             <br>
             <label>Years in service: {{data.jobService}}</label>
-            <br>
-            <label>Work experience needed: {{data.myJob[1]["experience"]}}+ years</label>
-            <br>
-            <label>Education needed: {{data.shareService.numToSchool(data.myJob[1]["education"])}}</label>
-            <br>
-            <label>Qualifications: None</label>
             <br>
 
             <button ion-button color="danger" small (click)="data.shareService.quitJob(data)">Quit</button>
@@ -83,7 +77,7 @@
             <br>
             <label>Education needed: {{data.shareService.numToSchool(job[1]["education"])}}</label>
             <br>
-            <label>Qualifications: None</label>
+            <label>Qualifications: {{(job[1]["skills"].length > 0) ? job[1]["skills"] : "None"}}</label>
             <br>
             <!-- Float the icon left -->
             <button ion-button color="secondary" [disabled]="data.age < 16" small (click)="data.shareService.applyForJob(data, job, i)">

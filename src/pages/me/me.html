@@ -9,10 +9,6 @@
       </button>
     </ion-buttons>
   </ion-navbar>
-</ion-header>
-
-<ion-content>
-
   <div>
     <ion-segment [(ngModel)]="meTabs">
       <ion-segment-button value="Info">
@@ -26,6 +22,9 @@
       </ion-segment-button>
     </ion-segment>
   </div>
+</ion-header>
+
+<ion-content>
 
   <div [ngSwitch]="meTabs">
     <ion-list *ngSwitchCase="'Info'">
@@ -101,6 +100,17 @@
               </label>
             </div>
 
+            <div ion-item>
+              <label>Musicality: {{data.musicality.toFixed(0)}}%
+                <br>
+                <div class="progressBar">
+                  <div class="progress-bar">
+                    <span class="progress-bar-fill" [ngStyle]="{'width': data.musicality + '%'}"></span>
+                  </div>
+                </div>
+              </label>
+            </div>
+
           </ion-list>
         </ion-card-content>
       </ion-card>
@@ -161,7 +171,7 @@
             <ion-icon name="md-book" class="miscListIcon"></ion-icon> Reading books</ion-label>
           <ion-toggle [(ngModel)]="data.isReadingBooks" disabled="{{data.age < 9}}" (ionChange)="data.shareService.readingChanged(data)"></ion-toggle>
         </ion-item>
-        
+
         <ion-item>
           <ion-label (click)="(data.goingToGym == 0) ? data.goingToGym = 1 : data.goingToGym = 0">
             <ion-icon name="ios-body" class="miscListIcon"></ion-icon> Go to gym (50$/mo)</ion-label>
@@ -174,15 +184,17 @@
               <ion-icon name="ios-musical-notes" class="miscListIcon"></ion-icon> Play instrument (100$/mo each)</ion-label>
             <ion-select [(ngModel)]="data.instruments" multiple="true" cancelText="Dismiss" okText="Ok" disabled="{{data.age < 3 || data.inDebt == 1}}"
               (ionChange)="data.shareService.instrumentsChanged(data)">
-              <ion-option value="guitar">Guitar</ion-option>
+              <ion-option value="guitar">Acoustic guitar</ion-option>
               <ion-option value="bass guitar">Bass guitar</ion-option>
               <ion-option value="piano">Piano</ion-option>
               <ion-option value="drums">Drums</ion-option>
               <ion-option value="trumpet">Trumpet</ion-option>
+              <ion-option value="guitar">Electric guitar</ion-option>
               <ion-option value="saxophone">Saxophone</ion-option>
               <ion-option value="cello">Cello</ion-option>
               <ion-option value="flute">Flute</ion-option>
               <ion-option value="clarinet">Clarinet</ion-option>
+              <ion-option value="clarinet">Violin</ion-option>
             </ion-select>
           </ion-item>
 

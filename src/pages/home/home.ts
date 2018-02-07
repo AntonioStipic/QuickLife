@@ -100,6 +100,7 @@ export class HomePage {
       data.goingToCollege = 0;
       data.goingToCollegeYears = 0;
       data.myMajors[data.currentCollegeMajor] = 1;
+      data.mySkills.push(data.currentCollegeMajor);
       data.years[data.age].events.push("I graduated from college in " + data.currentCollegeMajor + ".");
       data.currentCollegeMajor = "";
     }
