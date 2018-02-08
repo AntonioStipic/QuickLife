@@ -39,14 +39,14 @@
       </ion-card>
 
       <ion-card>
-          <ion-card-header>
-            <b>Mother</b>
-          </ion-card-header>
-          <ion-card-content>
-            <p>Name: {{data.mother.name}} {{data.surname}}</p>
-            <p>Age: {{data.mother.age}} years old</p>
-          </ion-card-content>
-        </ion-card>
+        <ion-card-header>
+          <b>Mother</b>
+        </ion-card-header>
+        <ion-card-content>
+          <p>Name: {{data.mother.name}} {{data.surname}}</p>
+          <p>Age: {{data.mother.age}} years old</p>
+        </ion-card-content>
+      </ion-card>
 
     </ion-list>
 
@@ -58,14 +58,42 @@
         </ion-list> -->
 
 
-      <p>
-        SO
-      </p>
+      <ion-card>
+        <div [hidden]="!data.havePartner">
+          <ion-card-header>
+            <b>u very good</b>
+          </ion-card-header>
+          <ion-card-content>
+            <label>Status: {{data.lover.status}}</label>
+            <br>
+            <label>Name: {{data.lover.name}} {{data.lover.surname}}</label>
+            <br>
+          </ion-card-content>
+
+        </div>
+
+        <div [hidden]="data.havePartner">
+          <ion-card-header>
+            <b>U no have relationship</b>
+          </ion-card-header>
+          <ion-card-content>
+
+          </ion-card-content>
+        </div>
+
+      </ion-card>
 
 
 
 
 
+      <ion-footer no-shadow [hidden]="data.havePartner == 1">
+        <ion-toolbar position="bottom">
+          <button ion-button full round color="danger" (click)="data.shareService.findLove(data)" [disabled]="data.shareService.isFindLoveEnabled(data)">Find love
+            <ion-icon id="clockIcon" name="md-heart"></ion-icon>
+          </button>
+        </ion-toolbar>
+      </ion-footer>
     </ion-list>
   </div>
 </ion-content>

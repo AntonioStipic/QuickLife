@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Component } from '@angular/core';
 import { AlertController } from 'ionic-angular';
+import { ModalController, NavParams } from 'ionic-angular';
+import { ViewController } from 'ionic-angular';
 
 @Injectable()
 export class ShareService {
@@ -7,8 +10,18 @@ export class ShareService {
     data: object;
     names: object;
 
-    constructor(public alertCtrl: AlertController) {
+    constructor(public alertCtrl: AlertController, public modalCtrl: ModalController) {
         this.data = {};
+    }
+
+    findLoveModal(lover) {
+        let profileModal = this.modalCtrl.create(findLoveModal, { lover: lover }, {
+            showBackdrop: false,
+            enableBackdropDismiss: false,
+            enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave'
+        });
+        profileModal.present();
     }
 
     setData(data) {
@@ -399,8 +412,8 @@ export class ShareService {
         data.nationality = "Croatian";
         data.appearance = this.random1to100();
         data.intelligence = this.random1to100();
-        data.fitness = this.random1to100();
-        data.musicality = this.random1to100();
+        data.fitness = this.randomAtoB(1, 100);
+        data.musicality = this.randomAtoB(1, 100);
 
         // Balance player has at the beggining of game
         data.finance = 100;
@@ -500,8 +513,14 @@ export class ShareService {
         // List with instruments including the ones player has added
         data.instruments = [];
 
-         // List with sports player played before a change has been made
-         data.oldSports = [];
+        // List with sports player played before a change has been made
+        data.oldSports = [];
+
+        // Indicator if player has patner/is in relationship
+        data.havePartner = 0;
+
+        // Lover object
+        data.lover = {};
 
         // List with sports including the ones player has added
         data.sports = [];
@@ -518,33 +537,97 @@ export class ShareService {
         var name = this.randomName(data, gender);
         var age = this.randomAtoB(16, 45);
         var alive = 1;
-       
+
         if (gender == "female") {
             var fatherAge = data.father.age;
             var variety = this.randomAtoB(0, 6);
             var upOrDown = this.randomAtoB(0, 2);
             if (upOrDown == 0) {
-                age = fatherAge - variety;
-            } else {
                 age = fatherAge + variety;
+            } else {
+                age = fatherAge - variety;
+                if (fatherAge == 16) age = 16;
             }
         }
 
-        return {name: name, age: age, alive: alive};
+        return { name: name, age: age, alive: alive };
         //console.log(name, age);
+    }
+
+    createLover(data) {
+        //console.log(data.sexuality);
+        var loverGender = "";
+        if (data.sexuality == "Heterosexual") {
+            if (data.gender == "M") loverGender = "female";
+            else loverGender = "male";
+        } else if (data.sexuality == "Homosexual") {
+            if (data.gender == "M") loverGender = "male";
+            else loverGender = "female";
+        } else if (data.sexuality == "Bisexual") {
+            var loverChance = this.randomAtoB(0, 1);
+            if (loverChance == 0) {
+                loverGender = "male";
+            } else {
+                loverGender = "female";
+            }
+        }
+        var loverName = this.randomName(data, loverGender);
+        var loverSurname = this.randomSurname(data);
+        var loverAppearance = this.random1to100();
+        var loverIntelligence = this.random1to100();
+        var loverFitness = this.randomAtoB(1, 100);
+
+        var playerAge = data.age;
+        var variety = 0;
+        if (playerAge > 25) {
+            variety = this.randomAtoB(0, 10);
+        } else if (playerAge > 16) {
+            variety = this.randomAtoB(0, 4);
+        } else {
+            variety = this.randomAtoB(0, 2);
+        }
+        var upOrDown = this.randomAtoB(0, 2);
+        var loverAge = 0;
+        if (upOrDown == 0) {
+            loverAge = playerAge + variety;
+        } else {
+            loverAge = playerAge - variety;
+        }
+
+        return { name: loverName, surname: loverSurname, appearance: loverAppearance, intelligence: loverIntelligence, gender: loverGender, age: loverAge, fitness: loverFitness };
+    }
+
+    isFindLoveEnabled(data) {
+        if (data.age < 12) return 1;
+        else if (data.sexuality == "Asexual") return 1;
+        else return 0;
+    }
+
+    goForDate(data, lover) {
+        console.log(lover);
+        let alert = this.alertCtrl.create({
+            title: "You are in relationship!",
+            subTitle: `You are now dating ${lover.name} ${lover.surname}!`,
+            buttons: ["Okay"]
+        });
+        data.havePartner = 1;
+        data.lover = lover;
+        data.lover["status"] = "Relationship";
+        data.years[data.age].events.push(`I'm dating ${lover.name} ${lover.surname}.`);
+        alert.present();
     }
 
     randomName(data, gender) {
         var nameNum = this.randomAtoB(0, this.names[gender].length - 1);
         var newName = this.names[gender][nameNum];
-        
+
         return newName;
     }
 
     randomSurname(data) {
         var surnameNum = this.randomAtoB(0, this.names["surname"].length - 1);
         var newSurname = this.names["surname"][surnameNum];
-        
+
         return newSurname;
     }
 
@@ -569,6 +652,13 @@ export class ShareService {
             gender = "F";
         }
         return gender;
+    }
+
+    findLove(data) {
+        var lover = this.createLover(data);
+        //console.log(lover);
+
+        this.findLoveModal(lover);
     }
 
     // This function is called when player is in debt
@@ -728,4 +818,26 @@ export class ShareService {
 
         return diff;
     } */
+}
+
+@Component({
+    templateUrl: '../../pages/findLove/findLove.html'
+})
+export class findLoveModal {
+    data: object;
+    lover: object;
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
+        this.lover = params.get("lover");
+        this.data = shareService.getData();
+        //console.log();
+    }
+
+    goForDate(data, lover) {
+        this.dismiss();
+        data.shareService.goForDate(data, lover);
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
 }

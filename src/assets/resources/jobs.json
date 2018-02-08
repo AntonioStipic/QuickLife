@@ -57,6 +57,13 @@
             "experience": 2,
             "education": 2,
             "skills": ["History"]
+        },
+        {
+            "title": "Nurse",
+            "salary": "25-30",
+            "experience": 2,
+            "education": 2,
+            "skills": ["Nursing"]
         }
 
     ]

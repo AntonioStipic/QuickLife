@@ -2,17 +2,18 @@
   <ion-navbar color="primary">
     <ion-title>Home</ion-title>
     <ion-buttons right>
-        <button ion-button icon-only (click)="openPopover($event)">
-           <ion-icon name="md-more"></ion-icon>
-        </button>
-      </ion-buttons>
+      <button ion-button icon-only (click)="openPopover($event)">
+        <ion-icon name="md-more"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
   <div id="lifeLog" #scrollMe [scrollTop]="scrollMe.scrollHeight">
     <div *ngFor="let year of data.years">
-      <ion-card #lastEvent> <!-- data.years -->
+      <ion-card #lastEvent>
+        <!-- data.years -->
         <ion-card-header>
           <b>{{year.year}} years old</b>
         </ion-card-header>
@@ -29,7 +30,9 @@
   </div>
 </ion-content>
 <ion-footer no-shadow>
-    <ion-toolbar position="bottom">
-        <button ion-button full round (click)="age(data)" id="ageButton">Age <ion-icon id="clockIcon" name="md-clock"></ion-icon></button>
-    </ion-toolbar>
-  </ion-footer>
+  <ion-toolbar position="bottom">
+    <button ion-button full round (click)="age(data)" id="ageButton">Age
+      <ion-icon id="clockIcon" name="md-clock"></ion-icon>
+    </button>
+  </ion-toolbar>
+</ion-footer>
