@@ -198,6 +198,20 @@
             </ion-select>
           </ion-item>
 
+          <ion-item>
+            <ion-label class="ion-select-text">
+              <ion-icon name="md-football" class="miscListIcon"></ion-icon> Play sport (60$/mo each)</ion-label>
+            <ion-select [(ngModel)]="data.sports" multiple="true" cancelText="Dismiss" okText="Ok" disabled="{{data.age < 5 || data.inDebt == 1}}"
+              (ionChange)="data.shareService.sportsChanged(data)">
+              <ion-option value="football">Football</ion-option>
+              <ion-option value="basketball">Basketball</ion-option>
+              <ion-option value="handball">Handball</ion-option>
+              <ion-option value="volleyball">Volleyball</ion-option>
+              <ion-option value="swimming">Swimming</ion-option>
+              <ion-option value="archery">Archery</ion-option>
+            </ion-select>
+          </ion-item>
+
 
         </ion-list>
       </ion-item-group>

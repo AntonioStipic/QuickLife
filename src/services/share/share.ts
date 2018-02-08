@@ -113,6 +113,65 @@ export class ShareService {
 
     }
 
+    sportsChanged(data) {
+        //console.log(data.instruments, data.oldInstruments);;
+        //var newInstruments = this.arr_diff(data.instruments, data.oldInstruments);
+        var newSports1 = data.sports.filter(item => data.oldSports.indexOf(item) < 0);
+        var newSports2 = data.oldSports.filter(item => data.sports.indexOf(item) < 0);
+        data.oldSports = data.oldSports.concat(newSports1);
+        data.oldSports = data.oldSports.filter(function (el) {
+            return newSports2.indexOf(el) < 0;
+        });
+
+        //console.log(newInstruments, "newInstruments");
+        if (newSports1.length > 0) {
+
+            data.outcome += (newSports1.length * 60);
+
+            var startedSportsText = "";
+            if (newSports1.length == 1) {
+                startedSportsText = "I started playing " + newSports1[0] + ".";
+            } else if (newSports1.length == 2) {
+                startedSportsText = "I started playing " + newSports1[0] + " and " + newSports1[1] + ".";
+            } else {
+                startedSportsText = "I started playing " + newSports1[0];
+                for (newSportsTmp = 1; newSportsTmp < newSports1.length - 1; newSportsTmp++) {
+                    startedSportsText += ", " + newSports1[newSportsTmp];
+                }
+                startedSportsText += (" and " + newSports1[newSports1.length - 1] + ".");
+            }
+            /* if (data.years[data.age].events[-1] == startedInstrumentsText) {
+                console.log("WAIT, ISTI SU");
+            } */
+            data.years[data.age].events.push(startedSportsText);
+        }
+
+        if (newSports2.length > 0) {
+
+            data.outcome -= (newSports2.length * 60);
+
+            var stoppedSportsText = "";
+            if (newSports2.length == 1) {
+                stoppedSportsText = "I stopped playing " + newSports2[0] + ".";
+            } else if (newSports2.length == 2) {
+                stoppedSportsText = "I stopped playing " + newSports2[0] + " and " + newSports2[1] + ".";
+            } else {
+                stoppedSportsText = "I stopped playing " + newSports2[0];
+                for (var newSportsTmp = 1; newSportsTmp < newSports2.length - 1; newSportsTmp++) {
+                    stoppedSportsText += ", " + newSports2[newSportsTmp];
+                }
+                stoppedSportsText += (" and " + newSports2[newSports2.length - 1] + ".");
+            }
+
+
+
+            data.years[data.age].events.push(stoppedSportsText);
+        }
+        /* console.log("Ovo su dodane stvari", newInstruments1);
+        console.log("Ovo su uklonjene stvari", newInstruments2); */
+
+    }
+
     enrollHighSchoolButton(data) {
         //!data.goingToHighSchool && (data.age < 14 || data.age > 18)
         if (data.age < 14 || data.age >= 18) {
@@ -441,6 +500,12 @@ export class ShareService {
         // List with instruments including the ones player has added
         data.instruments = [];
 
+         // List with sports player played before a change has been made
+         data.oldSports = [];
+
+        // List with sports including the ones player has added
+        data.sports = [];
+
         data.father = this.createParent(data, "male");
         data.mother = this.createParent(data, "female");
 
@@ -452,6 +517,7 @@ export class ShareService {
     createParent(data, gender) {
         var name = this.randomName(data, gender);
         var age = this.randomAtoB(16, 45);
+        var alive = 1;
        
         if (gender == "female") {
             var fatherAge = data.father.age;
@@ -464,7 +530,7 @@ export class ShareService {
             }
         }
 
-        return {name: name, age: age};
+        return {name: name, age: age, alive: alive};
         //console.log(name, age);
     }
 
@@ -517,6 +583,12 @@ export class ShareService {
             data.oldInstruments = data.instruments;
             data.instruments = [];
             this.instrumentsChanged(data);
+        }
+
+        if (data.sports.length > 0) {
+            data.oldSports = data.sports;
+            data.sports = [];
+            this.sportsChanged(data);
         }
     }
 

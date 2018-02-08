@@ -64,6 +64,14 @@ export class HomePage {
 
     this.data["shareService"].updateJobs(this.data, this.jobs);
 
+    if (data.father.alive == 1) {
+      data.father.age += 1;
+    }
+
+    if (data.mother.alive == 1) {
+      data.mother.age += 1;
+    }
+
     if (data.isWorking == 1) {
       data.finance += (data.myJob[2] * 1000) * (1 - data.tax);
       data.workExperience += 1;
@@ -148,6 +156,24 @@ export class HomePage {
       if (data.intelligence <= 99.7) data.intelligence += 0.3;
     }
 
+    if (data.instruments.length > 0) {
+      var toAddInstruments = data.instruments.length * 0.4;
+      if (data.musicality <= (100 - toAddInstruments)) {
+        data.musicality += toAddInstruments;
+      } else {
+        data.musicality = 100;
+      }
+    }
+
+    if (data.sports.length > 0) {
+      var toAddSports = data.fitness.length * 0.3;
+      if (data.fitness <= (100 - toAddSports)) {
+        data.fitness += toAddSports;
+      } else {
+        data.fitness = 100;
+      }
+    }
+
     if (data.isReadingBooks == 1) {
       if (data.intelligence <= 99.8) data.intelligence += 0.2;
     }
@@ -159,6 +185,10 @@ export class HomePage {
 
     if (data.instruments.length > 0) {
       data.finance -= data.instruments.length * 100 * 12;
+    }
+
+    if (data.sports.length > 0) {
+      data.finance -= data.sports.length * 60 * 12;
     }
 
     if (data.age == 3) {

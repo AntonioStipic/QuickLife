@@ -1,58 +1,71 @@
 <ion-header>
-    <ion-navbar color="primary">
-      <ion-title>
-        Family
-      </ion-title>
-      <ion-buttons right>
-        <button ion-button icon-only (click)="openPopover($event)">
-          <ion-icon name="md-more"></ion-icon>
-        </button>
-      </ion-buttons>
-    </ion-navbar>
-    <!-- <ion-toolbar> -->
-    <div>
-      <ion-segment [(ngModel)]="familyTabs">
-        <ion-segment-button value="Parents">
-          Parents
-        </ion-segment-button>
-        <ion-segment-button value="SO">
-          Partner
-        </ion-segment-button>
-      </ion-segment>
-    </div>
-  
-    <!-- </ion-toolbar> -->
-  </ion-header>
-  
-  <ion-content>
-    <div [ngSwitch]="familyTabs">
-      <ion-list *ngSwitchCase="'Parents'">
-        <h2>Father:</h2>
-        <p>{{data.father.name}}</p>
-        <p>{{data.father.age}}</p><br>
-        
-        <h2>Mother:</h2>
-        <p>{{data.mother.name}}</p>
-        <p>{{data.mother.age}}</p><br>
-      </ion-list>
-  
-      <ion-list *ngSwitchCase="'SO'">
-        <!-- <ion-list>
+  <ion-navbar color="primary">
+    <ion-title>
+      Family
+    </ion-title>
+    <ion-buttons right>
+      <button ion-button icon-only (click)="openPopover($event)">
+        <ion-icon name="md-more"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+  <!-- <ion-toolbar> -->
+  <div>
+    <ion-segment [(ngModel)]="familyTabs">
+      <ion-segment-button value="Parents">
+        Parents
+      </ion-segment-button>
+      <ion-segment-button value="SO">
+        Partner
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <!-- </ion-toolbar> -->
+</ion-header>
+
+<ion-content>
+  <div [ngSwitch]="familyTabs">
+    <ion-list *ngSwitchCase="'Parents'">
+
+      <ion-card>
+        <ion-card-header>
+          <b>Father</b>
+        </ion-card-header>
+        <ion-card-content>
+          <p>Name: {{data.father.name}} {{data.surname}}</p>
+          <p>Age: {{data.father.age}} years old</p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+          <ion-card-header>
+            <b>Mother</b>
+          </ion-card-header>
+          <ion-card-content>
+            <p>Name: {{data.mother.name}} {{data.surname}}</p>
+            <p>Age: {{data.mother.age}} years old</p>
+          </ion-card-content>
+        </ion-card>
+
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'SO'">
+      <!-- <ion-list>
           <button ion-item *ngFor="let job of data.listedJobs.company">
             {{ job }}
           </button>
         </ion-list> -->
-  
-  
-        <p>
-            SO
-        </p>
-  
-  
-  
-  
-  
-      </ion-list>
-    </div>
-  </ion-content>
-  
+
+
+      <p>
+        SO
+      </p>
+
+
+
+
+
+    </ion-list>
+  </div>
+</ion-content>

@@ -50,6 +50,13 @@
             "experience": 0,
             "education": 2,
             "skills": []
+        },
+        {
+            "title": "Archaeologist",
+            "salary": "25-30",
+            "experience": 2,
+            "education": 2,
+            "skills": ["History"]
         }
 
     ]
