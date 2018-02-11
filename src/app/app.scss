@@ -108,3 +108,44 @@ ion-modal {
 .buttonright {
   float: right;
 }
+
+.progressBarRoyal {
+  background-color: #8869EA!important;
+}
+
+.progressBarDanger {
+  background-color: #f53d3d!important;
+}
+
+.tabbar {
+	a.tab-button[aria-selected=true]:nth-of-type(1) {
+		color: color($colors,primary);
+		.tab-button-icon {
+			color: color($colors,primary);
+		}
+	}
+	a.tab-button[aria-selected=true]:nth-of-type(2) {
+		color: color($colors,royal-v1);
+		.tab-button-icon {
+			color: color($colors,royal-v1);
+		}
+	}
+	a.tab-button[aria-selected=true]:nth-of-type(3) {
+		color: color($colors,danger);
+		.tab-button-icon {
+			color: color($colors,danger);
+		}
+  }
+  a.tab-button[aria-selected=true]:nth-of-type(4) {
+		color: color($colors,energized-v1);
+		.tab-button-icon {
+			color: color($colors,energized-v1);
+		}
+  }
+  a.tab-button[aria-selected=true]:nth-of-type(5) {
+		color: color($colors,dark-v1);
+		.tab-button-icon {
+			color: color($colors,dark-v1);
+		}
+	}
+}

@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar color="primary">
+  <ion-navbar color="royal-v1">
     <ion-title>
       Me
     </ion-title>
@@ -10,7 +10,7 @@
     </ion-buttons>
   </ion-navbar>
   <div>
-    <ion-segment [(ngModel)]="meTabs">
+    <ion-segment [(ngModel)]="meTabs" color="royal-v1">
       <ion-segment-button value="Info">
         Info
       </ion-segment-button>
@@ -72,7 +72,7 @@
                 <br>
                 <div class="progressBar">
                   <div class="progress-bar">
-                    <span class="progress-bar-fill" [ngStyle]="{'width': data.appearance + '%'}"></span>
+                    <span class="progress-bar-fill progressBarRoyal" [ngStyle]="{'width': data.appearance + '%'}"></span>
                   </div>
                 </div>
               </label>
@@ -83,7 +83,7 @@
                 <br>
                 <div class="progressBar">
                   <div class="progress-bar">
-                    <span class="progress-bar-fill" [ngStyle]="{'width': data.intelligence + '%'}"></span>
+                    <span class="progress-bar-fill progressBarRoyal" [ngStyle]="{'width': data.intelligence + '%'}"></span>
                   </div>
                 </div>
               </label>
@@ -94,7 +94,7 @@
                 <br>
                 <div class="progressBar">
                   <div class="progress-bar">
-                    <span class="progress-bar-fill" [ngStyle]="{'width': data.fitness + '%'}"></span>
+                    <span class="progress-bar-fill progressBarRoyal" [ngStyle]="{'width': data.fitness + '%'}"></span>
                   </div>
                 </div>
               </label>
@@ -105,7 +105,7 @@
                 <br>
                 <div class="progressBar">
                   <div class="progress-bar">
-                    <span class="progress-bar-fill" [ngStyle]="{'width': data.musicality + '%'}"></span>
+                    <span class="progress-bar-fill progressBarRoyal" [ngStyle]="{'width': data.musicality + '%'}"></span>
                   </div>
                 </div>
               </label>

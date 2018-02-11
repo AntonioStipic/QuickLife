@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar color="primary">
+  <ion-navbar color="danger">
     <ion-title>
       Family
     </ion-title>
@@ -11,7 +11,7 @@
   </ion-navbar>
   <!-- <ion-toolbar> -->
   <div>
-    <ion-segment [(ngModel)]="familyTabs">
+    <ion-segment [(ngModel)]="familyTabs" color="danger">
       <ion-segment-button value="Parents">
         Parents
       </ion-segment-button>
@@ -61,7 +61,7 @@
       <ion-card>
         <div [hidden]="!data.havePartner">
           <ion-card-header>
-            <b>u very good</b>
+            <b>Relationship</b>
           </ion-card-header>
           <ion-card-content>
             <label>Status: {{data.lover.status}}</label>
@@ -74,7 +74,7 @@
 
         <div [hidden]="data.havePartner">
           <ion-card-header>
-            <b>U no have relationship</b>
+            <b>You don't have a partner.</b>
           </ion-card-header>
           <ion-card-content>
 
