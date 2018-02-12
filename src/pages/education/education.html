@@ -70,7 +70,7 @@
         </tr>
         <tr>
           <td>
-            <button ion-button small class="educationEnrollButton" [disabled]="data.shareService.enrollHighSchoolButton(data)" (click)="data.shareService.enrollHighSchool(data)"
+            <button ion-button color="energized-v1" small class="educationEnrollButton" [disabled]="data.shareService.enrollHighSchoolButton(data)" (click)="data.shareService.enrollHighSchool(data)"
               [hidden]="data.shareService.enrollHighSchoolButton(data)">Enroll</button>
             <button ion-button color="danger" small class="educationEnrollButton" [disabled]="data.shareService.dropoutHighSchoolButton(data)"
               [hidden]="!data.goingToHighSchool" (click)="data.shareService.dropoutHighSchool(data)">Dropout</button>
@@ -88,7 +88,7 @@
   <br>
 
 
-  <button ion-button small class="collegeEnrollButton" (click)="data.shareService.enrollCollege(data)" [hidden]="data.shareService.enrollCollegeButton(data)">Enroll</button>
+  <button ion-button color="energized-v1" small class="collegeEnrollButton" (click)="data.shareService.enrollCollege(data)" [hidden]="data.shareService.enrollCollegeButton(data)">Enroll</button>
   <button ion-button color="danger" class="collegeEnrollButton" small [hidden]="!data.goingToCollege" (click)="data.shareService.dropoutCollege(data)">Dropout</button>
   <ion-card>
     <ion-card-content>
