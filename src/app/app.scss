@@ -86,7 +86,7 @@ ion-modal {
 
 .modal_content {
   position: absolute; //top: calc(50% - (80%/2));
-  margin-top: 50px !important;
+  margin-top: 25% !important;
   left: 0;
   right: 0;
   width: 90%;
@@ -104,6 +104,10 @@ ion-modal {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   overflow: hidden;
+}
+
+.maliMarginGore{
+  margin-top: 50px!important;
 }
 
 .buttonright {
