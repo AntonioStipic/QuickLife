@@ -71,7 +71,7 @@ export class ShareService {
             if (hasParking == 1) hasParking = "True";
             else hasParking = "False";
 
-            result = [tmpType, numOfBedrooms + " bedrooms", "Has parking spot: " + hasParking, priceRange]
+            result = [tmpType, numOfBedrooms, "Parking space: " + hasParking, priceRange]
 
             //console.log(tmpType, "Num of bedrooms:", numOfBedrooms, "Has parking:", hasParking, "Price:", priceRange);
         } else if (tmpType == "House") {
@@ -99,6 +99,26 @@ export class ShareService {
         }
 
         return result;
+    }
+
+    buyProperty(data, property) {
+        console.log(property);
+        data.finance -= property[3];
+        data.posjedi.push(property)
+        let alert = this.alertCtrl.create({
+            title: "Congratulations!",
+            subTitle: `You bought ${property[0].toLowerCase()} for $${this.formatMoney(property[3])}!`,
+            buttons: [
+                {
+                    text: 'Okay',
+                    role: 'cancel',
+                    handler: () => {
+                        //console.log('Cancel clicked');
+                        
+                    }
+                }]
+        });
+        alert.present();
     }
 
     learningChanged(data) {
@@ -590,6 +610,9 @@ export class ShareService {
         // List with sports including the ones player has added
         data.sports = [];
 
+        // List with all properties that player owns
+        data.posjedi = [];
+
         data.father = this.createParent(data, "male");
         data.mother = this.createParent(data, "female");
 
@@ -673,7 +696,7 @@ export class ShareService {
 
     propertyListings(data) {
         var property, posjedi = [];
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < 25; i++) {
             property = this.createRealEstate();
             posjedi.push(property);
         }

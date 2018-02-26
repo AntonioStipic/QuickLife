@@ -170,17 +170,12 @@
           </ion-card-header>
           <!-- property listings -->
           <ion-list>
-            <button ion-item>
-              <ion-icon name="ios-home-outline" item-start></ion-icon>
-              Household
-              <br> heheh
-              <br> hehehehehehehehesždfksdf
-              <br> a fddsf
-            </button>
-
-            <button ion-item>
-              <ion-icon name="quicklife-apartment" item-start></ion-icon>
-              Condo
+            <button ion-item *ngFor="let property of data.posjedi">
+              <ion-icon [name]="(property[0] == 'Apartment' || property[0] == 'Condo')?'quicklife-apartment':'ios-home-outline'" item-start></ion-icon>
+              {{property[0]}}
+              <br> {{property[1] == 1? "1 bedroom":(property[1] + " bedrooms")}}
+              <br> {{property[2]}}
+              <br>Value: {{data.shareService.formatMoney(property[3])}}
             </button>
 
           </ion-list>
@@ -202,7 +197,7 @@
             <b>Owned:</b>
           </ion-card-header>
           <ion-card-content>
-            Bla bla this house that car their mine heh
+            None
           </ion-card-content>
         </ion-card>
       </div>
