@@ -17,6 +17,9 @@
       <ion-segment-button value="Finance">
         Finance
       </ion-segment-button>
+      <ion-segment-button value="Assets">
+        Assets
+      </ion-segment-button>
       <ion-segment-button value="Misc">
         Misc
       </ion-segment-button>
@@ -56,7 +59,7 @@
                     <label>Sexuality: {{data.sexuality}}</label>
                   </div> -->
 
-            <ion-item>
+            <ion-item class="bottomLine">
               <ion-label class="ion-select-text">Sexuality</ion-label>
               <ion-select [(ngModel)]="data.sexuality" interface="popover" (ionChange)="sexualityChanged(data, selectedSexuality.value)"
                 #selectedSexuality disabled="{{data.age < 12}}">
@@ -149,6 +152,62 @@
 
     </ion-list>
 
+    <ion-list *ngSwitchCase="'Assets'">
+      <button ion-button icon-only class="halfWidth firstHalfWidth" color="royal-v1" (click)="data.meAssets = 'House'">
+        House
+        <ion-icon name="ios-home"></ion-icon>
+      </button>
+
+      <button ion-button icon-only class="halfWidth" color="royal-v1" (click)="data.meAssets = 'Car'">
+        Car
+        <ion-icon name="ios-car"></ion-icon>
+      </button>
+
+      <div [hidden]="data.meAssets != 'House'">
+        <ion-card>
+          <ion-card-header>
+            <b>Owned:</b>
+          </ion-card-header>
+          <!-- property listings -->
+          <ion-list>
+            <button ion-item>
+              <ion-icon name="ios-home-outline" item-start></ion-icon>
+              Household
+              <br> heheh
+              <br> hehehehehehehehesždfksdf
+              <br> a fddsf
+            </button>
+
+            <button ion-item>
+              <ion-icon name="quicklife-apartment" item-start></ion-icon>
+              Condo
+            </button>
+
+          </ion-list>
+        </ion-card>
+
+
+        <ion-footer no-shadow [hidden]="data.meAssets != 'House'">
+          <ion-toolbar position="bottom">
+            <button ion-button full round color="royal-v1" (click)="data.shareService.propertyListings(data)">Property listings
+              <ion-icon id="clockIcon" name="quicklife-city"></ion-icon>
+            </button>
+          </ion-toolbar>
+        </ion-footer>
+      </div>
+
+      <div [hidden]="data.meAssets != 'Car'">
+        <ion-card>
+          <ion-card-header>
+            <b>Owned:</b>
+          </ion-card-header>
+          <ion-card-content>
+            Bla bla this house that car their mine heh
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </ion-list>
+
     <ion-list *ngSwitchCase="'Misc'">
       <ion-item-group>
         <ion-item-divider color="light">Activities</ion-item-divider>
@@ -162,18 +221,21 @@
           <ion-icon name="rose" item-end></ion-icon>
         </ion-item> -->
         <ion-item>
-          <ion-label> <!-- (click)="(data.isLearning == 0) ? data.isLearning = 1 : data.isLearning = 0" -->
+          <ion-label>
+            <!-- (click)="(data.isLearning == 0) ? data.isLearning = 1 : data.isLearning = 0" -->
             <ion-icon name="md-bookmarks" class="miscListIcon"></ion-icon> Learning</ion-label>
           <ion-toggle [(ngModel)]="data.isLearning" disabled="{{data.age < 6}}" (ionChange)="data.shareService.learningChanged(data)"></ion-toggle>
         </ion-item>
         <ion-item>
-          <ion-label> <!-- (click)="(data.isReadingBooks == 0) ? data.isReadingBooks = 1 : data.isReadingBooks = 0" -->
+          <ion-label>
+            <!-- (click)="(data.isReadingBooks == 0) ? data.isReadingBooks = 1 : data.isReadingBooks = 0" -->
             <ion-icon name="md-book" class="miscListIcon"></ion-icon> Reading books</ion-label>
           <ion-toggle [(ngModel)]="data.isReadingBooks" disabled="{{data.age < 9}}" (ionChange)="data.shareService.readingChanged(data)"></ion-toggle>
         </ion-item>
 
-        <ion-item>
-          <ion-label> <!-- (click)="(data.goingToGym == 0) ? data.goingToGym = 1 : data.goingToGym = 0" -->
+        <ion-item class="bottomLine">
+          <ion-label>
+            <!-- (click)="(data.goingToGym == 0) ? data.goingToGym = 1 : data.goingToGym = 0" -->
             <ion-icon name="ios-body" class="miscListIcon"></ion-icon> Go to gym (50$/mo)</ion-label>
           <ion-toggle [(ngModel)]="data.goingToGym" disabled="{{data.age < 12}}" (ionChange)="data.shareService.gymChanged(data)"></ion-toggle>
         </ion-item>
@@ -198,7 +260,7 @@
             </ion-select>
           </ion-item>
 
-          <ion-item>
+          <ion-item class="bottomLine">
             <ion-label class="ion-select-text">
               <ion-icon name="md-football" class="miscListIcon"></ion-icon> Play sport (60$/mo each)</ion-label>
             <ion-select [(ngModel)]="data.sports" multiple="true" cancelText="Dismiss" okText="Ok" disabled="{{data.age < 5 || data.inDebt == 1}}"

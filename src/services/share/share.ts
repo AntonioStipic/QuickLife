@@ -24,6 +24,16 @@ export class ShareService {
         profileModal.present();
     }
 
+    propertyListingModal(data, posjedi) {
+        let propertyModal = this.modalCtrl.create(propertyListingModal, { data: data, posjedi: posjedi }, {
+            showBackdrop: false,
+            enableBackdropDismiss: false,
+            enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave'
+        });
+        propertyModal.present();
+    }
+
     setData(data) {
         this.data = data;
     }
@@ -34,6 +44,61 @@ export class ShareService {
 
     sexualityConfirm(data) {
         data.years[data.age].events.push("I declared myself as " + data.sexuality + ".");
+    }
+
+    createRealEstate() {
+        let types = ["Apartment", "Apartment", "Condo", "Condo", "House", "House"];
+        //, "Mansion" Mansion will be added later !
+        let tmpType = types[this.randomAtoB(0, 3)];
+        var numOfBedrooms, hasParking, hasGarage, hasGarden, priceRange, k, v, addOrTake, result;
+
+        if (tmpType == "Apartment" || tmpType == "Condo") {
+            numOfBedrooms = this.randomAtoB(1, 2);
+            hasParking = this.randomAtoB(0, 1);
+
+            if (numOfBedrooms == 2) k = 1.5;
+            else k = 1;
+
+            if (hasParking == 1) k += 0.4;
+
+            addOrTake = this.randomAtoB(0, 1);
+
+            if (addOrTake == 0) v = 1 + (this.randomAtoB(1, 15) / 100);
+            else v = 1 - (this.randomAtoB(1, 15) / 100);
+
+            priceRange = 80000 * k * v;
+
+            if (hasParking == 1) hasParking = "True";
+            else hasParking = "False";
+
+            result = [tmpType, numOfBedrooms + " bedrooms", "Has parking spot: " + hasParking, priceRange]
+
+            //console.log(tmpType, "Num of bedrooms:", numOfBedrooms, "Has parking:", hasParking, "Price:", priceRange);
+        } else if (tmpType == "House") {
+            numOfBedrooms = this.randomAtoB(2, 5);
+            hasGarage = this.randomAtoB(0, 1);
+            hasGarden = this.randomAtoB(0, 1);
+
+            if (numOfBedrooms == 2) k = 1.1;
+            else if (numOfBedrooms == 3) k = 1.5;
+            else if (numOfBedrooms == 4) k = 1.9;
+            else if (numOfBedrooms == 5) k = 2.4;
+
+            if (hasGarage == 1) k += 0.4;
+
+            addOrTake = this.randomAtoB(0, 1);
+
+            if (addOrTake == 0) v = 1 + (this.randomAtoB(1, 20) / 100);
+            else v = 1 - (this.randomAtoB(1, 20) / 100);
+
+            priceRange = 180000 * k * v;
+
+            //console.log(tmpType, "Num of bedrooms:", numOfBedrooms, "Has garage:", hasGarage, "Has garden:", hasGarden, "Price:", priceRange);
+        } else {
+            //console.log(tmpType, "Num of bedrooms:", numOfBedrooms, "Has parking:", hasParking);
+        }
+
+        return result;
     }
 
     learningChanged(data) {
@@ -54,7 +119,7 @@ export class ShareService {
     }
 
     formatMoney(amount) {
-        return (amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+        return ((amount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     }
 
     gymChanged(data) {
@@ -528,6 +593,9 @@ export class ShareService {
         data.father = this.createParent(data, "male");
         data.mother = this.createParent(data, "female");
 
+        // Current tab choosen in view "Me" under "Assets"
+        data.meAssets = "House";
+
         // Empty log
         data.years = [{ "year": 0, "events": ["You have been born as " + data.name + " " + data.surname + ".", " You are " + data.nationality + ", " + data.genderFull + ".", "Your parents are:<br>" + data.father.name + " " + data.surname + " (" + data.father.age + " years old),<br>" + data.mother.name + " " + data.surname + " (" + data.mother.age + " years old)."] }];
         return data;
@@ -601,6 +669,17 @@ export class ShareService {
         if (data.age < 12) return 1;
         else if (data.sexuality == "Asexual") return 1;
         else return 0;
+    }
+
+    propertyListings(data) {
+        var property, posjedi = [];
+        for (var i = 0; i < 10; i++) {
+            property = this.createRealEstate();
+            posjedi.push(property);
+        }
+
+        console.log(posjedi)
+        this.propertyListingModal(data, posjedi);
     }
 
     goForDate(data, lover) {
@@ -835,6 +914,31 @@ export class findLoveModal {
     goForDate(data, lover) {
         this.dismiss();
         data.shareService.goForDate(data, lover);
+    }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+@Component({
+    templateUrl: '../../pages/me/propertyListing.html'
+})
+export class propertyListingModal {
+    data: object;
+    posjedi: object;
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
+        this.posjedi = params.get("posjedi");
+        this.data = shareService.getData();
+        //console.log();
+    }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
     }
 
     dismiss() {

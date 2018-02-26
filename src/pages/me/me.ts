@@ -11,11 +11,14 @@ import { ShareService } from '../../services/share/share';
 export class MePage {
   data: object;
   meTabs: string;
+  assetsTabs: string;
+  
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService) {
     this.data = shareService.getData();
     this.data["shareService"] = shareService;
 
     this.meTabs = "Info";
+    this.assetsTabs = "House";
   }
 
   openPopover(myEvent) {
