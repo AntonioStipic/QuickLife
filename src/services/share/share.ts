@@ -513,6 +513,9 @@ export class ShareService {
         data.surname = this.randomSurname(data);
 
         data.age = 0;
+
+        // Boolean of life and death
+        data.alive = 1;
         //data.name = "Antonio";
         //data.surname = "Stipić";
         data.nationality = "Croatian";

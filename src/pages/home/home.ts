@@ -55,6 +55,21 @@ export class HomePage {
     });
   }
 
+  willIDie(data) {
+    let chance = 1;
+
+    if (data.age > 50) chance = 8;
+    else if (data.age > 60) chance = 15;
+    else if (data.age > 70) chance = 20;
+    else if (data.age > 80) chance = 25;
+
+    let rollDice = data.shareService.randomAtoB(1, 100);
+
+    if (rollDice < chance) {
+      data.alive = 0;
+    }
+  }
+
 
 
   age(data) {
@@ -62,183 +77,187 @@ export class HomePage {
     data.years.push({ "year": data.age, "events": [] });
     data.gotJobNum = -1;
 
-    this.data["shareService"].updateJobs(this.data, this.jobs);
+    this.willIDie(data);
 
-    if (data.father.alive == 1) {
-      data.father.age += 1;
-    }
+    if (data.alive) {
+      this.data["shareService"].updateJobs(this.data, this.jobs);
 
-    if (data.mother.alive == 1) {
-      data.mother.age += 1;
-    }
-
-    if (data.isWorking == 1) {
-      data.finance += (data.myJob[2] * 1000) * (1 - data.tax);
-      data.workExperience += 1;
-      data.jobService += 1;
-    }
-
-    if (data.finance < 0) {
-      data.inDebt = 1;
-      let alert = this.alertCtrl.create({
-        title: 'You are in debt!',
-        subTitle: 'Find a job with a better salary or start saving.',
-        buttons: [{
-          text: 'Ok',
-          handler: () => {
-            data.shareService.inDebt(data);
-          }
-        }]
-      });
-      alert.present();
-    } else {
-      data.inDebt = 0;
-    }
-
-    if (data.goingToHighSchool == 1) {
-      data.goingToHighSchoolYears += 1;
-    }
-
-    if (data.goingToCollege == 1) {
-      data.goingToCollegeYears += 1;
-    }
-
-    if (data.goingToCollegeYears == 3) {
-      data.educationLevel = 2;
-      data.goingToCollege = 0;
-      data.goingToCollegeYears = 0;
-      data.myMajors[data.currentCollegeMajor] = 1;
-      data.mySkills.push(data.currentCollegeMajor);
-      data.years[data.age].events.push("I graduated from college in " + data.currentCollegeMajor + ".");
-      data.currentCollegeMajor = "";
-    }
-
-    if (data.goingToHighSchoolYears == 4) {
-      var percentH = ((data.learnedHighSchool / 1.2) + (data.intelligence / 12)) / 12;
-      //console.log(data.learnedHighSchool);
-      if (percentH < 0.1) {
-        data.highSchoolGrade = "F";
-        data.passed.highschool = 0;
-      } else if (percentH < 0.3) {
-        data.highSchoolGrade = "D";
-        data.passed.highschool = 1;
-      } else if (percentH < 0.5) {
-        data.highSchoolGrade = "C";
-        data.passed.highschool = 1;
-      } else if (percentH < 0.7) {
-        data.highSchoolGrade = "B";
-        data.passed.highschool = 1;
-      } else if (percentH < 0.9) {
-        data.highSchoolGrade = "A";
-        data.passed.highschool = 1;
-      } else if (percentH >= 0.9) {
-        data.highSchoolGrade = "A+";
-        data.passed.highschool = 1;
+      if (data.father.alive == 1) {
+        data.father.age += 1;
       }
-      //console.log("High School", percentH);
 
-      if (data.passed.highschool == 1) {
-        data.educationLevel = 1;
-        data.goingToHighSchool = 0;
-        data.goingToHighSchoolYears = 0;
-        data.years[data.age].events.push("I graduated from high school at grade " + data.highSchoolGrade + ".");
-        this.checkGoToCollege(data);
-        //this.checkGoToHighSchool(data);
+      if (data.mother.alive == 1) {
+        data.mother.age += 1;
+      }
+
+      if (data.isWorking == 1) {
+        data.finance += (data.myJob[2] * 1000) * (1 - data.tax);
+        data.workExperience += 1;
+        data.jobService += 1;
+      }
+
+      if (data.finance < 0) {
+        data.inDebt = 1;
+        let alert = this.alertCtrl.create({
+          title: 'You are in debt!',
+          subTitle: 'Find a job with a better salary or start saving.',
+          buttons: [{
+            text: 'Ok',
+            handler: () => {
+              data.shareService.inDebt(data);
+            }
+          }]
+        });
+        alert.present();
       } else {
-        data.years[data.age].events.push("I failed from high school. I was kicked out of it.");
+        data.inDebt = 0;
       }
-    }
 
-    if (data.isLearning == 1) {
-      if (data.age < 14) data.learnedElementary += 1;
-      else if (data.age < 18) data.learnedHighSchool += 1;
-
-      if (data.intelligence <= 99.7) data.intelligence += 0.3;
-    }
-
-    if (data.instruments.length > 0) {
-      var toAddInstruments = data.instruments.length * 0.4;
-      if (data.musicality <= (100 - toAddInstruments)) {
-        data.musicality += toAddInstruments;
-      } else {
-        data.musicality = 100;
+      if (data.goingToHighSchool == 1) {
+        data.goingToHighSchoolYears += 1;
       }
-    }
 
-    if (data.sports.length > 0) {
-      var toAddSports = data.fitness.length * 0.3;
-      if (data.fitness <= (100 - toAddSports)) {
-        data.fitness += toAddSports;
-      } else {
-        data.fitness = 100;
+      if (data.goingToCollege == 1) {
+        data.goingToCollegeYears += 1;
       }
-    }
 
-    if (data.isReadingBooks == 1) {
-      if (data.intelligence <= 99.8) data.intelligence += 0.2;
-    }
+      if (data.goingToCollegeYears == 3) {
+        data.educationLevel = 2;
+        data.goingToCollege = 0;
+        data.goingToCollegeYears = 0;
+        data.myMajors[data.currentCollegeMajor] = 1;
+        data.mySkills.push(data.currentCollegeMajor);
+        data.years[data.age].events.push("I graduated from college in " + data.currentCollegeMajor + ".");
+        data.currentCollegeMajor = "";
+      }
 
-    if (data.goingToGym == 1) {
-      data.finance -= 50 * 12;
-      if (data.fitness <= 99.3) data.fitness += 0.7;
-    }
-
-    if (data.instruments.length > 0) {
-      data.finance -= data.instruments.length * 100 * 12;
-    }
-
-    if (data.sports.length > 0) {
-      data.finance -= data.sports.length * 60 * 12;
-    }
-
-    if (data.age == 3) {
-      data.years[data.age].events.push("I started going to kindergarten.");
-    } else if (data.age == 6) {
-      data.kindergarten = 1;
-      data.goingToElementary = 1;
-      data.years[data.age].events.push("I started going to school.");
-    } else if (data.age == 12) {
-      this.checkSexuality(data);
-    } else if (data.age == 14) {
-
-      if (data.goingToElementary == 1) {
-        var percent = ((data.learnedElementary / 2) + (data.intelligence / 10)) / 12;
-        //console.log(data.learnedElementary);
-        if (percent < 0.1) {
-          data.elementaryGrade = "F";
-          data.passed.elementary = 0;
-        } else if (percent < 0.3) {
-          data.elementaryGrade = "D";
-          data.passed.elementary = 1;
-        } else if (percent < 0.5) {
-          data.elementaryGrade = "C";
-          data.passed.elementary = 1;
-        } else if (percent < 0.7) {
-          data.elementaryGrade = "B";
-          data.passed.elementary = 1;
-        } else if (percent < 1) {
-          data.elementaryGrade = "A";
-          data.passed.elementary = 1;
-        } else if (percent >= 1) {
-          data.elementaryGrade = "A+";
-          data.passed.elementary = 1;
+      if (data.goingToHighSchoolYears == 4) {
+        var percentH = ((data.learnedHighSchool / 1.2) + (data.intelligence / 12)) / 12;
+        //console.log(data.learnedHighSchool);
+        if (percentH < 0.1) {
+          data.highSchoolGrade = "F";
+          data.passed.highschool = 0;
+        } else if (percentH < 0.3) {
+          data.highSchoolGrade = "D";
+          data.passed.highschool = 1;
+        } else if (percentH < 0.5) {
+          data.highSchoolGrade = "C";
+          data.passed.highschool = 1;
+        } else if (percentH < 0.7) {
+          data.highSchoolGrade = "B";
+          data.passed.highschool = 1;
+        } else if (percentH < 0.9) {
+          data.highSchoolGrade = "A";
+          data.passed.highschool = 1;
+        } else if (percentH >= 0.9) {
+          data.highSchoolGrade = "A+";
+          data.passed.highschool = 1;
         }
-        //console.log("Elementary", percent);
-        if (data.passed.elementary == 1) {
-          data.educationLevel += 1;
-          data.goingToElementary = 0;
-          data.years[data.age].events.push("I graduated from elementary school at grade " + data.elementaryGrade + ".");
-          this.checkGoToHighSchool(data);
+        //console.log("High School", percentH);
+
+        if (data.passed.highschool == 1) {
+          data.educationLevel = 1;
+          data.goingToHighSchool = 0;
+          data.goingToHighSchoolYears = 0;
+          data.years[data.age].events.push("I graduated from high school at grade " + data.highSchoolGrade + ".");
+          this.checkGoToCollege(data);
+          //this.checkGoToHighSchool(data);
         } else {
-          data.years[data.age].events.push("I failed from elementary school. I was kicked out of it.");
+          data.years[data.age].events.push("I failed from high school. I was kicked out of it.");
         }
       }
 
-      //you have got enough qualifications to go to high school. Will you go?
+      if (data.isLearning == 1) {
+        if (data.age < 14) data.learnedElementary += 1;
+        else if (data.age < 18) data.learnedHighSchool += 1;
 
-    } /* else if (data.age == 18) {
-      
-    } */
+        if (data.intelligence <= 99.7) data.intelligence += 0.3;
+      }
+
+      if (data.instruments.length > 0) {
+        var toAddInstruments = data.instruments.length * 0.4;
+        if (data.musicality <= (100 - toAddInstruments)) {
+          data.musicality += toAddInstruments;
+        } else {
+          data.musicality = 100;
+        }
+      }
+
+      if (data.sports.length > 0) {
+        var toAddSports = data.fitness.length * 0.3;
+        if (data.fitness <= (100 - toAddSports)) {
+          data.fitness += toAddSports;
+        } else {
+          data.fitness = 100;
+        }
+      }
+
+      if (data.isReadingBooks == 1) {
+        if (data.intelligence <= 99.8) data.intelligence += 0.2;
+      }
+
+      if (data.goingToGym == 1) {
+        data.finance -= 50 * 12;
+        if (data.fitness <= 99.3) data.fitness += 0.7;
+      }
+
+      if (data.instruments.length > 0) {
+        data.finance -= data.instruments.length * 100 * 12;
+      }
+
+      if (data.sports.length > 0) {
+        data.finance -= data.sports.length * 60 * 12;
+      }
+
+      if (data.age == 3) {
+        data.years[data.age].events.push("I started going to kindergarten.");
+      } else if (data.age == 6) {
+        data.kindergarten = 1;
+        data.goingToElementary = 1;
+        data.years[data.age].events.push("I started going to school.");
+      } else if (data.age == 12) {
+        this.checkSexuality(data);
+      } else if (data.age == 14) {
+
+        if (data.goingToElementary == 1) {
+          var percent = ((data.learnedElementary / 2) + (data.intelligence / 10)) / 12;
+          //console.log(data.learnedElementary);
+          if (percent < 0.1) {
+            data.elementaryGrade = "F";
+            data.passed.elementary = 0;
+          } else if (percent < 0.3) {
+            data.elementaryGrade = "D";
+            data.passed.elementary = 1;
+          } else if (percent < 0.5) {
+            data.elementaryGrade = "C";
+            data.passed.elementary = 1;
+          } else if (percent < 0.7) {
+            data.elementaryGrade = "B";
+            data.passed.elementary = 1;
+          } else if (percent < 1) {
+            data.elementaryGrade = "A";
+            data.passed.elementary = 1;
+          } else if (percent >= 1) {
+            data.elementaryGrade = "A+";
+            data.passed.elementary = 1;
+          }
+          //console.log("Elementary", percent);
+          if (data.passed.elementary == 1) {
+            data.educationLevel += 1;
+            data.goingToElementary = 0;
+            data.years[data.age].events.push("I graduated from elementary school at grade " + data.elementaryGrade + ".");
+            this.checkGoToHighSchool(data);
+          } else {
+            data.years[data.age].events.push("I failed from elementary school. I was kicked out of it.");
+          }
+        }
+
+      }
+
+
+    } else {
+      data.years[data.age].events.push("You have died.");
+    }
 
   }
 

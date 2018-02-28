@@ -61,7 +61,11 @@
   <ion-scroll scrollX="true" scrollY="true" style="width: 100%; height: 100%">
     <div class="overlay" (click)="dismiss()"></div>
     <div class="modal_content maliMarginGore">
-      <h2>Property listings:</h2>
+      <b class="h2">Property listings:</b>
+      <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1">
+        <ion-icon name="md-close"></ion-icon>
+      </button>
+      <br><br>
       <ion-list>
 
         <ion-card>
@@ -72,7 +76,7 @@
 
         <ion-card *ngFor="let property of posjedi">
           <ion-card-header>
-            {{property[0]}}
+            <b>{{property[0]}}</b>
           </ion-card-header>
 
           <ion-card-content>
@@ -89,9 +93,10 @@
               <br> Garden: {{property[3]}}
               <br> Price: ${{data.shareService.formatMoney(property[4])}}
             </div>
-            
 
-            <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 16 || data.finance < property[3]" small (click)="data.shareService.buyProperty(data, property)">
+
+            <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 16 || data.finance < property[3]"
+              small (click)="data.shareService.buyProperty(data, property)">
               Buy
             </button>
           </ion-card-content>
