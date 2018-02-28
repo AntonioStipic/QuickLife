@@ -49,7 +49,7 @@ export class ShareService {
     createRealEstate() {
         let types = ["Apartment", "Apartment", "Condo", "Condo", "House", "House"];
         //, "Mansion" Mansion will be added later !
-        let tmpType = types[this.randomAtoB(0, 3)];
+        let tmpType = types[this.randomAtoB(0, 5)];
         var numOfBedrooms, hasParking, hasGarage, hasGarden, priceRange, k, v, addOrTake, result;
 
         if (tmpType == "Apartment" || tmpType == "Condo") {
@@ -71,7 +71,7 @@ export class ShareService {
             if (hasParking == 1) hasParking = "True";
             else hasParking = "False";
 
-            result = [tmpType, numOfBedrooms, "Parking space: " + hasParking, priceRange]
+            result = [tmpType, numOfBedrooms, hasParking, priceRange];
 
             //console.log(tmpType, "Num of bedrooms:", numOfBedrooms, "Has parking:", hasParking, "Price:", priceRange);
         } else if (tmpType == "House") {
@@ -86,12 +86,22 @@ export class ShareService {
 
             if (hasGarage == 1) k += 0.4;
 
+            if (hasGarden == 1) k += 0.3;
+
             addOrTake = this.randomAtoB(0, 1);
 
             if (addOrTake == 0) v = 1 + (this.randomAtoB(1, 20) / 100);
             else v = 1 - (this.randomAtoB(1, 20) / 100);
 
             priceRange = 180000 * k * v;
+
+            if (hasGarage == 1) hasGarage = "True";
+            else hasGarage = "False";
+
+            if (hasGarden == 1) hasGarden = "True";
+            else hasGarden = "False";
+
+            result = [tmpType, numOfBedrooms, hasGarage, hasGarden, priceRange];
 
             //console.log(tmpType, "Num of bedrooms:", numOfBedrooms, "Has garage:", hasGarage, "Has garden:", hasGarden, "Price:", priceRange);
         } else {
@@ -103,11 +113,14 @@ export class ShareService {
 
     buyProperty(data, property) {
         console.log(property);
-        data.finance -= property[3];
+        let valueIndex = 0;
+        if (property[0] == "House") valueIndex = 4;
+        else if (property[0] == "Apartment" || property[0] == "Condo") valueIndex = 3;
+        data.finance -= property[valueIndex];
         data.posjedi.push(property)
         let alert = this.alertCtrl.create({
             title: "Congratulations!",
-            subTitle: `You bought ${property[0].toLowerCase()} for $${this.formatMoney(property[3])}!`,
+            subTitle: `You bought ${property[0].toLowerCase()} for $${this.formatMoney(property[valueIndex])}!`,
             buttons: [
                 {
                     text: 'Okay',
@@ -422,6 +435,14 @@ export class ShareService {
             type: 'radio',
             label: 'Modern Languages',
             value: 'Modern Languages'
+        }, {
+            type: 'radio',
+            label: 'Business Management',
+            value: 'Business Management'
+        }, {
+            type: 'radio',
+            label: 'Law Enforcement',
+            value: 'Law Enforcement'
         }
 
         ])
@@ -696,7 +717,7 @@ export class ShareService {
 
     propertyListings(data) {
         var property, posjedi = [];
-        for (var i = 0; i < 25; i++) {
+        for (var i = 0; i < 15; i++) {
             property = this.createRealEstate();
             posjedi.push(property);
         }
@@ -814,6 +835,14 @@ export class ShareService {
             var jobNum = this.randomAtoB(0, jobs["jobs"].length - 1);
             tmpJob.push(jobs["jobs"][jobNum]);
 
+            console.log();
+            jobs["jobs"][jobNum]["skillsRender"] = "";
+            for (let u in jobs["jobs"][jobNum]["skills"]) {
+                //&& u != (jobs["jobs"][jobNum]["skills"].length - 1).toString()
+                if (u != "0") jobs["jobs"][jobNum]["skillsRender"] += (", " + jobs["jobs"][jobNum]["skills"][u]);
+                else jobs["jobs"][jobNum]["skillsRender"] += (jobs["jobs"][jobNum]["skills"][u]);
+            }
+
             var range = jobs["jobs"][jobNum]["salary"].split("-");
             //console.log(range);
             var salaryNum = this.randomAtoB(parseInt(range[0]), parseInt(range[1]));
@@ -837,9 +866,16 @@ export class ShareService {
         if (job[1]["education"] <= data.educationLevel) {
             var remainingSkills = job[1]["skills"].filter(item => data.mySkills.indexOf(item) < 0);
             if (remainingSkills.length == 0) {
+                let subtitleText = '';
+                console.log(job[1]["title"]);
+                if (job[1]["title"] != "Nurse" && job[1]["title"] != "Doctor") {
+                    subtitleText = '<br>You got job as ' + job[1]["title"] + ' at ' + job[0] + '.';
+                } else {
+                    subtitleText = '<br>You got job as ' + job[1]["title"] + '.';
+                }
                 let alert = this.alertCtrl.create({
                     title: 'Congratulations!',
-                    subTitle: '<br>You got job as ' + job[1]["title"] + ' at ' + job[0] + '.',
+                    subTitle: subtitleText,
                     buttons: [{
                         text: 'Ok',
                         handler: () => {
@@ -851,7 +887,10 @@ export class ShareService {
 
                             data.myJob = job;
                             data.isWorking = 1;
-                            data.years[data.age].events.push("I started working as " + job[1]["title"] + " at " + job[0] + ".");
+                            // If job title is not Nurse of Doctor you can show where they work
+                            //else don't show at which company they work for
+                            if (job[1]["title"] != "Nurse" && job[1]["title"] != "Doctor") data.years[data.age].events.push("I started working as " + job[1]["title"] + " at " + job[0] + ".");
+                            else data.years[data.age].events.push("I started working as " + job[1]["title"] + ".");
                             data.income += (job[2] / 12 * 1000) * (1 - data.tax);
                         }
                     }]

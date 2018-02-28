@@ -77,8 +77,19 @@
 
           <ion-card-content>
             {{property[1] == 1? "1 bedroom":(property[1] + " bedrooms")}}
-            <br> {{property[2]}}
-            <br> Price: ${{data.shareService.formatMoney(property[3])}}
+            <br>
+
+            <div *ngIf="property[0] == 'Apartment' || property[0] == 'Condo'">
+              Parking space: {{property[2]}}
+              <br> Price: ${{data.shareService.formatMoney(property[3])}}
+            </div>
+
+            <div *ngIf="property[0] == 'House'">
+              Garage: {{property[2]}}
+              <br> Garden: {{property[3]}}
+              <br> Price: ${{data.shareService.formatMoney(property[4])}}
+            </div>
+            
 
             <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 16 || data.finance < property[3]" small (click)="data.shareService.buyProperty(data, property)">
               Buy

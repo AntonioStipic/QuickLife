@@ -31,7 +31,7 @@
         <div [hidden]="!data.isWorking">
           <ion-card-header>
             <b>{{data.myJob[1]["title"]}}</b>
-            <div [hidden]="data.myJob[1]['title'] == 'Nurse'">at {{data.myJob[0]}}</div>
+            <div [hidden]="data.myJob[1]['title'] == 'Nurse' || data.myJob[1]['title'] == 'Doctor'">at {{data.myJob[0]}}</div>
           </ion-card-header>
           <ion-card-content>
             <label>Salary: ${{data.shareService.formatMoney(data.myJob[2] / 12 * 1000)}}/mo</label>
@@ -69,7 +69,7 @@
         <ion-card [hidden]="i == data.gotJobNum">
           <ion-card-header>
             <b>{{job[1]["title"]}}</b>
-            <div [hidden]="job[1]['title'] == 'Nurse'">at {{job[0]}}</div>
+            <div [hidden]="job[1]['title'] == 'Nurse' || job[1]['title'] == 'Doctor'">at {{job[0]}}</div>
           </ion-card-header>
           <ion-card-content>
             <label>Salary: ${{data.shareService.formatMoney(job[2] / 12 * 1000)}}/mo</label>
@@ -78,7 +78,7 @@
             <br>
             <label>Education needed: {{data.shareService.numToSchool(job[1]["education"])}}</label>
             <br>
-            <label>Qualifications: {{(job[1]["skills"].length > 0) ? job[1]["skills"] : "None"}}</label>
+            <label>Qualifications: {{(job[1]["skills"].length > 0) ? job[1]["skillsRender"] : "None"}}</label>
             <br>
             <!-- Float the icon left -->
             <button ion-button color="secondary" [disabled]="data.age < 16" small (click)="data.shareService.applyForJob(data, job, i)">

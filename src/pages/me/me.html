@@ -171,11 +171,21 @@
           <!-- property listings -->
           <ion-list>
             <button ion-item *ngFor="let property of data.posjedi">
-              <ion-icon [name]="(property[0] == 'Apartment' || property[0] == 'Condo')?'quicklife-apartment':'ios-home-outline'" item-start></ion-icon>
-              {{property[0]}}
-              <br> {{property[1] == 1? "1 bedroom":(property[1] + " bedrooms")}}
-              <br> {{property[2]}}
-              <br>Value: {{data.shareService.formatMoney(property[3])}}
+              <ion-icon [name]="(property[0] == 'House')? 'ios-home-outline':'quicklife-apartment'" item-start></ion-icon>
+              <div *ngIf="property[0] == 'House'">
+                <b>{{property[0]}}</b>
+                <br> {{property[1] == 1? "1 bedroom":(property[1] + " bedrooms")}}
+                <br> Garage: {{property[2]}}
+                <br> Garden: {{property[3]}}
+                <br> Value: ${{data.shareService.formatMoney(property[4])}}
+              </div>
+
+              <div *ngIf="property[0] == 'Apartment' || property[0] == 'Condo'">
+                <b>{{property[0]}}</b>
+                <br> {{property[1] == 1? "1 bedroom":(property[1] + " bedrooms")}}
+                <br> Parking: {{property[2]}}
+                <br> Value: ${{data.shareService.formatMoney(property[3])}}
+              </div>
             </button>
 
           </ion-list>
