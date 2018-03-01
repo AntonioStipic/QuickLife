@@ -127,7 +127,7 @@ export class ShareService {
                     role: 'cancel',
                     handler: () => {
                         //console.log('Cancel clicked');
-                        
+
                     }
                 }]
         });
@@ -718,6 +718,104 @@ export class ShareService {
         else return 0;
     }
 
+
+    // If already went is 0, push event to log
+    goToClub(data, alreadyWent) {
+        //console.log("You went to club.");
+
+        let meetingChance = 35;
+
+        if (alreadyWent == 0) data.years[data.age].events.push(`I went to club.`);
+        else alreadyWent = 0;
+        if (this.randomAtoB(1, 100) < meetingChance) {
+            let tmpPerson = this.createLover(data);
+            console.log(tmpPerson);
+
+            let meetingPlaceChance = this.randomAtoB(1, 5);
+            let meetingPlace = "", meetingAppearanceText = "";
+
+            if (meetingPlaceChance == 1) meetingPlace = "at the bar";
+            else if (meetingPlaceChance == 2) meetingPlace = "on the dance floor";
+            else if (meetingPlaceChance == 3) meetingPlace = "in front of the club";
+            else if (meetingPlaceChance == 4) meetingPlace = "in the bathroom waiting line";
+            else if (meetingPlaceChance == 5) meetingPlace = "in a private booth";
+
+            if (data.appearance > tmpPerson["appearance"]) {
+                meetingAppearanceText = (data.appearance - tmpPerson["appearance"]) + "% less than you";
+            } else if (data.appearance < tmpPerson["appearance"]) {
+                meetingAppearanceText = (tmpPerson["appearance"] - data.appearance) + "% more than you";
+            } else {
+                meetingAppearanceText = "same as you";
+            }
+
+            let meetingText = `You meet ${tmpPerson["name"]} ${tmpPerson["surname"]} ${meetingPlace}. <br> ${tmpPerson["name"]} has appearance ${meetingAppearanceText}.`;
+
+            let alert = this.alertCtrl.create({
+                //title: 'Congratulations!',
+                message: meetingText,
+                buttons: [{
+                    text: 'Flirt',
+                    handler: () => {
+                        let likingChances = this.randomAtoB(0, 1);
+                        let hobbys = ["sense of humor", "personality", "looks", "kindness", "hair", "arms", "eyes", "shoes", "shoelaces", "extensive vocabulary", "music taste", "fun facts"];
+                        let randomHobby = this.randomAtoB(0, hobbys.length - 1);
+                        if (likingChances == 0) {
+                            //alert.dismiss();
+
+                            let rejectingText = `${tmpPerson["name"]} disliked your ${hobbys[randomHobby]}. <br><br> ${tmpPerson["name"]} brushes your hand off in disgust.`;
+                            // This opens when parner doesn't like you
+                            let alert0 = this.alertCtrl.create({
+                                //title: 'Congratulations!',
+                                message: rejectingText,
+                                buttons: [{
+                                    text: 'Go back to the club',
+                                    handler: () => {
+                                        this.goToClub(data, 1);
+                                    }
+                                }, {
+                                    text: 'Go home',
+                                    handler: () => {
+
+                                    }
+                                }]
+                            });
+                            alert0.present();
+                        } else {
+                            let acceptingText = `${tmpPerson["name"]} liked your ${hobbys[randomHobby]}. <br><br> ${tmpPerson["name"]} smiles shyly.`;
+                            // This opens when parner doesn't like you
+                            let alert1 = this.alertCtrl.create({
+                                //title: 'Congratulations!',
+                                message: acceptingText,
+                                buttons: [{
+                                    text: 'Date',
+                                    handler: () => {
+                                        this.goForDate(data, tmpPerson);
+                                    }
+                                }, {
+                                    text: 'Ignore',
+                                    handler: () => {
+                                        
+                                    }
+                                }]
+                            });
+                            alert1.present();
+                        }
+
+
+                    }
+                }, {
+                    text: 'Ignore',
+                    handler: () => {
+
+                    }
+                }]
+            });
+            alert.present();
+
+        }
+
+    }
+
     propertyListings(data) {
         var property, posjedi = [];
         for (var i = 0; i < 15; i++) {
@@ -730,7 +828,7 @@ export class ShareService {
     }
 
     goForDate(data, lover) {
-        console.log(lover);
+        //console.log(lover);
         let alert = this.alertCtrl.create({
             title: "You are in relationship!",
             subTitle: `You are now dating ${lover.name} ${lover.surname}!`,
@@ -741,6 +839,12 @@ export class ShareService {
         data.lover["status"] = "Relationship";
         data.years[data.age].events.push(`I'm dating ${lover.name} ${lover.surname}.`);
         alert.present();
+    }
+
+    brakeUp(data) {
+        data.havePartner = 0;
+        data.years[data.age].events.push(`I broke up with ${data.lover.name}.`);
+        data.lover = {};
     }
 
     randomName(data, gender) {

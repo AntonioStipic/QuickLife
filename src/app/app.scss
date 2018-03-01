@@ -190,6 +190,9 @@ ion-icon {
   &[class*="quicklife-city"] {
     mask-image: url(../assets/imgs/cityscape.svg);
   }
+  &[class*="quicklife-disco"] {
+    mask-image: url(../assets/imgs/disco.svg);
+  }
 }
 
 .modal_content ion-card {
@@ -198,4 +201,9 @@ ion-icon {
 
 .h2 {
   font-size: 2em;
+}
+
+.button-ion-item {
+  border-bottom: 0px solid red !important;
+  border-top: 0px;
 }

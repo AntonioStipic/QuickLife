@@ -265,7 +265,7 @@
             </ion-select>
           </ion-item>
 
-          <ion-item class="bottomLine">
+          <ion-item>
             <ion-label class="ion-select-text">
               <ion-icon name="md-football" class="miscListIcon"></ion-icon> Play sport (60$/mo each)</ion-label>
             <ion-select [(ngModel)]="data.sports" multiple="true" cancelText="Dismiss" okText="Ok" disabled="{{data.age < 5 || data.inDebt == 1}}"
@@ -279,7 +279,9 @@
             </ion-select>
           </ion-item>
 
-
+          <button ion-item (click)="data.shareService.goToClub(data, 0)" class="bottomLine button-ion-item" [disabled]="data.age < 16">
+              <ion-icon name="quicklife-disco" class="miscListIcon"></ion-icon> Go to club
+          </button>
         </ion-list>
       </ion-item-group>
 

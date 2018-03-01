@@ -34,7 +34,8 @@
         </ion-card-header>
         <ion-card-content>
           <p>Name: {{data.father.name}} {{data.surname}}</p>
-          <p>Age: {{data.father.age}} years old</p>
+          <p [hidden]="!data.father.alive">Age: {{data.father.age}} years old</p>
+          <p>Alive: {{(data.father.alive == 1)?"True":"False"}}</p>
         </ion-card-content>
       </ion-card>
 
@@ -44,7 +45,8 @@
         </ion-card-header>
         <ion-card-content>
           <p>Name: {{data.mother.name}} {{data.surname}}</p>
-          <p>Age: {{data.mother.age}} years old</p>
+          <p [hidden]="!data.mother.alive">Age: {{data.mother.age}} years old</p>
+          <p>Alive: {{(data.mother.alive == 1)?"True":"False"}}</p>
         </ion-card-content>
       </ion-card>
 
@@ -68,6 +70,7 @@
             <br>
             <label>Name: {{data.lover.name}} {{data.lover.surname}}</label>
             <br>
+            <button ion-button color="danger" small (click)="data.shareService.brakeUp(data)">Break up</button>
           </ion-card-content>
 
         </div>

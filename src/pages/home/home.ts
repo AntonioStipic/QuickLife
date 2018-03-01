@@ -70,6 +70,39 @@ export class HomePage {
     }
   }
 
+  willParentsDie(data) {
+    let fatherChance = 1;
+    let motherChance = 1;
+
+    if (data.father.alive == 1) {
+      if (data.father.age > 50) fatherChance = 8;
+      else if (data.father.age > 60) fatherChance = 15;
+      else if (data.father.age > 70) fatherChance = 20;
+      else if (data.father.age > 80) fatherChance = 25;
+
+      let fatherRollDice = data.shareService.randomAtoB(1, 100);
+
+      if (fatherRollDice < fatherChance) {
+        data.father.alive = 0;
+        data.years[data.age].events.push("My father died at the age of " + data.father.age + ".");
+      }
+    }
+
+    if (data.mother.alive == 1) {
+      if (data.mother.age > 50) motherChance = 8;
+      else if (data.mother.age > 60) motherChance = 15;
+      else if (data.mother.age > 70) motherChance = 20;
+      else if (data.mother.age > 80) motherChance = 25;
+
+      let motherRollDice = data.shareService.randomAtoB(1, 100);
+
+      if (motherRollDice < motherChance) {
+        data.mother.alive = 0;
+        data.years[data.age].events.push("My mother died at the age of " + data.mother.age + ".");
+      }
+    }
+  }
+
 
 
   age(data) {
@@ -78,6 +111,7 @@ export class HomePage {
     data.gotJobNum = -1;
 
     this.willIDie(data);
+    this.willParentsDie(data);
 
     if (data.alive) {
       this.data["shareService"].updateJobs(this.data, this.jobs);
@@ -256,7 +290,7 @@ export class HomePage {
 
 
     } else {
-      data.years[data.age].events.push("You have died.");
+      data.years[data.age].events.push("I died.");
     }
 
   }
