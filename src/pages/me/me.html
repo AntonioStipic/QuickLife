@@ -200,7 +200,8 @@
                 <br> Value: ${{data.shareService.formatMoney(property[3])}}
               </div>
 
-              <ion-icon (click)="data.shareService.moveTo(data, property)" [name]="property[property.length - 1] == data.livingIn?'md-checkbox-outline':'md-square-outline'" item-end class="checkbox-icon"></ion-icon>
+              <ion-icon (click)="data.shareService.moveTo(data, property)" [name]="property[property.length - 1] == data.livingIn?'md-checkbox-outline':'md-square-outline'"
+                item-end class="checkbox-icon"></ion-icon>
             </button>
           </ion-list>
         </ion-card>
@@ -252,11 +253,18 @@
           <ion-toggle [(ngModel)]="data.isReadingBooks" disabled="{{data.age < 9}}" (ionChange)="data.shareService.readingChanged(data)"></ion-toggle>
         </ion-item>
 
-        <ion-item class="bottomLine">
+        <ion-item>
           <ion-label>
             <!-- (click)="(data.goingToGym == 0) ? data.goingToGym = 1 : data.goingToGym = 0" -->
             <ion-icon name="ios-body" class="miscListIcon"></ion-icon> Go to gym (50$/mo)</ion-label>
           <ion-toggle [(ngModel)]="data.goingToGym" disabled="{{data.age < 12}}" (ionChange)="data.shareService.gymChanged(data)"></ion-toggle>
+        </ion-item>
+
+        <ion-item class="bottomLine">
+          <ion-label>
+            <!-- (click)="(data.goingToGym == 0) ? data.goingToGym = 1 : data.goingToGym = 0" -->
+            <ion-icon name="quicklife-smoking" class="miscListIcon"></ion-icon> Smoke</ion-label>
+          <ion-toggle [(ngModel)]="data.smoking" disabled="{{data.age < 16}}" (ionChange)="data.shareService.smokingChanged(data)"></ion-toggle>
         </ion-item>
 
         <ion-list>
@@ -294,7 +302,7 @@
           </ion-item>
 
           <button ion-item (click)="data.shareService.goToClub(data, 0)" class="bottomLine button-ion-item" [disabled]="data.age < 16">
-              <ion-icon name="quicklife-disco" class="miscListIcon"></ion-icon> Go to club
+            <ion-icon name="quicklife-disco" class="miscListIcon"></ion-icon> Go to club
           </button>
         </ion-list>
       </ion-item-group>

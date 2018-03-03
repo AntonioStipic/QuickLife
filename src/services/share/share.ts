@@ -177,6 +177,33 @@ export class ShareService {
         }
     }
 
+    smokingChanged(data) {
+        if (data.smoking == 1) {
+            if (data.dontAnnounceSmoking == 0) {
+                data.years[data.age].events.push("I started smoking.");
+            } else {
+                data.dontAnnounceSmoking = 0;
+            }
+        } else {
+            //console.log(this.randomAtoB(1, data.smokingFor));
+
+            let lessThan = 0;
+            if (data.smokingFor < 5) {
+                lessThan = 3;
+            } else {
+                lessThan = data.smokingFor / 5;
+            }
+            
+            if (this.randomAtoB(1, data.smokingFor) < lessThan) {
+                data.smokingFor = 0;
+                data.years[data.age].events.push("I stopped smoking.");
+            } else {
+                data.years[data.age].events.push("I stopped smoking.");
+                data.startSmokingAgain = 1;
+            }
+        }
+    }
+
     instrumentsChanged(data) {
         //console.log(data.instruments, data.oldInstruments);;
         //var newInstruments = this.arr_diff(data.instruments, data.oldInstruments);
@@ -638,8 +665,20 @@ export class ShareService {
         // Boolan is player currently reading books
         data.isReadingBooks = 0;
 
-        // Boolan is player currently going to gym
+        // Boolean is player currently going to gym
         data.goingToGym = 0;
+
+        // Boolean is player currently smoking
+        data.smoking = 0;
+
+        // For how long is player smoking
+        data.smokingFor = 0;
+
+        // If this is true, player won't be able to quit smoking and smoking will re-activate next year
+        data.startSmokingAgain = 0;
+
+        // If this is true don't push event "I started smoking"
+        data.dontAnnounceSmoking = 0;
 
         // List with instruments player played before a change has been made
         data.oldInstruments = [];
@@ -694,6 +733,9 @@ export class ShareService {
             } else {
                 age = fatherAge - variety;
                 if (fatherAge == 16) age = 16;
+                else if (fatherAge == 17) age = 17;
+                else if (fatherAge == 18) age = 18;
+                else if (fatherAge == 19) age = 18;
             }
         }
 
@@ -760,23 +802,45 @@ export class ShareService {
     // If already went is 0, push event to log
     goToClub(data, alreadyWent) {
         //console.log("You went to club.");
-
         let meetingChance = 35;
+        let smokingChance = 15;
 
         if (alreadyWent == 0) data.years[data.age].events.push(`I went to club.`);
         else alreadyWent = 0;
-        if (this.randomAtoB(1, 100) < meetingChance) {
+
+        if (this.randomAtoB(1, 100) < smokingChance) {
+            let alert = this.alertCtrl.create({
+                subTitle: 'How about that?',
+                message: "Your friend offers you a cigarette.",
+                buttons: [{
+                    text: 'Smoke',
+                    handler: () => {
+                        if (data.smoking == 0){
+                            data.smoking = 1;
+                            data.dontAnnounceSmoking = 1;
+                            data.years[data.age].events.push("I started smoking.");
+                        }
+
+                        //this.smokingChanged(data);
+                        
+                        //console.log("You smoked");
+                    }
+                }, {
+                    text: 'Leave',
+                    handler: () => {
+                        //console.log("You didn't smoked");
+                    }
+                }]
+            });
+            alert.present();
+        }
+
+        if (this.randomAtoB(1, 100) < meetingChance && data.sexuality != "Asexual") {
             let tmpPerson = this.createLover(data);
-            console.log(tmpPerson);
 
-            let meetingPlaceChance = this.randomAtoB(1, 5);
             let meetingPlace = "", meetingAppearanceText = "";
-
-            if (meetingPlaceChance == 1) meetingPlace = "at the bar";
-            else if (meetingPlaceChance == 2) meetingPlace = "on the dance floor";
-            else if (meetingPlaceChance == 3) meetingPlace = "in front of the club";
-            else if (meetingPlaceChance == 4) meetingPlace = "in the bathroom waiting line";
-            else if (meetingPlaceChance == 5) meetingPlace = "in a private booth";
+            let places = ["at the bar", "on the dance floor", "in front of the club", "in the bathroom waiting line", "in a private booth"];
+            meetingPlace = places[this.randomAtoB(0, places.length - 1)];
 
             if (data.appearance > tmpPerson["appearance"]) {
                 meetingAppearanceText = (data.appearance - tmpPerson["appearance"]) + "% less than you";
@@ -800,25 +864,6 @@ export class ShareService {
                         let subtitle = "Uh-oh!";
                         if (data.likingHobbies[randomHobby] == "shoes") subtitle = "What are thooose?!";
 
-                        let rejectingText = `${tmpPerson["name"]} disliked your ${data.likingHobbies[randomHobby]}. <br> ${tmpPerson["name"]} brushes your hand off in disgust.`;
-                        // This opens when parner doesn't like you
-                        let alert = this.alertCtrl.create({
-                            subTitle: subtitle,
-                            message: rejectingText,
-                            buttons: [{
-                                text: 'Go back to the club',
-                                handler: () => {
-                                    this.goToClub(data, 1);
-                                }
-                            }, {
-                                text: 'Go home',
-                                handler: () => {
-
-                                }
-                            }]
-                        });
-                        alert.present();
-
                         if (likingChances == 0) {
                             //alert.dismiss();
 
@@ -828,12 +873,7 @@ export class ShareService {
                                 subTitle: subtitle,
                                 message: rejectingText,
                                 buttons: [{
-                                    text: 'Go back to the club',
-                                    handler: () => {
-                                        this.goToClub(data, 1);
-                                    }
-                                }, {
-                                    text: 'Go home',
+                                    text: 'Okay',
                                     handler: () => {
 
                                     }
@@ -900,9 +940,6 @@ export class ShareService {
         if (data.appearance > 70 && data.appearance <= 80) chances += 10;
         if (data.intelligence > 70) chances += 10;
 
-        console.log((lover.appearance - data.appearance))
-        console.log(chances)
-
         let doTheyLikeMe = this.randomAtoB(1, 100) <= chances;
 
         if (doTheyLikeMe) {
@@ -922,7 +959,7 @@ export class ShareService {
             let randomHobby = this.randomAtoB(0, data.likingHobbies.length - 1);
             let subtitle = "Uh-oh!";
             if (data.likingHobbies[randomHobby] == "shoes") subtitle = "What are thooose?!";
-            
+
             let rejectingText = `${lover["name"]} disliked your ${data.likingHobbies[randomHobby]}. <br> ${lover["name"]} brushes your hand off in disgust.`;
             // This opens when parner doesn't like you
             let alert = this.alertCtrl.create({
@@ -952,9 +989,19 @@ export class ShareService {
         alert.present();
     }
 
-    brakeUp(data) {
+    breakUp(data) {
         data.havePartner = 0;
         data.years[data.age].events.push(`I broke up with ${data.lover.name}.`);
+        if ((data.happiness - 20) < 0) data.happiness = 0;
+        else data.happiness -= 20;
+        data.lover = { stability: 50, time: 0 };
+    }
+
+    breakUp2(data) {
+        data.havePartner = 0;
+        data.years[data.age].events.push(`${data.lover.name} broke up with me.`);
+        if ((data.happiness - 50) < 0) data.happiness = 0;
+        else data.happiness -= 50;
         data.lover = { stability: 50, time: 0 };
     }
 
@@ -1069,7 +1116,6 @@ export class ShareService {
             var jobNum = this.randomAtoB(0, jobs["jobs"].length - 1);
             tmpJob.push(jobs["jobs"][jobNum]);
 
-            console.log();
             jobs["jobs"][jobNum]["skillsRender"] = "";
             for (let u in jobs["jobs"][jobNum]["skills"]) {
                 //&& u != (jobs["jobs"][jobNum]["skills"].length - 1).toString()

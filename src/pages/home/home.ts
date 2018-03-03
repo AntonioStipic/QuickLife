@@ -58,7 +58,7 @@ export class HomePage {
   willIDie(data) {
     let chance = 1;
 
-    if (data.age > 50) chance = 5;
+    if (data.age > 50) chance = 4;
     else if (data.age > 60) chance = 14;
     else if (data.age > 70) chance = 18;
     else if (data.age > 80) chance = 20;
@@ -141,6 +141,13 @@ export class HomePage {
     }
   }
 
+  willPartnerBreakUp(data) {
+    let chances = data.shareService.randomAtoB(1, 100);
+
+    if (chances < 2) {
+      data.shareService.breakUp2(data);
+    }
+  }
 
   age(data) {
     data.age += 1;
@@ -150,6 +157,20 @@ export class HomePage {
     this.willIDie(data);
     this.willParentsDie(data);
     this.regulateHappiness(data);
+
+    if (data.havePartner == 1) {
+      this.willPartnerBreakUp(data);
+    }
+
+    if (data.startSmokingAgain == 1) {
+      data.smoking = 1;
+      data.startSmokingAgain = 0;
+      data.years[data.age].events.push("I tried to quit smoking but I didn't make it. I started smoking again.");
+    }
+
+    if (data.smoking == 1) {
+      data.smokingFor += 1;
+    }
 
     if (data.brokeLegLastYear == 1) {
       data.years[data.age].events.push("My leg healed.");

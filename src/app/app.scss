@@ -193,6 +193,12 @@ ion-icon {
   &[class*="quicklife-disco"] {
     mask-image: url(../assets/imgs/disco.svg);
   }
+  &[class*="quicklife-ring"] {
+    mask-image: url(../assets/imgs/ring.svg);
+  }
+  &[class*="quicklife-smoking"] {
+    mask-image: url(../assets/imgs/smoking.svg);
+  }
 }
 
 .modal_content ion-card {
