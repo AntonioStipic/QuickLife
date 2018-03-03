@@ -626,6 +626,9 @@ export class ShareService {
         // Index of the job the player has got, used to hide card with that job
         data.gotJobNum = -1;
 
+        // List of things person can like or dislike about you
+        data.likingHobbies = ["sense of humor", "personality", "looks", "kindness", "hair", "arms", "eyes", "shoes", "shoelaces", "extensive vocabulary", "music taste", "fun facts"];
+
         // Boolean indicators for passing elementary and high school
         data.passed = { "elementary": 0, "highschool": 0 };
 
@@ -651,7 +654,7 @@ export class ShareService {
         data.havePartner = 0;
 
         // Lover object
-        data.lover = {stability: 50, time: 0};
+        data.lover = { stability: 50, time: 0 };
 
         // List with sports including the ones player has added
         data.sports = [];
@@ -792,15 +795,34 @@ export class ShareService {
                     text: 'Flirt',
                     handler: () => {
                         let likingChances = this.randomAtoB(0, 1);
-                        let hobbys = ["sense of humor", "personality", "looks", "kindness", "hair", "arms", "eyes", "shoes", "shoelaces", "extensive vocabulary", "music taste", "fun facts"];
-                        let randomHobby = this.randomAtoB(0, hobbys.length - 1);
+
+                        let randomHobby = this.randomAtoB(0, data.likingHobbies.length - 1);
                         let subtitle = "Uh-oh!";
-                        if (hobbys[randomHobby] == "shoes") subtitle = "What are thooose?!"
+                        if (data.likingHobbies[randomHobby] == "shoes") subtitle = "What are thooose?!";
+
+                        let rejectingText = `${tmpPerson["name"]} disliked your ${data.likingHobbies[randomHobby]}. <br> ${tmpPerson["name"]} brushes your hand off in disgust.`;
+                        // This opens when parner doesn't like you
+                        let alert = this.alertCtrl.create({
+                            subTitle: subtitle,
+                            message: rejectingText,
+                            buttons: [{
+                                text: 'Go back to the club',
+                                handler: () => {
+                                    this.goToClub(data, 1);
+                                }
+                            }, {
+                                text: 'Go home',
+                                handler: () => {
+
+                                }
+                            }]
+                        });
+                        alert.present();
 
                         if (likingChances == 0) {
                             //alert.dismiss();
 
-                            let rejectingText = `${tmpPerson["name"]} disliked your ${hobbys[randomHobby]}. <br> ${tmpPerson["name"]} brushes your hand off in disgust.`;
+                            let rejectingText = `${tmpPerson["name"]} disliked your ${data.likingHobbies[randomHobby]}. <br> ${tmpPerson["name"]} brushes your hand off in disgust.`;
                             // This opens when parner doesn't like you
                             let alert0 = this.alertCtrl.create({
                                 subTitle: subtitle,
@@ -819,7 +841,7 @@ export class ShareService {
                             });
                             alert0.present();
                         } else {
-                            let acceptingText = `${tmpPerson["name"]} liked your ${hobbys[randomHobby]}. <br> ${tmpPerson["name"]} smiles shyly.`;
+                            let acceptingText = `${tmpPerson["name"]} liked your ${data.likingHobbies[randomHobby]}. <br> ${tmpPerson["name"]} smiles shyly.`;
                             // This opens when parner doesn't like you
                             let alert1 = this.alertCtrl.create({
                                 subTitle: 'How does that sound?',
@@ -827,7 +849,7 @@ export class ShareService {
                                 buttons: [{
                                     text: 'Date',
                                     handler: () => {
-                                        this.goForDate(data, tmpPerson);
+                                        this.forceDate(data, tmpPerson);
                                     }
                                 }, {
                                     text: 'One night stand',
@@ -872,6 +894,50 @@ export class ShareService {
     }
 
     goForDate(data, lover) {
+        let chances = 50;
+        if ((lover.appearance - data.appearance) > 50) chances -= 30;
+        if (data.appearance > 80) chances += 20;
+        if (data.appearance > 70 && data.appearance <= 80) chances += 10;
+        if (data.intelligence > 70) chances += 10;
+
+        console.log((lover.appearance - data.appearance))
+        console.log(chances)
+
+        let doTheyLikeMe = this.randomAtoB(1, 100) <= chances;
+
+        if (doTheyLikeMe) {
+            //console.log(lover);
+            let alert = this.alertCtrl.create({
+                title: "You are in relationship!",
+                subTitle: `You are now dating ${lover.name} ${lover.surname}!`,
+                buttons: ["Okay"]
+            });
+            data.havePartner = 1;
+            data.lover = lover;
+            data.lover["status"] = "Relationship";
+            data.lover["stability"] = 50;
+            data.years[data.age].events.push(`I'm dating ${lover.name} ${lover.surname}.`);
+            alert.present();
+        } else {
+            let randomHobby = this.randomAtoB(0, data.likingHobbies.length - 1);
+            let subtitle = "Uh-oh!";
+            if (data.likingHobbies[randomHobby] == "shoes") subtitle = "What are thooose?!";
+            
+            let rejectingText = `${lover["name"]} disliked your ${data.likingHobbies[randomHobby]}. <br> ${lover["name"]} brushes your hand off in disgust.`;
+            // This opens when parner doesn't like you
+            let alert = this.alertCtrl.create({
+                subTitle: subtitle,
+                message: rejectingText,
+                buttons: ["Okay"]
+            });
+            alert.present();
+
+
+        }
+
+    }
+
+    forceDate(data, lover) {
         //console.log(lover);
         let alert = this.alertCtrl.create({
             title: "You are in relationship!",
@@ -889,7 +955,7 @@ export class ShareService {
     brakeUp(data) {
         data.havePartner = 0;
         data.years[data.age].events.push(`I broke up with ${data.lover.name}.`);
-        data.lover = {stability: 50, time: 0};
+        data.lover = { stability: 50, time: 0 };
     }
 
     moveTo(data, property) {
