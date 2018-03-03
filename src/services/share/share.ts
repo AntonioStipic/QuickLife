@@ -253,11 +253,11 @@ export class ShareService {
 
             var startedSportsText = "";
             if (newSports1.length == 1) {
-                startedSportsText = "I started playing " + newSports1[0] + ".";
+                startedSportsText = "I started training " + newSports1[0] + ".";
             } else if (newSports1.length == 2) {
-                startedSportsText = "I started playing " + newSports1[0] + " and " + newSports1[1] + ".";
+                startedSportsText = "I started training " + newSports1[0] + " and " + newSports1[1] + ".";
             } else {
-                startedSportsText = "I started playing " + newSports1[0];
+                startedSportsText = "I started training " + newSports1[0];
                 for (newSportsTmp = 1; newSportsTmp < newSports1.length - 1; newSportsTmp++) {
                     startedSportsText += ", " + newSports1[newSportsTmp];
                 }
@@ -651,7 +651,7 @@ export class ShareService {
         data.havePartner = 0;
 
         // Lover object
-        data.lover = {};
+        data.lover = {stability: 50};
 
         // List with sports including the ones player has added
         data.sports = [];
@@ -720,6 +720,7 @@ export class ShareService {
         var loverAppearance = this.random1to100();
         var loverIntelligence = this.random1to100();
         var loverFitness = this.randomAtoB(1, 100);
+        var loverStability = 50;
 
         var playerAge = data.age;
         var variety = 0;
@@ -738,7 +739,7 @@ export class ShareService {
             loverAge = playerAge - variety;
         }
 
-        return { name: loverName, surname: loverSurname, appearance: loverAppearance, intelligence: loverIntelligence, gender: loverGender, age: loverAge, fitness: loverFitness };
+        return { name: loverName, surname: loverSurname, appearance: loverAppearance, intelligence: loverIntelligence, gender: loverGender, age: loverAge, fitness: loverFitness, stability: loverStability };
     }
 
     isFindLoveEnabled(data) {
@@ -875,6 +876,7 @@ export class ShareService {
         data.havePartner = 1;
         data.lover = lover;
         data.lover["status"] = "Relationship";
+        data.lover["stability"] = 50;
         data.years[data.age].events.push(`I'm dating ${lover.name} ${lover.surname}.`);
         alert.present();
     }
@@ -882,7 +884,7 @@ export class ShareService {
     brakeUp(data) {
         data.havePartner = 0;
         data.years[data.age].events.push(`I broke up with ${data.lover.name}.`);
-        data.lover = {};
+        data.lover = {stability: 50};
     }
 
     moveTo(data, property) {
@@ -976,6 +978,10 @@ export class ShareService {
         } else if (lvl == 0) {
             return "Elementary school";
         }
+    }
+
+    disableAll(data) {
+
     }
 
     // Update jobs list

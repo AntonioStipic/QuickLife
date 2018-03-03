@@ -200,7 +200,7 @@
                 <br> Value: ${{data.shareService.formatMoney(property[3])}}
               </div>
 
-              <ion-icon (click)="data.shareService.moveTo(data, property)" [name]="property[data.propertyValueIndex + 1] == data.livingIn?'md-checkbox-outline':'md-square-outline'" item-end class="checkbox-icon"></ion-icon>
+              <ion-icon (click)="data.shareService.moveTo(data, property)" [name]="property[property.length - 1] == data.livingIn?'md-checkbox-outline':'md-square-outline'" item-end class="checkbox-icon"></ion-icon>
             </button>
           </ion-list>
         </ion-card>
@@ -281,7 +281,7 @@
 
           <ion-item>
             <ion-label class="ion-select-text">
-              <ion-icon name="md-football" class="miscListIcon"></ion-icon> Play sport (60$/mo each)</ion-label>
+              <ion-icon name="md-football" class="miscListIcon"></ion-icon> Train sport (60$/mo each)</ion-label>
             <ion-select [(ngModel)]="data.sports" multiple="true" cancelText="Dismiss" okText="Ok" disabled="{{data.age < 5 || data.inDebt == 1}}"
               (ionChange)="data.shareService.sportsChanged(data)">
               <ion-option value="football">Football</ion-option>

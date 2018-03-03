@@ -66,11 +66,26 @@
             <b>Relationship</b>
           </ion-card-header>
           <ion-card-content>
-            <label>Status: {{data.lover.status}}</label>
-            <br>
-            <label>Name: {{data.lover.name}} {{data.lover.surname}}</label>
-            <br>
-            <button ion-button color="danger" small (click)="data.shareService.brakeUp(data)">Break up</button>
+            <ion-list>
+              <div ion-item>
+                  <label>Status: {{data.lover.status}}</label>
+              </div>
+              <div ion-item>
+                  <label>Name: {{data.lover.name}} {{data.lover.surname}}</label>
+              </div>
+              <div ion-item>
+                <label>Stability: {{data.lover["stability"].toFixed(0)}}%
+                  <br>
+                  <div class="progressBar">
+                    <div class="progress-bar">
+                      <span class="progress-bar-fill progressBarDanger" [ngStyle]="{'width': data.lover.stability + '%'}"></span>
+                    </div>
+                  </div>
+                </label>
+              </div>
+              
+              <button ion-button color="danger" small (click)="data.shareService.brakeUp(data)">Break up</button>
+            </ion-list>
           </ion-card-content>
 
         </div>

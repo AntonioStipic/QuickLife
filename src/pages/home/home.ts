@@ -115,20 +115,27 @@ export class HomePage {
     if (data.isReadingBooks == 1) result += 0.2;
     if (data.goingToGym == 1) result += 0.3;
     if (data.havePartner == 1) result += 0.25;
-    
-    data.happiness += result;
+
+
+    if (data.happiness + result > 100) data.happiness = 100;
+    else data.happiness += result;
   }
 
   childPlay(data) {
+    let surfaces = ["on concrete", "on rock", "going down the stairs", "off my bicycle", "from a tree"]
+
+    let surfaceChosen = surfaces[data.shareService.randomAtoB(0, surfaces.length - 1)];
     let breakLegChance = data.shareService.randomAtoB(1, 100);
     if (breakLegChance < 4) {
-      data.years[data.age].events.push("I went out to play with my friends. I fell and broke my leg.");
+      data.years[data.age].events.push(`I went out to play with my friends. I fell ${surfaceChosen} and broke my leg.`);
       data.brokeLegLastYear = 1;
     }
 
+
+    surfaceChosen = surfaces[data.shareService.randomAtoB(0, surfaces.length - 1)];
     let breakArmChance = data.shareService.randomAtoB(1, 100);
     if (breakArmChance < 4) {
-      data.years[data.age].events.push("I went out to play with my friends. I fell on concrete and broke my arm.");
+      data.years[data.age].events.push(`I went out to play with my friends. I fell ${surfaceChosen} and broke my arm.`);
       data.brokeArmLastYear = 1;
     }
   }
@@ -241,6 +248,8 @@ export class HomePage {
           this.checkGoToCollege(data);
           //this.checkGoToHighSchool(data);
         } else {
+          data.goingToHighSchool = 0;
+          data.goingToHighSchoolYears = 0;
           data.years[data.age].events.push("I failed from high school. I was kicked out of it.");
         }
       }
@@ -326,6 +335,8 @@ export class HomePage {
             data.years[data.age].events.push("I graduated from elementary school at grade " + data.elementaryGrade + ".");
             this.checkGoToHighSchool(data);
           } else {
+            data.goingToElementary = 0;
+            data.goingToElementaryYears = 0;
             data.years[data.age].events.push("I failed from elementary school. I was kicked out of it.");
           }
         }
@@ -334,6 +345,7 @@ export class HomePage {
 
 
     } else {
+      data.shareService.disableAll(data);
       data.years[data.age].events.push("I died.");
     }
 
