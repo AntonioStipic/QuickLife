@@ -19,7 +19,6 @@ export class HomePage {
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public alertCtrl: AlertController, private http: Http) {
     this.data = shareService.getData();
     this.data["shareService"] = shareService;
-
     //this.http.get('assets/resources/names.json').map(response => response.json()).subscribe(result => this.names = result);
     //this.http.get('assets/resources/names.json').subscribe(result => this.names =result.json());
 
@@ -63,6 +62,10 @@ export class HomePage {
     else if (data.age > 70) chance = 18;
     else if (data.age > 80) chance = 20;
     else if (data.age > 100) chance = 30;
+    else if (data.age > 105) chance = 45;
+    else if (data.age > 110) chance = 60;
+    else if (data.age > 115) chance = 85;
+    else if (data.age > 122) chance = 100;
 
     let rollDice = data.shareService.randomAtoB(1, 100);
 
@@ -154,12 +157,21 @@ export class HomePage {
     data.years.push({ "year": data.age, "events": [] });
     data.gotJobNum = -1;
 
-    this.willIDie(data);
-    this.willParentsDie(data);
-    this.regulateHappiness(data);
-
-    if (data.havePartner == 1) {
-      this.willPartnerBreakUp(data);
+    if (data.finance < 0) {
+      data.inDebt = 1;
+      let alert = this.alertCtrl.create({
+        title: 'You are in debt!',
+        subTitle: 'Find a job with a better salary or start saving.',
+        buttons: [{
+          text: 'Ok',
+          handler: () => {
+            data.shareService.inDebt(data);
+          }
+        }]
+      });
+      alert.present();
+    } else {
+      data.inDebt = 0;
     }
 
     if (data.startSmokingAgain == 1) {
@@ -170,6 +182,13 @@ export class HomePage {
 
     if (data.smoking == 1) {
       data.smokingFor += 1;
+    }
+
+    this.willParentsDie(data);
+    this.regulateHappiness(data);
+
+    if (data.havePartner == 1) {
+      this.willPartnerBreakUp(data);
     }
 
     if (data.brokeLegLastYear == 1) {
@@ -186,6 +205,7 @@ export class HomePage {
       this.childPlay(data);
     }
 
+    this.willIDie(data);
     if (data.alive) {
       this.data["shareService"].updateJobs(this.data, this.jobs);
 
@@ -205,23 +225,6 @@ export class HomePage {
         data.finance += (data.myJob[2] * 1000) * (1 - data.tax);
         data.workExperience += 1;
         data.jobService += 1;
-      }
-
-      if (data.finance < 0) {
-        data.inDebt = 1;
-        let alert = this.alertCtrl.create({
-          title: 'You are in debt!',
-          subTitle: 'Find a job with a better salary or start saving.',
-          buttons: [{
-            text: 'Ok',
-            handler: () => {
-              data.shareService.inDebt(data);
-            }
-          }]
-        });
-        alert.present();
-      } else {
-        data.inDebt = 0;
       }
 
       if (data.goingToHighSchool == 1) {
@@ -368,7 +371,6 @@ export class HomePage {
         }
 
       }
-
 
     } else {
       data.shareService.disableAll(data);

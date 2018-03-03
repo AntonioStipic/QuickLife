@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Component } from '@angular/core';
-import { AlertController } from 'ionic-angular';
-import { ModalController, NavParams } from 'ionic-angular';
-import { ViewController } from 'ionic-angular';
+import { AlertController, App } from 'ionic-angular';
+import { ModalController, NavParams, ViewController } from 'ionic-angular';
+
 
 @Injectable()
 export class ShareService {
@@ -10,7 +10,7 @@ export class ShareService {
     data: object;
     names: object;
 
-    constructor(public alertCtrl: AlertController, public modalCtrl: ModalController) {
+    constructor(public app: App, public alertCtrl: AlertController, public modalCtrl: ModalController) {
         this.data = {};
     }
 
@@ -193,7 +193,7 @@ export class ShareService {
             } else {
                 lessThan = data.smokingFor / 5;
             }
-            
+
             if (this.randomAtoB(1, data.smokingFor) < lessThan) {
                 data.smokingFor = 0;
                 data.years[data.age].events.push("I stopped smoking.");
@@ -815,14 +815,14 @@ export class ShareService {
                 buttons: [{
                     text: 'Smoke',
                     handler: () => {
-                        if (data.smoking == 0){
+                        if (data.smoking == 0) {
                             data.smoking = 1;
                             data.dontAnnounceSmoking = 1;
                             data.years[data.age].events.push("I started smoking.");
                         }
 
                         //this.smokingChanged(data);
-                        
+
                         //console.log("You smoked");
                     }
                 }, {
@@ -919,7 +919,14 @@ export class ShareService {
             alert.present();
 
         }
+        //this.data.navCtrl.push(TabsPage, {tabIndex:0}); 
+        //let nav = this.app.getRootNav();
+        // there is also this.app.getRootNav()
 
+        //nav.push(HomePage);
+        //TabsPage.homeButtonTab.nativeElement.click();
+        document.getElementById("tab-t0-0").click();
+        // etc
     }
 
     propertyListings(data) {
