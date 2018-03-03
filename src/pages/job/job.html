@@ -31,7 +31,7 @@
         <div [hidden]="!data.isWorking">
           <ion-card-header>
             <b>{{data.myJob[1]["title"]}}</b>
-            <div [hidden]="data.myJob[1]['title'] == 'Nurse' || data.myJob[1]['title'] == 'Doctor'">at {{data.myJob[0]}}</div>
+            <div [hidden]="data.myJob[1]['title'] == 'Nurse' || data.myJob[1]['title'] == 'Doctor' || data.myJob[1]['title'] == 'Police Officer'">at {{data.myJob[0]}}</div>
           </ion-card-header>
           <ion-card-content>
             <label>Salary: ${{data.shareService.formatMoney(data.myJob[2] / 12 * 1000)}}/mo</label>
@@ -69,7 +69,7 @@
         <ion-card [hidden]="i == data.gotJobNum">
           <ion-card-header>
             <b>{{job[1]["title"]}}</b>
-            <div [hidden]="job[1]['title'] == 'Nurse' || job[1]['title'] == 'Doctor'">at {{job[0]}}</div>
+            <div [hidden]="job[1]['title'] == 'Nurse' || job[1]['title'] == 'Doctor' || job[1]['title'] == 'Police Officer'">at {{job[0]}}</div>
           </ion-card-header>
           <ion-card-content>
             <label>Salary: ${{data.shareService.formatMoney(job[2] / 12 * 1000)}}/mo</label>

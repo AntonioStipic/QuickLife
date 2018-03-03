@@ -65,7 +65,8 @@
       <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1">
         <ion-icon name="md-close"></ion-icon>
       </button>
-      <br><br>
+      <br>
+      <br>
       <ion-list>
 
         <ion-card>
@@ -86,19 +87,24 @@
             <div *ngIf="property[0] == 'Apartment' || property[0] == 'Condo'">
               Parking space: {{property[2]}}
               <br> Price: ${{data.shareService.formatMoney(property[3])}}
+
+              <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 16 || data.finance < property[3]"
+                small (click)="data.shareService.buyProperty(data, property)">
+                Buy
+              </button>
             </div>
 
             <div *ngIf="property[0] == 'House'">
               Garage: {{property[2]}}
               <br> Garden: {{property[3]}}
               <br> Price: ${{data.shareService.formatMoney(property[4])}}
+
+              <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 16 || data.finance < property[4]"
+                small (click)="data.shareService.buyProperty(data, property)">
+                Buy
+              </button>
             </div>
 
-
-            <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 16 || data.finance < property[3]"
-              small (click)="data.shareService.buyProperty(data, property)">
-              Buy
-            </button>
           </ion-card-content>
         </ion-card>
 

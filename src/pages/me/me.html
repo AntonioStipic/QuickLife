@@ -71,6 +71,18 @@
             </ion-item>
 
             <div ion-item>
+              <label>Happiness: {{data.happiness.toFixed(0)}}%
+                <br>
+                <div class="progressBar">
+                  <div class="progress-bar">
+                    <span class="progress-bar-fill progressBarRoyal" [ngStyle]="{'width': data.happiness + '%'}"></span>
+                  </div>
+                </div>
+              </label>
+            </div>
+
+
+            <div ion-item>
               <label>Appearance: {{data.appearance}}%
                 <br>
                 <div class="progressBar">
@@ -169,10 +181,11 @@
             <b>Owned:</b>
           </ion-card-header>
           <!-- property listings -->
+
           <ion-list>
             <button ion-item *ngFor="let property of data.posjedi">
               <ion-icon [name]="(property[0] == 'House')? 'ios-home-outline':'quicklife-apartment'" item-start></ion-icon>
-              <div *ngIf="property[0] == 'House'">
+              <div *ngIf="property[0] == 'House'" class="propertyInfo">
                 <b>{{property[0]}}</b>
                 <br> {{property[1] == 1? "1 bedroom":(property[1] + " bedrooms")}}
                 <br> Garage: {{property[2]}}
@@ -180,14 +193,15 @@
                 <br> Value: ${{data.shareService.formatMoney(property[4])}}
               </div>
 
-              <div *ngIf="property[0] == 'Apartment' || property[0] == 'Condo'">
+              <div *ngIf="property[0] == 'Apartment' || property[0] == 'Condo'" class="propertyInfo">
                 <b>{{property[0]}}</b>
                 <br> {{property[1] == 1? "1 bedroom":(property[1] + " bedrooms")}}
                 <br> Parking: {{property[2]}}
                 <br> Value: ${{data.shareService.formatMoney(property[3])}}
               </div>
-            </button>
 
+              <ion-icon (click)="data.shareService.moveTo(data, property)" [name]="property[data.propertyValueIndex + 1] == data.livingIn?'md-checkbox-outline':'md-square-outline'" item-end class="checkbox-icon"></ion-icon>
+            </button>
           </ion-list>
         </ion-card>
 

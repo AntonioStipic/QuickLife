@@ -75,10 +75,11 @@ export class HomePage {
     let motherChance = 1;
 
     if (data.father.alive == 1) {
-      if (data.father.age > 50) fatherChance = 8;
-      else if (data.father.age > 60) fatherChance = 15;
-      else if (data.father.age > 70) fatherChance = 20;
-      else if (data.father.age > 80) fatherChance = 25;
+      if (data.father.age > 50) fatherChance = 3;
+      else if (data.father.age > 60) fatherChance = 10;
+      else if (data.father.age > 70) fatherChance = 15;
+      else if (data.father.age > 80) fatherChance = 20;
+      else if (data.father.age > 95) fatherChance = 30;
 
       let fatherRollDice = data.shareService.randomAtoB(1, 100);
 
@@ -89,10 +90,11 @@ export class HomePage {
     }
 
     if (data.mother.alive == 1) {
-      if (data.mother.age > 50) motherChance = 8;
-      else if (data.mother.age > 60) motherChance = 15;
-      else if (data.mother.age > 70) motherChance = 20;
-      else if (data.mother.age > 80) motherChance = 25;
+      if (data.mother.age > 50) motherChance = 3;
+      else if (data.mother.age > 60) motherChance = 10;
+      else if (data.mother.age > 70) motherChance = 15;
+      else if (data.mother.age > 80) motherChance = 20;
+      else if (data.mother.age > 95) motherChance = 30;
 
       let motherRollDice = data.shareService.randomAtoB(1, 100);
 
@@ -103,6 +105,33 @@ export class HomePage {
     }
   }
 
+  regulateHappiness(data) {
+    let result = -1 * (data.shareService.randomAtoB(1, 100) / 100);
+    if (data.income - data.outcome <= 0 && data.age > 20) result -= 0.5;
+    if (data.inDebt == 1) result -= 1;
+    if (data.instruments.length > 0) result += 0.4;
+    if (data.sports.length > 0) result += 0.4;
+    if (data.isLearning == 1) result += 0.4;
+    if (data.isReadingBooks == 1) result += 0.2;
+    if (data.goingToGym == 1) result += 0.3;
+    if (data.havePartner == 1) result += 0.25;
+    
+    data.happiness += result;
+  }
+
+  childPlay(data) {
+    let breakLegChance = data.shareService.randomAtoB(1, 100);
+    if (breakLegChance < 4) {
+      data.years[data.age].events.push("I went out to play with my friends. I fell and broke my leg.");
+      data.brokeLegLastYear = 1;
+    }
+
+    let breakArmChance = data.shareService.randomAtoB(1, 100);
+    if (breakArmChance < 4) {
+      data.years[data.age].events.push("I went out to play with my friends. I fell on concrete and broke my arm.");
+      data.brokeArmLastYear = 1;
+    }
+  }
 
 
   age(data) {
@@ -112,6 +141,21 @@ export class HomePage {
 
     this.willIDie(data);
     this.willParentsDie(data);
+    this.regulateHappiness(data);
+
+    if (data.brokeLegLastYear == 1) {
+      data.years[data.age].events.push("My leg healed.");
+      data.brokeLegLastYear = 0;
+    }
+
+    if (data.brokeArmLastYear == 1) {
+      data.years[data.age].events.push("My arm healed.");
+      data.brokeArmLastYear = 0;
+    }
+
+    if (data.age > 4 && data.age < 13) {
+      this.childPlay(data);
+    }
 
     if (data.alive) {
       this.data["shareService"].updateJobs(this.data, this.jobs);

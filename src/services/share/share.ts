@@ -50,7 +50,7 @@ export class ShareService {
         let types = ["Apartment", "Apartment", "Condo", "Condo", "House", "House"];
         //, "Mansion" Mansion will be added later !
         let tmpType = types[this.randomAtoB(0, 5)];
-        var numOfBedrooms, hasParking, hasGarage, hasGarden, priceRange, k, v, addOrTake, result;
+        let numOfBedrooms, hasParking, hasGarage, hasGarden, priceRange, k, v, addOrTake, id, result;
 
         if (tmpType == "Apartment" || tmpType == "Condo") {
             numOfBedrooms = this.randomAtoB(1, 2);
@@ -71,7 +71,9 @@ export class ShareService {
             if (hasParking == 1) hasParking = "True";
             else hasParking = "False";
 
-            result = [tmpType, numOfBedrooms, hasParking, priceRange];
+            id = this.randomId(8);
+
+            result = [tmpType, numOfBedrooms, hasParking, priceRange, id];
 
             //console.log(tmpType, "Num of bedrooms:", numOfBedrooms, "Has parking:", hasParking, "Price:", priceRange);
         } else if (tmpType == "House") {
@@ -101,7 +103,9 @@ export class ShareService {
             if (hasGarden == 1) hasGarden = "True";
             else hasGarden = "False";
 
-            result = [tmpType, numOfBedrooms, hasGarage, hasGarden, priceRange];
+            id = this.randomId(8);
+
+            result = [tmpType, numOfBedrooms, hasGarage, hasGarden, priceRange, id];
 
             //console.log(tmpType, "Num of bedrooms:", numOfBedrooms, "Has garage:", hasGarage, "Has garden:", hasGarden, "Price:", priceRange);
         } else {
@@ -112,15 +116,23 @@ export class ShareService {
     }
 
     buyProperty(data, property) {
-        console.log(property);
-        let valueIndex = 0;
-        if (property[0] == "House") valueIndex = 4;
-        else if (property[0] == "Apartment" || property[0] == "Condo") valueIndex = 3;
-        data.finance -= property[valueIndex];
-        data.posjedi.push(property)
+        //console.log(property);
+        data.propertyValueIndex = 0;
+        if (property[0] == "House") data.propertyValueIndex = 4;
+        else if (property[0] == "Apartment" || property[0] == "Condo") data.propertyValueIndex = 3;
+        data.finance -= property[data.propertyValueIndex];
+        data.posjedi.push(property);
+
+        if (data.posjedi.length == 1) {
+            data.livingIn = property[data.propertyValueIndex + 1];
+        }
+        let preposition = "";
+        if (property[0] == "Apartment") preposition = "an";
+        else preposition = "a";
+        data.years[data.age].events.push(`I bought ${preposition} ${property[0].toLowerCase()}.`);
         let alert = this.alertCtrl.create({
             title: "Congratulations!",
-            subTitle: `You bought ${property[0].toLowerCase()} for $${this.formatMoney(property[valueIndex])}!`,
+            subTitle: `You bought ${property[0].toLowerCase()} for $${this.formatMoney(property[data.propertyValueIndex])}!`,
             buttons: [
                 {
                     text: 'Okay',
@@ -500,6 +512,13 @@ export class ShareService {
         this.updateJobs(data, data.jsonJobs); */
     }
 
+    randomId(length) {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        for (var i = 0; i < length; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+        return text;
+    }
+
     createMe(data, names) {
         this.names = names;
         data.gender = this.randomGender(data);
@@ -523,6 +542,9 @@ export class ShareService {
         data.intelligence = this.random1to100();
         data.fitness = this.randomAtoB(1, 100);
         data.musicality = this.randomAtoB(1, 100);
+
+        // Happinness player has at the beggining of game
+        data.happiness = this.randomAtoB(50, 100);
 
         // Balance player has at the beggining of game
         data.finance = 100;
@@ -637,6 +659,13 @@ export class ShareService {
         // List with all properties that player owns
         data.posjedi = [];
 
+        // ID of property in which the player is living
+        data.livingIn = "";
+
+        // Booleans to check whether player broke something in last year
+        data.brokeLegLastYear = 0;
+        data.brokeArmLastYear = 0;
+
         data.father = this.createParent(data, "male");
         data.mother = this.createParent(data, "female");
 
@@ -748,10 +777,10 @@ export class ShareService {
                 meetingAppearanceText = "same as you";
             }
 
-            let meetingText = `You meet ${tmpPerson["name"]} ${tmpPerson["surname"]} ${meetingPlace}. <br> ${tmpPerson["name"]} has appearance ${meetingAppearanceText}.`;
+            let meetingText = `You met ${tmpPerson["name"]} ${tmpPerson["surname"]} ${meetingPlace}. <br> ${tmpPerson["name"]} has appearance ${meetingAppearanceText}.`;
 
             let alert = this.alertCtrl.create({
-                //title: 'Congratulations!',
+                subTitle: `Hi! I’m ${data.name}. And you?`,
                 message: meetingText,
                 buttons: [{
                     text: 'Flirt',
@@ -759,13 +788,16 @@ export class ShareService {
                         let likingChances = this.randomAtoB(0, 1);
                         let hobbys = ["sense of humor", "personality", "looks", "kindness", "hair", "arms", "eyes", "shoes", "shoelaces", "extensive vocabulary", "music taste", "fun facts"];
                         let randomHobby = this.randomAtoB(0, hobbys.length - 1);
+                        let subtitle = "Uh-oh!";
+                        if (hobbys[randomHobby] == "shoes") subtitle = "What are thooose?!"
+
                         if (likingChances == 0) {
                             //alert.dismiss();
 
-                            let rejectingText = `${tmpPerson["name"]} disliked your ${hobbys[randomHobby]}. <br><br> ${tmpPerson["name"]} brushes your hand off in disgust.`;
+                            let rejectingText = `${tmpPerson["name"]} disliked your ${hobbys[randomHobby]}. <br> ${tmpPerson["name"]} brushes your hand off in disgust.`;
                             // This opens when parner doesn't like you
                             let alert0 = this.alertCtrl.create({
-                                //title: 'Congratulations!',
+                                subTitle: subtitle,
                                 message: rejectingText,
                                 buttons: [{
                                     text: 'Go back to the club',
@@ -781,10 +813,10 @@ export class ShareService {
                             });
                             alert0.present();
                         } else {
-                            let acceptingText = `${tmpPerson["name"]} liked your ${hobbys[randomHobby]}. <br><br> ${tmpPerson["name"]} smiles shyly.`;
+                            let acceptingText = `${tmpPerson["name"]} liked your ${hobbys[randomHobby]}. <br> ${tmpPerson["name"]} smiles shyly.`;
                             // This opens when parner doesn't like you
                             let alert1 = this.alertCtrl.create({
-                                //title: 'Congratulations!',
+                                subTitle: 'How does that sound?',
                                 message: acceptingText,
                                 buttons: [{
                                     text: 'Date',
@@ -792,9 +824,15 @@ export class ShareService {
                                         this.goForDate(data, tmpPerson);
                                     }
                                 }, {
+                                    text: 'One night stand',
+                                    handler: () => {
+                                        //this.goForDate(data, tmpPerson);
+                                        data.years[data.age].events.push(`I had a one night stand.`);
+                                    }
+                                }, {
                                     text: 'Ignore',
                                     handler: () => {
-                                        
+
                                     }
                                 }]
                             });
@@ -823,7 +861,7 @@ export class ShareService {
             posjedi.push(property);
         }
 
-        console.log(posjedi)
+        //console.log(posjedi)
         this.propertyListingModal(data, posjedi);
     }
 
@@ -845,6 +883,18 @@ export class ShareService {
         data.havePartner = 0;
         data.years[data.age].events.push(`I broke up with ${data.lover.name}.`);
         data.lover = {};
+    }
+
+    moveTo(data, property) {
+        //console.log(property);
+        let valueIndex = 0;
+        if (property[0] == "House") valueIndex = 5;
+        else if (property[0] == "Apartment" || property[0] == "Condo") valueIndex = 4;
+
+        if (data.livingIn != property[valueIndex]) {
+            data.livingIn = property[valueIndex];
+            data.years[data.age].events.push(`I moved in to my ${property[0].toLowerCase()}.`);
+        }
     }
 
     randomName(data, gender) {
@@ -969,13 +1019,13 @@ export class ShareService {
     }
 
     applyForJob(data, job, index) {
-
-        if (job[1]["education"] <= data.educationLevel) {
+        console.log(job);
+        if (job[1]["education"] <= data.educationLevel && data.workExperience >= job[1]["experience"]) {
             var remainingSkills = job[1]["skills"].filter(item => data.mySkills.indexOf(item) < 0);
             if (remainingSkills.length == 0) {
                 let subtitleText = '';
                 console.log(job[1]["title"]);
-                if (job[1]["title"] != "Nurse" && job[1]["title"] != "Doctor") {
+                if (job[1]["title"] != "Nurse" && job[1]["title"] != "Doctor" && job[1]["title"] != "Police Officer") {
                     subtitleText = '<br>You got job as ' + job[1]["title"] + ' at ' + job[0] + '.';
                 } else {
                     subtitleText = '<br>You got job as ' + job[1]["title"] + '.';
@@ -996,7 +1046,7 @@ export class ShareService {
                             data.isWorking = 1;
                             // If job title is not Nurse of Doctor you can show where they work
                             //else don't show at which company they work for
-                            if (job[1]["title"] != "Nurse" && job[1]["title"] != "Doctor") data.years[data.age].events.push("I started working as " + job[1]["title"] + " at " + job[0] + ".");
+                            if (job[1]["title"] != "Nurse" && job[1]["title"] != "Doctor" && job[1]["title"] != "Police Officer") data.years[data.age].events.push("I started working as " + job[1]["title"] + " at " + job[0] + ".");
                             else data.years[data.age].events.push("I started working as " + job[1]["title"] + ".");
                             data.income += (job[2] / 12 * 1000) * (1 - data.tax);
                         }
@@ -1006,7 +1056,7 @@ export class ShareService {
             } else {
                 let alert = this.alertCtrl.create({
                     title: 'Bad news...',
-                    subTitle: '<br>You didn\'t get the job because you don\'t have enough qualifications.',
+                    subTitle: '<br>You didn\'t get the job because you don\'t have enough qualifications or work experience.',
                     buttons: [{
                         text: 'Ok',
                         handler: () => {
