@@ -651,7 +651,7 @@ export class ShareService {
         data.havePartner = 0;
 
         // Lover object
-        data.lover = {stability: 50};
+        data.lover = {stability: 50, time: 0};
 
         // List with sports including the ones player has added
         data.sports = [];
@@ -698,6 +698,10 @@ export class ShareService {
         //console.log(name, age);
     }
 
+    capitalize(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
     createLover(data) {
         //console.log(data.sexuality);
         var loverGender = "";
@@ -721,6 +725,7 @@ export class ShareService {
         var loverIntelligence = this.random1to100();
         var loverFitness = this.randomAtoB(1, 100);
         var loverStability = 50;
+        var loverTime = 0;
 
         var playerAge = data.age;
         var variety = 0;
@@ -739,7 +744,7 @@ export class ShareService {
             loverAge = playerAge - variety;
         }
 
-        return { name: loverName, surname: loverSurname, appearance: loverAppearance, intelligence: loverIntelligence, gender: loverGender, age: loverAge, fitness: loverFitness, stability: loverStability };
+        return { name: loverName, surname: loverSurname, appearance: loverAppearance, intelligence: loverIntelligence, gender: loverGender, age: loverAge, fitness: loverFitness, stability: loverStability, time: loverTime };
     }
 
     isFindLoveEnabled(data) {
@@ -884,7 +889,7 @@ export class ShareService {
     brakeUp(data) {
         data.havePartner = 0;
         data.years[data.age].events.push(`I broke up with ${data.lover.name}.`);
-        data.lover = {stability: 50};
+        data.lover = {stability: 50, time: 0};
     }
 
     moveTo(data, property) {
@@ -1139,6 +1144,10 @@ export class findLoveModal {
     goForDate(data, lover) {
         this.dismiss();
         data.shareService.goForDate(data, lover);
+    }
+
+    capitalize(data, string) {
+        return data.shareService.capitalize(string);
     }
 
     backButtonAction() {

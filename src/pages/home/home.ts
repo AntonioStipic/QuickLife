@@ -58,10 +58,11 @@ export class HomePage {
   willIDie(data) {
     let chance = 1;
 
-    if (data.age > 50) chance = 8;
-    else if (data.age > 60) chance = 15;
-    else if (data.age > 70) chance = 20;
-    else if (data.age > 80) chance = 25;
+    if (data.age > 50) chance = 5;
+    else if (data.age > 60) chance = 14;
+    else if (data.age > 70) chance = 18;
+    else if (data.age > 80) chance = 20;
+    else if (data.age > 100) chance = 30;
 
     let rollDice = data.shareService.randomAtoB(1, 100);
 
@@ -173,6 +174,10 @@ export class HomePage {
 
       if (data.mother.alive == 1) {
         data.mother.age += 1;
+      }
+
+      if (data.havePartner == 1) {
+        data.lover.time += 1;
       }
 
       if (data.isWorking == 1) {

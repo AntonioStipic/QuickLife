@@ -74,6 +74,9 @@
                   <label>Name: {{data.lover.name}} {{data.lover.surname}}</label>
               </div>
               <div ion-item>
+                  <label>Dating: {{data.lover.time}} {{data.lover.time == 1?"year":"years"}}</label>
+              </div>
+              <div ion-item>
                 <label>Stability: {{data.lover["stability"].toFixed(0)}}%
                   <br>
                   <div class="progressBar">
