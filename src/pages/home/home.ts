@@ -15,6 +15,7 @@ export class HomePage {
   data: object;
   names: object;
   jobs: object;
+  cars: object;
 
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public alertCtrl: AlertController, private http: Http) {
     this.data = shareService.getData();
@@ -29,6 +30,16 @@ export class HomePage {
         this.names = this.names[0];
         //console.log(this.names);
         this.data = this.data["shareService"].createMe(this.data, this.names);
+      }, error => {
+        console.log(error);
+      });
+
+    this.http.get("assets/resources/cars.json")
+      .subscribe(res => {
+        this.cars = res.json();
+        this.data["shareService"].setCars(this.data, this.cars);
+        //console.log(res.json());
+        //console.log(this.cars);
       }, error => {
         console.log(error);
       });

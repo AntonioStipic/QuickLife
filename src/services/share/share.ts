@@ -9,9 +9,33 @@ export class ShareService {
 
     data: object;
     names: object;
+    cars: object;
 
     constructor(public app: App, public alertCtrl: AlertController, public modalCtrl: ModalController) {
         this.data = {};
+    }
+
+    createVehicle(data) {
+        let rndCar = {};
+        while (rndCar["price"] == undefined) {
+            rndCar = this.randomProperty(this.cars);
+        }
+        //console.log(rndCar);
+
+        let range = rndCar["price"].split("-");
+        //console.log(range);
+        let brand = rndCar["title"];
+        let color = data.colors[this.randomAtoB(0, data.colors.length - 1)];
+        let carPrice = this.randomAtoB(parseInt(range[0]) * 1000, parseInt(range[1]) * 1000);
+        let car = this.randomProperty(rndCar["models"]);
+        //console.log(brand + " - " + car["title"], carPrice);
+
+        return [brand, car["title"], color, carPrice];
+    }
+
+    randomProperty(obj) {
+        let keys = Object.keys(obj)
+        return obj[keys[keys.length * Math.random() << 0]];
     }
 
     findLoveModal(lover) {
@@ -32,6 +56,16 @@ export class ShareService {
             leaveAnimation: 'modal-scale-up-leave'
         });
         propertyModal.present();
+    }
+
+    carsForSaleModal(data, cars) {
+        let vehicleModal = this.modalCtrl.create(carsForSaleModal, { data: data, cars: cars }, {
+            showBackdrop: false,
+            enableBackdropDismiss: false,
+            enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave'
+        });
+        vehicleModal.present();
     }
 
     setData(data) {
@@ -136,7 +170,6 @@ export class ShareService {
             buttons: [
                 {
                     text: 'Okay',
-                    role: 'cancel',
                     handler: () => {
                         //console.log('Cancel clicked');
 
@@ -144,6 +177,78 @@ export class ShareService {
                 }]
         });
         alert.present();
+    }
+
+    buyVehicle(data, car) {
+        data.finance -= car[3];
+        data.cars.push(car);
+        data.years[data.age].events.push(`I bought a car.`);
+        let preposition = "";
+        if (car[1][0].toLowerCase() == "a" ||
+            car[1][0].toLowerCase() == "e" ||
+            car[1][0].toLowerCase() == "i" ||
+            car[1][0].toLowerCase() == "o" ||
+            car[1][0].toLowerCase() == "u") {
+            preposition = "an";
+        } else {
+            preposition = "a";
+        }
+        let alert = this.alertCtrl.create({
+            title: "Good deal!",
+            subTitle: `You bought ${preposition} ${car[0]} for $${this.formatMoney(car[3])}!`,
+            buttons: [
+                {
+                    text: 'Okay',
+                    handler: () => {
+                        //console.log('Cancel clicked');
+
+                    }
+                }]
+        });
+        alert.present();
+    }
+
+    goForADrive(data) {
+        data.years[data.age].events.push(`I went for a drive.`);
+        let speedingChance = this.randomAtoB(1, 100);
+
+        if (speedingChance < 30) {
+            let alert = this.alertCtrl.create({
+                subTitle: "I'm above the law!",
+                message: "You are driving too fast.<br>Police is driving right behind you with sirens on. They want you to stop.",
+                buttons: [{
+                    text: 'Pull over',
+                    handler: () => {
+                        let releasedWith = "";
+                        let messageText = "";
+                        let warning = this.randomAtoB(0, 1);
+                        if (warning == 1) {
+                            messageText = "You got away with a warning.";
+                            releasedWith = "warning";
+                        } else {
+                            messageText = "Officer wrote you a speeding ticket. You had to pay $200.";
+                            releasedWith = "speeding ticket";
+                            data.finance -= 200;
+                        }
+                        let pulloverAlert = this.alertCtrl.create({
+                            subTitle: "Good day officer...",
+                            message: messageText,
+                            buttons: ["Okay"]
+                        });
+                        pulloverAlert.present();
+                        data.years[data.age].events.push(`I got pulled over and released with ${releasedWith}.`);
+                    }
+                }, {
+                    text: 'Accelerate',
+                    handler: () => {
+                        //document.getElementById("tab-t0-0").click();
+                    }
+                }]
+            });
+            alert.present();
+        }
+
+        document.getElementById("tab-t0-0").click();
     }
 
     learningChanged(data) {
@@ -546,6 +651,10 @@ export class ShareService {
         return text;
     }
 
+    setCars(data, cars) {
+        this.cars = cars;
+    }
+
     createMe(data, names) {
         this.names = names;
         data.gender = this.randomGender(data);
@@ -574,7 +683,8 @@ export class ShareService {
         data.happiness = this.randomAtoB(50, 100);
 
         // Balance player has at the beggining of game
-        data.finance = 100;
+        //data.finance = 100;
+        data.finance = 100000000;
 
         // Player is none sexuality until 12th yo
         data.sexuality = "None";
@@ -663,7 +773,13 @@ export class ShareService {
         data.gotJobNum = -1;
 
         // List of things person can like or dislike about you
-        data.likingHobbies = ["sense of humor", "personality", "looks", "kindness", "hair", "arms", "eyes", "shoes", "shoelaces", "extensive vocabulary", "music taste", "fun facts"];
+        data.likingHobbies = ["sense of humor", "personality", "looks", "kindness", "hair", "arms", "eyes", "shoes", "shoelaces", "extensive vocabulary", "music taste", "fun facts", "T-shirt"];
+
+        // Things that person does when they reject you
+        data.rejections = ["brushes your hand off in disgust", "laughs at you", "ignores you", "walks past you", "shivers in disgust", "cringes"];
+
+        // Things person may do if they like you
+        data.acceptions = ["smiles shyly", "gazes into your eyes", "giggles", "takes you by the hand", "blows you a kiss", "invites you over", "is delighted"];
 
         // Boolean indicators for passing elementary and high school
         data.passed = { "elementary": 0, "highschool": 0 };
@@ -712,6 +828,9 @@ export class ShareService {
 
         // ID of property in which the player is living
         data.livingIn = "";
+
+        // List of colors
+        data.colors = ["Red", "Black", "Yellow", "Blue", "White", "Silver", "Grey", "Green"];
 
         // Booleans to check whether player broke something in last year
         data.brokeLegLastYear = 0;
@@ -772,45 +891,59 @@ export class ShareService {
     }
 
     takeDrivingTest(data) {
-        let chance = this.randomAtoB(0, 120 - data.intelligence);
-        if (chance < 35) {
-            data.passedDrivingTest = 1;
-            data.drivingTestCount += 1;
+        if (data.finance >= 80) {
+            data.finance -= 80;
+            let chance = this.randomAtoB(0, 120 - data.intelligence);
+            if (chance < 35) {
+                data.passedDrivingTest = 1;
+                data.drivingTestCount += 1;
 
-            let textToAdd = "";
+                let textToAdd = "";
 
-            if (data.drivingTestCount == 1) textToAdd = "1st";
-            else if (data.drivingTestCount == 2) textToAdd = "2nd";
-            else if (data.drivingTestCount == 3) textToAdd = "3rd";
-            else textToAdd = data.drivingTestCount + "th";
+                if (data.drivingTestCount == 1) textToAdd = "1st";
+                else if (data.drivingTestCount == 2) textToAdd = "2nd";
+                else if (data.drivingTestCount == 3) textToAdd = "3rd";
+                else textToAdd = data.drivingTestCount + "th";
+                data.years[data.age].events.push(`I passed my driving exam after ${textToAdd} attempt.`);
+                let alert = this.alertCtrl.create({
+                    subTitle: 'Nicely done!',
+                    message: "You passed your driving exam.",
+                    buttons: [{
+                        text: 'Okay',
+                        handler: () => {
+                            document.getElementById("tab-t0-0").click();
+                        }
+                    }]
+                });
+                alert.present();
 
-            data.years[data.age].events.push(`I passed my driving exam after ${textToAdd} attempt.`);
-            let alert = this.alertCtrl.create({
-                subTitle: 'Nicely done!',
-                message: "You passed your driving exam.",
-                buttons: [{
-                    text: 'Okay',
-                    handler: () => {
-                        this.goToHomePage();
-                    }
-                }]
-            });
-            alert.present();
-
+            } else {
+                data.drivingTestCount += 1;
+                data.years[data.age].events.push(`I failed my driving exam.`);
+                let alert = this.alertCtrl.create({
+                    subTitle: 'Better luck next time!',
+                    message: "You failed your driving exam.",
+                    buttons: [{
+                        text: 'Okay',
+                        handler: () => {
+                            document.getElementById("tab-t0-0").click();
+                        }
+                    }]
+                });
+                alert.present();
+            }
         } else {
-            data.drivingTestCount += 1;
-            data.years[data.age].events.push(`I failed my driving exam.`);
-            let alert = this.alertCtrl.create({
-                subTitle: 'Better luck next time!',
-                message: "You failed your driving exam.",
+            let alertic = this.alertCtrl.create({
+                subTitle: 'Shut up and take my money!',
+                message: "You can't afford to take this driving test. <br> It costs $80.",
                 buttons: [{
                     text: 'Okay',
                     handler: () => {
-                        this.goToHomePage();
+                        //document.getElementById("tab-t0-0").click();
                     }
                 }]
             });
-            alert.present();
+            alertic.present();
         }
     }
 
@@ -929,16 +1062,16 @@ export class ShareService {
                 buttons: [{
                     text: 'Flirt',
                     handler: () => {
-                        let likingChances = this.randomAtoB(0, 1);
+                        let likingChances = this.randomAtoB(1, 5);
 
                         let randomHobby = this.randomAtoB(0, data.likingHobbies.length - 1);
                         let subtitle = "Uh-oh!";
                         if (data.likingHobbies[randomHobby] == "shoes") subtitle = "What are thooose?!";
 
-                        if (likingChances == 0) {
+                        if (likingChances < 3) {
                             //alert.dismiss();
-
-                            let rejectingText = `${tmpPerson["name"]} disliked your ${data.likingHobbies[randomHobby]}. <br> ${tmpPerson["name"]} brushes your hand off in disgust.`;
+                            let rejectionAction = data.rejections[this.randomAtoB(0, data.rejections.length - 1)];
+                            let rejectingText = `${tmpPerson["name"]} disliked your ${data.likingHobbies[randomHobby]}. <br> ${tmpPerson["name"]} ${rejectionAction}.`;
                             // This opens when parner doesn't like you
                             let alert0 = this.alertCtrl.create({
                                 subTitle: subtitle,
@@ -952,7 +1085,8 @@ export class ShareService {
                             });
                             alert0.present();
                         } else {
-                            let acceptingText = `${tmpPerson["name"]} liked your ${data.likingHobbies[randomHobby]}. <br> ${tmpPerson["name"]} smiles shyly.`;
+                            let acceptionAction = data.acceptions[this.randomAtoB(0, data.acceptions.length - 1)];
+                            let acceptingText = `${tmpPerson["name"]} liked your ${data.likingHobbies[randomHobby]}. <br> ${tmpPerson["name"]} ${acceptionAction}.`;
                             // This opens when parner doesn't like you
                             let alert1 = this.alertCtrl.create({
                                 subTitle: 'How does that sound?',
@@ -996,12 +1130,23 @@ export class ShareService {
 
         //nav.push(HomePage);
         //TabsPage.homeButtonTab.nativeElement.click();
-        this.goToHomePage();
+        //this.goToHomePage();
+        document.getElementById("tab-t0-0").click();
         // etc
     }
 
     goToHomePage() {
         document.getElementById("tab-t0-0").click();
+    }
+
+    carsForSale(data) {
+        let car, cars = [];
+        for (let i = 0; i < 25; i++) {
+            car = this.createVehicle(data);
+            cars.push(car);
+        }
+
+        this.carsForSaleModal(data, cars);
     }
 
     propertyListings(data) {
@@ -1042,7 +1187,8 @@ export class ShareService {
             let subtitle = "Uh-oh!";
             if (data.likingHobbies[randomHobby] == "shoes") subtitle = "What are thooose?!";
 
-            let rejectingText = `${lover["name"]} disliked your ${data.likingHobbies[randomHobby]}. <br> ${lover["name"]} brushes your hand off in disgust.`;
+            let rejectionAction = data.rejections[this.randomAtoB(0, data.rejections.length - 1)];
+            let rejectingText = `${lover["name"]} disliked your ${data.likingHobbies[randomHobby]}. <br> ${lover["name"]} ${rejectionAction}.`;
             // This opens when parner doesn't like you
             let alert = this.alertCtrl.create({
                 subTitle: subtitle,
@@ -1361,6 +1507,26 @@ export class propertyListingModal {
     posjedi: object;
     constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
         this.posjedi = params.get("posjedi");
+        this.data = shareService.getData();
+        //console.log();
+    }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+@Component({
+    templateUrl: '../../pages/me/vehicleListing.html'
+})
+export class carsForSaleModal {
+    data: object;
+    cars: object;
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
+        this.cars = params.get("cars");
         this.data = shareService.getData();
         //console.log();
     }

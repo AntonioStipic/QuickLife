@@ -221,10 +221,28 @@
           <ion-card-header>
             <b>Owned:</b>
           </ion-card-header>
-          <ion-card-content>
-            None
-          </ion-card-content>
+          <ion-list>
+            <button ion-item *ngFor="let car of data.cars">
+              <ion-icon name="quicklife-car2" item-start></ion-icon>
+              
+              <div>
+                  <b>{{car[0]}}</b>
+                  <br>Model: {{car[1]}}
+                  <br>Color: {{car[2]}}
+                  <br>Value: ${{data.shareService.formatMoney(car[3])}}
+                </div>
+              
+            </button>
+          </ion-list>
         </ion-card>
+
+        <ion-footer no-shadow [hidden]="data.meAssets != 'Car'">
+          <ion-toolbar position="bottom">
+            <button ion-button full round color="royal-v1" (click)="data.shareService.carsForSale(data)">Cars for sale
+              <ion-icon id="clockIcon" name="quicklife-buy-car"></ion-icon>
+            </button>
+          </ion-toolbar>
+        </ion-footer>
       </div>
     </ion-list>
 
@@ -306,7 +324,7 @@
             <span class="absolutePosition">Go to club</span>
           </button>
 
-          <button ion-item (click)="data.shareService.goToClub(data, 0)" class="button-ion-item topLine" [disabled]="!data.cars.length > 0">
+          <button ion-item (click)="data.shareService.goForADrive(data)" class="button-ion-item topLine" [disabled]="!data.cars.length > 0 || !data.passedDrivingTest">
             <ion-icon name="quicklife-car" class="miscListIcon"></ion-icon>
             <span class="absolutePosition">Go for a drive</span>
           </button>

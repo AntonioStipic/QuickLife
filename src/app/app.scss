@@ -205,6 +205,12 @@ ion-icon {
   &[class*="quicklife-steering-wheel"] {
     mask-image: url(../assets/imgs/steering_wheel.svg);
   }
+  &[class*="quicklife-buy-car"] {
+    mask-image: url(../assets/imgs/buy_car.svg);
+  }
+  &[class*="quicklife-car2"] {
+    mask-image: url(../assets/imgs/car2.svg);
+  }
 }
 
 .modal_content ion-card {

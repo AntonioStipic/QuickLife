@@ -1,0 +1,100 @@
+<!-- <ion-header>
+  <ion-navbar *navbar>
+    <ion-title>
+      Matchmaker
+    </ion-title>
+  </ion-navbar>
+
+<ion-content class="has-header">
+  <ion-list>
+    <div ion-item>
+      <label>Name: </label>
+    </div>
+
+    <div ion-item>
+      <label>Gender: </label>
+    </div>
+
+    <div ion-item>
+      <label>Age: </label>
+    </div>
+
+    <div ion-item>
+      <label>Nationality: Croatian</label>
+    </div>
+
+    <div ion-item>
+      <label>Appearance: %
+        <br>
+        <div class="progressBar">
+          <div class="progress-bar">
+            <span class="progress-bar-fill" [ngStyle]="{'width': '50px!important'}"></span>
+          </div>
+        </div>
+      </label>
+    </div>
+
+
+
+  </ion-list>
+</ion-content> -->
+
+<!-- <ion-content id="findLoveModal">
+  <button ion-button (click)="dismiss()">
+    <span ion-text color="primary" showWhen="ios">Cancel</span>
+    <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+  </button>
+  <ion-list>
+    <ion-item>
+      <ion-avatar item-start>
+        <img src="">
+      </ion-avatar>
+      <h2>toni</h2>
+      <p>hehe</p>
+    </ion-item>
+
+
+  </ion-list>
+</ion-content> -->
+
+<ion-content class="main-view">
+  <ion-scroll scrollX="true" scrollY="true" style="width: 100%; height: 100%">
+    <div class="overlay" (click)="dismiss()"></div>
+    <div class="modal_content maliMarginGore">
+      <b class="h2">Cars for sale:</b>
+      <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1">
+        <ion-icon name="md-close"></ion-icon>
+      </button>
+      <br>
+      <br>
+      <ion-list>
+
+        <ion-card>
+          <ion-card-header>
+            <b>Current balance:</b> ${{data.shareService.formatMoney(data.finance)}}
+          </ion-card-header>
+        </ion-card>
+
+        <ion-card *ngFor="let car of cars">
+          <ion-card-header>
+            <b>{{car[0]}}</b>
+          </ion-card-header>
+
+          <ion-card-content>
+            Model: {{car[1]}}
+            <br> Color: {{car[2]}}
+            <br> Price: ${{data.shareService.formatMoney(car[3])}}
+
+            <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 18 || data.finance < car[3]"
+              small (click)="data.shareService.buyVehicle(data, car)">
+              Buy
+            </button>
+
+          </ion-card-content>
+        </ion-card>
+
+
+      </ion-list>
+    </div>
+  </ion-scroll>
+</ion-content>
