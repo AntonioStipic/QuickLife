@@ -224,10 +224,10 @@ export class ShareService {
                         let warning = this.randomAtoB(0, 1);
                         if (warning == 1) {
                             messageText = "You got away with a warning.";
-                            releasedWith = "warning";
+                            releasedWith = "released with warning";
                         } else {
                             messageText = "Officer wrote you a speeding ticket. You had to pay $200.";
-                            releasedWith = "speeding ticket";
+                            releasedWith = "got speeding ticket";
                             data.finance -= 200;
                         }
                         let pulloverAlert = this.alertCtrl.create({
@@ -236,12 +236,73 @@ export class ShareService {
                             buttons: ["Okay"]
                         });
                         pulloverAlert.present();
-                        data.years[data.age].events.push(`I got pulled over and released with ${releasedWith}.`);
+                        data.years[data.age].events.push(`I got pulled over and ${releasedWith}.`);
                     }
                 }, {
                     text: 'Accelerate',
                     handler: () => {
-                        //document.getElementById("tab-t0-0").click();
+                        let speed = this.randomAtoB(150, 200);
+                        let policeCars = this.randomAtoB(2,3);
+                        let loseLicense = this.randomAtoB(0,1);
+                        let textToAdd = "";
+                        let speedingTicket = 2000 / 100 * speed;
+                        if (loseLicense == 1) {
+                            textToAdd = `Officer wrote you a speeding ticket of $${speedingTicket} and took your driving license.`;
+                        } else {
+                            textToAdd = `Officer wrote you a speeding ticket of $${speedingTicket}.`;
+                        }
+                        console.log(speed);
+                        let accelerateAlert = this.alertCtrl.create({
+                            subTitle: "Jesus take the wheel!",
+                            message: `You're driving at the speed of ${speed} km/h!<br>As you look in the rear-view mirror you can see there are now ${policeCars} police cars behind you.`,
+                            buttons: [{
+                                text: 'Pull over',
+                                handler: () => {
+                                    let pulloverAlert = this.alertCtrl.create({
+                                        subTitle: "Good day officer...",
+                                        message: textToAdd,
+                                        buttons: ["Okay"]
+                                    });
+                                    pulloverAlert.present();
+
+                                    data.finance -= speedingTicket;
+                                    if (loseLicense == 1) {
+                                        data.passedDrivingTest = 0;
+                                        data.years[data.age].events.push(`I got speeding ticket and lost my driving license.`);
+                                    } else {
+                                        data.years[data.age].events.push(`I got speeding ticket.`);
+                                    }
+                                }
+                            },{
+                                text: 'Escape them',
+                                handler: () => {
+                                    let willEscape = this.randomAtoB(0, 1);
+                                    let addTextEscape = "", titleToAdd = "";
+                                    if (willEscape == 1) {
+                                        addTextEscape = `You started slalom driving.<br>At the intersection you made sharp U turn. Police cars couldn't stop so fast.<br><br>You don't see anyone following you anymore.`;
+                                        data.years[data.age].events.push(`I escaped from cops.`);
+                                        titleToAdd = "Like a boss";
+                                    } else {
+                                        data.passedDrivingTest = 0;
+                                        data.allowedToTakeDrivingTest = 0;
+                                        let ticket = this.randomAtoB(8000, 12000);
+                                        data.finance -= ticket;
+                                        addTextEscape = `Another police car appeared in front of you.<br>You stepped on the brake so you don't crash in to them.<br><br>You got arrested and released, they took your driving license, you aren't allowed to ever again take driving test.<br>You paid $${ticket} for your speeding ticket.`;
+                                        data.years[data.age].events.push(`Police was chasing after me.<br>I got arrested and released.<br>I lost my driving license.`);
+                                        titleToAdd = "So close...";
+                                    }
+
+                                    let finalAlert = this.alertCtrl.create({
+                                        subTitle: titleToAdd,
+                                        message: addTextEscape,
+                                        buttons: ["Okay"]
+                                    });
+                                    finalAlert.present();
+                                }
+                            }]
+                        });
+                        accelerateAlert.present();
+                        //data.years[data.age].events.push(`I got pulled over and ${releasedWith}.`);
                     }
                 }]
             });
@@ -744,6 +805,9 @@ export class ShareService {
         // Boolean for passed driving test
         data.passedDrivingTest = 0;
 
+        // If this is false, player can't take driving test anymore
+        data.allowedToTakeDrivingTest = 1;
+
         // Number of times that player went to driving test
         data.drivingTestCount = 0;
 
@@ -883,7 +947,7 @@ export class ShareService {
     }
 
     passedDrivingTestButton(data) {
-        if (data.age > 17 && data.passedDrivingTest == 0) {
+        if (data.age > 17 && data.passedDrivingTest == 0 && data.allowedToTakeDrivingTest == 1) {
             return 0;
         } else {
             return 1;
@@ -905,6 +969,7 @@ export class ShareService {
                 else if (data.drivingTestCount == 3) textToAdd = "3rd";
                 else textToAdd = data.drivingTestCount + "th";
                 data.years[data.age].events.push(`I passed my driving exam after ${textToAdd} attempt.`);
+                data.drivingTestCount = 0;
                 let alert = this.alertCtrl.create({
                     subTitle: 'Nicely done!',
                     message: "You passed your driving exam.",
