@@ -628,6 +628,15 @@ export class ShareService {
         // For every year of work this counts up
         data.workExperience = 0;
 
+        // List containing cars that player has
+        data.cars = [];
+
+        // Boolean for passed driving test
+        data.passedDrivingTest = 0;
+
+        // Number of times that player went to driving test
+        data.drivingTestCount = 0;
+
         // -1 = No school, 0 = Elementary, 1 = High school, 2 = College
         data.educationLevel = -1;
 
@@ -719,6 +728,17 @@ export class ShareService {
         return data;
     }
 
+    passedDrivingTestText(data) {
+        let text = "";
+        if (data.passedDrivingTest == 1) {
+            text = "Passed driving test";
+        } else {
+            text = "Take driving test ($80)";
+        }
+
+        return text;
+    }
+
     createParent(data, gender) {
         var name = this.randomName(data, gender);
         var age = this.randomAtoB(16, 45);
@@ -741,6 +761,57 @@ export class ShareService {
 
         return { name: name, age: age, alive: alive };
         //console.log(name, age);
+    }
+
+    passedDrivingTestButton(data) {
+        if (data.age > 17 && data.passedDrivingTest == 0) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    takeDrivingTest(data) {
+        let chance = this.randomAtoB(0, 120 - data.intelligence);
+        if (chance < 35) {
+            data.passedDrivingTest = 1;
+            data.drivingTestCount += 1;
+
+            let textToAdd = "";
+
+            if (data.drivingTestCount == 1) textToAdd = "1st";
+            else if (data.drivingTestCount == 2) textToAdd = "2nd";
+            else if (data.drivingTestCount == 3) textToAdd = "3rd";
+            else textToAdd = data.drivingTestCount + "th";
+
+            data.years[data.age].events.push(`I passed my driving exam after ${textToAdd} attempt.`);
+            let alert = this.alertCtrl.create({
+                subTitle: 'Nicely done!',
+                message: "You passed your driving exam.",
+                buttons: [{
+                    text: 'Okay',
+                    handler: () => {
+                        this.goToHomePage();
+                    }
+                }]
+            });
+            alert.present();
+
+        } else {
+            data.drivingTestCount += 1;
+            data.years[data.age].events.push(`I failed my driving exam.`);
+            let alert = this.alertCtrl.create({
+                subTitle: 'Better luck next time!',
+                message: "You failed your driving exam.",
+                buttons: [{
+                    text: 'Okay',
+                    handler: () => {
+                        this.goToHomePage();
+                    }
+                }]
+            });
+            alert.present();
+        }
     }
 
     capitalize(string) {
@@ -925,8 +996,12 @@ export class ShareService {
 
         //nav.push(HomePage);
         //TabsPage.homeButtonTab.nativeElement.click();
-        document.getElementById("tab-t0-0").click();
+        this.goToHomePage();
         // etc
+    }
+
+    goToHomePage() {
+        document.getElementById("tab-t0-0").click();
     }
 
     propertyListings(data) {

@@ -301,9 +301,24 @@
             </ion-select>
           </ion-item>
 
-          <button ion-item (click)="data.shareService.goToClub(data, 0)" class="bottomLine button-ion-item" [disabled]="data.age < 16">
-            <ion-icon name="quicklife-disco" class="miscListIcon"></ion-icon> Go to club
+          <button ion-item (click)="data.shareService.goToClub(data, 0)" class="button-ion-item" [disabled]="data.age < 16">
+            <ion-icon name="quicklife-disco" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition">Go to club</span>
           </button>
+
+          <button ion-item (click)="data.shareService.goToClub(data, 0)" class="button-ion-item topLine" [disabled]="!data.cars.length > 0">
+            <ion-icon name="quicklife-car" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition">Go for a drive</span>
+          </button>
+          <ion-item-divider color="light">Documents</ion-item-divider>
+
+          <button ion-item class="button-ion-item" [disabled]="data.shareService.passedDrivingTestButton(data)" (click)="data.shareService.takeDrivingTest(data)">
+            <ion-icon name="quicklife-steering-wheel" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition">{{data.shareService.passedDrivingTestText(data)}}</span>
+            <ion-icon [name]="data.passedDrivingTest == 1?'md-checkbox-outline':'md-square-outline'" class="miscListIcon" item-right></ion-icon>
+          </button>
+
+
         </ion-list>
       </ion-item-group>
 

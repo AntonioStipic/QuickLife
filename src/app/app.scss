@@ -199,6 +199,12 @@ ion-icon {
   &[class*="quicklife-smoking"] {
     mask-image: url(../assets/imgs/smoking.svg);
   }
+  &[class*="quicklife-car"] {
+    mask-image: url(../assets/imgs/car.svg);
+  }
+  &[class*="quicklife-steering-wheel"] {
+    mask-image: url(../assets/imgs/steering_wheel.svg);
+  }
 }
 
 .modal_content ion-card {
@@ -229,4 +235,9 @@ ion-icon {
 
 .propertyInfo {
   border-right: 1px solid black;
+}
+
+.absolutePosition {
+  position: absolute;
+  
 }
