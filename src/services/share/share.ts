@@ -683,8 +683,8 @@ export class ShareService {
         data.happiness = this.randomAtoB(50, 100);
 
         // Balance player has at the beggining of game
-        //data.finance = 100;
-        data.finance = 100000000;
+        data.finance = 100;
+        //data.finance = 100000000;
 
         // Player is none sexuality until 12th yo
         data.sexuality = "None";
