@@ -69,7 +69,7 @@
         <ion-card [hidden]="i == data.gotJobNum">
           <ion-card-header>
             <b>{{job[1]["title"]}}</b>
-            <div [hidden]="job[1]['title'] == 'Nurse' || job[1]['title'] == 'Doctor' || job[1]['title'] == 'Police Officer'">at {{job[0]}}</div>
+            <div [hidden]="data.jobsWithoutLabel.indexOf(job[1]['title']) >= 0">at {{job[0]}}</div>
           </ion-card-header>
           <ion-card-content>
             <label>Salary: ${{data.shareService.formatMoney(job[2] / 12 * 1000)}}/mo</label>

@@ -49,13 +49,13 @@ export class ShareService {
     }
 
     propertyListingModal(data, posjedi) {
-        let propertyModal = this.modalCtrl.create(propertyListingModal, { data: data, posjedi: posjedi }, {
+        data.propertyModal = this.modalCtrl.create(propertyListingModal, { data: data, posjedi: posjedi }, {
             showBackdrop: false,
             enableBackdropDismiss: false,
             enterAnimation: 'modal-scale-up-enter',
             leaveAnimation: 'modal-scale-up-leave'
         });
-        propertyModal.present();
+        data.propertyModal.present();
     }
 
     carsForSaleModal(data, cars) {
@@ -66,6 +66,16 @@ export class ShareService {
             leaveAnimation: 'modal-scale-up-leave'
         });
         vehicleModal.present();
+    }
+
+    socialNetworkModal(data) {
+        let socialModal = this.modalCtrl.create(socialNetworkModal, { data: data }, {
+            showBackdrop: false,
+            enableBackdropDismiss: false,
+            enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave'
+        });
+        socialModal.present();
     }
 
     setData(data) {
@@ -155,7 +165,10 @@ export class ShareService {
         if (property[0] == "House") data.propertyValueIndex = 4;
         else if (property[0] == "Apartment" || property[0] == "Condo") data.propertyValueIndex = 3;
         data.finance -= property[data.propertyValueIndex];
+        data.ownedProperties.push(property[data.propertyValueIndex + 1]);
         data.posjedi.push(property);
+
+        data.propertyModal.dismiss();
 
         if (data.posjedi.length == 1) {
             data.livingIn = property[data.propertyValueIndex + 1];
@@ -212,6 +225,8 @@ export class ShareService {
         data.years[data.age].events.push(`I went for a drive.`);
         let speedingChance = this.randomAtoB(1, 100);
 
+        this.handleHappiness(data, "+", 1.5);
+
         if (speedingChance < 30) {
             let alert = this.alertCtrl.create({
                 subTitle: "I'm above the law!",
@@ -225,10 +240,13 @@ export class ShareService {
                         if (warning == 1) {
                             messageText = "You got away with a warning.";
                             releasedWith = "released with warning";
+                            
+                            this.handleHappiness(data, "-", 5);
                         } else {
                             messageText = "Officer wrote you a speeding ticket. You had to pay $200.";
                             releasedWith = "got speeding ticket";
                             data.finance -= 200;
+                            this.handleHappiness(data, "-", 8);
                         }
                         let pulloverAlert = this.alertCtrl.create({
                             subTitle: "Good day officer...",
@@ -269,8 +287,10 @@ export class ShareService {
                                     if (loseLicense == 1) {
                                         data.passedDrivingTest = 0;
                                         data.years[data.age].events.push(`I got speeding ticket and lost my driving license.`);
+                                        this.handleHappiness(data, "-", 20);
                                     } else {
                                         data.years[data.age].events.push(`I got speeding ticket.`);
+                                        this.handleHappiness(data, "-", 10);
                                     }
                                 }
                             },{
@@ -279,17 +299,19 @@ export class ShareService {
                                     let willEscape = this.randomAtoB(0, 1);
                                     let addTextEscape = "", titleToAdd = "";
                                     if (willEscape == 1) {
-                                        addTextEscape = `You started slalom driving.<br>At the intersection you made sharp U turn. Police cars couldn't stop so fast.<br><br>You don't see anyone following you anymore.`;
+                                        addTextEscape = `You started weaving through traffic.<br>At the intersection you made sharp U turn. Police cars couldn't stop so fast.<br><br>You don't see anyone following you anymore.`;
                                         data.years[data.age].events.push(`I escaped from cops.`);
                                         titleToAdd = "Like a boss";
+                                        this.handleHappiness(data, "+", 15);
                                     } else {
                                         data.passedDrivingTest = 0;
                                         data.allowedToTakeDrivingTest = 0;
                                         let ticket = this.randomAtoB(8000, 12000);
                                         data.finance -= ticket;
-                                        addTextEscape = `Another police car appeared in front of you.<br>You stepped on the brake so you don't crash in to them.<br><br>You got arrested and released, they took your driving license, you aren't allowed to ever again take driving test.<br>You paid $${ticket} for your speeding ticket.`;
+                                        addTextEscape = `Another police car appeared in front of you.<br>You stepped on the brake so you don't crash in to them.<br><br>You got arrested and released, they took your driving license and you aren't allowed to retake driving test ever again.<br>You paid $${ticket} for your speeding ticket.`;
                                         data.years[data.age].events.push(`Police was chasing after me.<br>I got arrested and released.<br>I lost my driving license.`);
                                         titleToAdd = "So close...";
+                                        this.handleHappiness(data, "-", 25);
                                     }
 
                                     let finalAlert = this.alertCtrl.create({
@@ -309,7 +331,7 @@ export class ShareService {
             alert.present();
         }
 
-        document.getElementById("tab-t0-0").click();
+        //document.getElementById("tab-t0-0").click();
     }
 
     learningChanged(data) {
@@ -740,7 +762,7 @@ export class ShareService {
         data.fitness = this.randomAtoB(1, 100);
         data.musicality = this.randomAtoB(1, 100);
 
-        // Happinness player has at the beggining of game
+        // Happiness player has at the beggining of game
         data.happiness = this.randomAtoB(50, 100);
 
         // Balance player has at the beggining of game
@@ -799,6 +821,9 @@ export class ShareService {
         // For every year of work this counts up
         data.workExperience = 0;
 
+        // List of jobs that don't need to specify where are you working at
+        data.jobsWithoutLabel = ["Doctor", "Nurse", "Police Officer", "Mathematics Professor", "Chemistry Professor", "Biology Professor", "Sociology Professor", "Physics Professor"];
+
         // List containing cars that player has
         data.cars = [];
 
@@ -832,6 +857,9 @@ export class ShareService {
 
         // Object which will contain list of jobs to be displayed in list
         data.listedJobs = [];
+
+        // List containing ids of properties that player has bought
+        data.ownedProperties = [];
 
         // Index of the job the player has got, used to hide card with that job
         data.gotJobNum = -1;
@@ -878,6 +906,18 @@ export class ShareService {
         // List with sports player played before a change has been made
         data.oldSports = [];
 
+        // Boolean if player has social network
+        data.hasSocialNetwork = 0;
+
+        // Number of fans that player has on social network
+        data.numOfSocialFans = 0;
+
+        // Number of selfies player has taken
+        data.numOfSelfies = 0;
+
+        // Number of posts player has created
+        data.numOfPosts = 0;
+
         // Indicator if player has patner/is in relationship
         data.havePartner = 0;
 
@@ -895,6 +935,12 @@ export class ShareService {
 
         // List of colors
         data.colors = ["Red", "Black", "Yellow", "Blue", "White", "Silver", "Grey", "Green"];
+
+        // Happiness player had, used to determine if he has been diagnosed with depression
+        data.lastHappiness = 0;
+
+        // Boolean to check if player has depression
+        data.hasDepression = 0;
 
         // Booleans to check whether player broke something in last year
         data.brokeLegLastYear = 0;
@@ -976,7 +1022,7 @@ export class ShareService {
                     buttons: [{
                         text: 'Okay',
                         handler: () => {
-                            document.getElementById("tab-t0-0").click();
+                            //document.getElementById("tab-t0-0").click();
                         }
                     }]
                 });
@@ -991,7 +1037,7 @@ export class ShareService {
                     buttons: [{
                         text: 'Okay',
                         handler: () => {
-                            document.getElementById("tab-t0-0").click();
+                            //document.getElementById("tab-t0-0").click();
                         }
                     }]
                 });
@@ -1065,6 +1111,40 @@ export class ShareService {
         if (data.age < 12) return 1;
         else if (data.sexuality == "Asexual") return 1;
         else return 0;
+    }
+
+    handleHappiness(data, character, amount) {
+        data.lastHappiness = data.happiness;
+        if (character == "+") {
+            if (data.happiness + amount > 100) data.happiness = 100;
+            else data.happiness += amount;
+        } else if (character == "-") {
+            if ((data.happiness - amount) < 0) data.happiness = 0;
+            else data.happiness -= amount;
+        } else {
+            if (data.happiness + amount > 100) data.happiness = 100;
+            else if (data.happiness + amount < 0) data.happiness = 0;
+            else if (data.age > 12) data.happiness += amount;
+        }
+
+        if (data.lastHappiness >= 20 && data.happiness < 20) {
+            data.hasDepression = 1;
+            data.years[data.age].events.push("I've been diagnosed with depression.");
+        } else if (data.lastHappiness < 20 && data.happiness >= 20) {
+            data.hasDepression = 0;
+            data.years[data.age].events.push("I don't have depression anymore.");
+        }
+    }
+
+    joinSocialNetwork(data) {
+        data.hasSocialNetwork = 1;
+        data.numOfSocialFans = ((data.appearance * data.fitness + (data.happiness / 2)) / 50).toFixed(0);
+        data.years[data.age].events.push(`I joined the social network.`);
+    }
+
+    leaveSocialNetwork(data) {
+        data.hasSocialNetwork = 0;
+        data.years[data.age].events.push(`I left the social network.`);
     }
 
 
@@ -1189,6 +1269,7 @@ export class ShareService {
             alert.present();
 
         }
+        //document.getElementById("tab-t0-0").click();
         //this.data.navCtrl.push(TabsPage, {tabIndex:0}); 
         //let nav = this.app.getRootNav();
         // there is also this.app.getRootNav()
@@ -1196,7 +1277,6 @@ export class ShareService {
         //nav.push(HomePage);
         //TabsPage.homeButtonTab.nativeElement.click();
         //this.goToHomePage();
-        document.getElementById("tab-t0-0").click();
         // etc
     }
 
@@ -1269,6 +1349,11 @@ export class ShareService {
 
     forceDate(data, lover) {
         //console.log(lover);
+
+        if (data.havePartner == 1) {
+            this.breakUp(data);
+        }
+
         let alert = this.alertCtrl.create({
             title: "You are in relationship!",
             subTitle: `You are now dating ${lover.name} ${lover.surname}!`,
@@ -1285,16 +1370,14 @@ export class ShareService {
     breakUp(data) {
         data.havePartner = 0;
         data.years[data.age].events.push(`I broke up with ${data.lover.name}.`);
-        if ((data.happiness - 20) < 0) data.happiness = 0;
-        else data.happiness -= 20;
+        this.handleHappiness(data, "-", 20);
         data.lover = { stability: 50, time: 0 };
     }
 
     breakUp2(data) {
         data.havePartner = 0;
         data.years[data.age].events.push(`${data.lover.name} broke up with me.`);
-        if ((data.happiness - 50) < 0) data.happiness = 0;
-        else data.happiness -= 50;
+        this.handleHappiness(data, "-", 50);
         data.lover = { stability: 50, time: 0 };
     }
 
@@ -1435,13 +1518,13 @@ export class ShareService {
     }
 
     applyForJob(data, job, index) {
-        console.log(job);
+        //console.log(job);
         if (job[1]["education"] <= data.educationLevel && data.workExperience >= job[1]["experience"]) {
             var remainingSkills = job[1]["skills"].filter(item => data.mySkills.indexOf(item) < 0);
             if (remainingSkills.length == 0) {
                 let subtitleText = '';
-                console.log(job[1]["title"]);
-                if (job[1]["title"] != "Nurse" && job[1]["title"] != "Doctor" && job[1]["title"] != "Police Officer") {
+                //console.log(job[1]["title"]);
+                if (data.jobsWithoutLabel.indexOf(job[1]["title"]) == -1) {
                     subtitleText = '<br>You got job as ' + job[1]["title"] + ' at ' + job[0] + '.';
                 } else {
                     subtitleText = '<br>You got job as ' + job[1]["title"] + '.';
@@ -1462,7 +1545,7 @@ export class ShareService {
                             data.isWorking = 1;
                             // If job title is not Nurse of Doctor you can show where they work
                             //else don't show at which company they work for
-                            if (job[1]["title"] != "Nurse" && job[1]["title"] != "Doctor" && job[1]["title"] != "Police Officer") data.years[data.age].events.push("I started working as " + job[1]["title"] + " at " + job[0] + ".");
+                            if (data.jobsWithoutLabel.indexOf(job[1]["title"]) == -1) data.years[data.age].events.push("I started working as " + job[1]["title"] + " at " + job[0] + ".");
                             else data.years[data.age].events.push("I started working as " + job[1]["title"] + ".");
                             data.income += (job[2] / 12 * 1000) * (1 - data.tax);
                         }
@@ -1592,6 +1675,25 @@ export class carsForSaleModal {
     cars: object;
     constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
         this.cars = params.get("cars");
+        this.data = shareService.getData();
+        //console.log();
+    }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+@Component({
+    templateUrl: '../../pages/me/socialNetwork.html'
+})
+export class socialNetworkModal {
+    data: object;
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
         this.data = shareService.getData();
         //console.log();
     }

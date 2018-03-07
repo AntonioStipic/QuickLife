@@ -130,10 +130,7 @@ export class HomePage {
     if (data.isReadingBooks == 1) result += 0.2;
     if (data.goingToGym == 1) result += 0.3;
     if (data.havePartner == 1) result += 0.25;
-
-
-    if (data.happiness + result > 100) data.happiness = 100;
-    else data.happiness += result;
+    data.shareService.handleHappiness(data, "", result);
   }
 
   childPlay(data) {

@@ -1,0 +1,72 @@
+<ion-content class="main-view">
+  <ion-scroll scrollX="true" scrollY="true" style="width: 100%; height: 100%">
+    <div class="overlay" (click)="dismiss()"></div>
+    <div class="modal_content maliMarginGore">
+      <ion-card>
+        <ion-card-header>
+          <b class="gurniDolje">Social Network</b>
+          <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1" small>
+            <ion-icon name="md-close"></ion-icon>
+          </button>
+        </ion-card-header>
+      </ion-card>
+      <ion-list>
+
+        <ion-card *ngIf="data.hasSocialNetwork == 1">
+          <ion-card-content>
+            <ion-list>
+              <ion-item>
+                <ion-label class="ion-select-text">
+                  <b>Followers:</b>
+                </ion-label>
+                <ion-input value="{{data.numOfSocialFans}}" disabled></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label class="ion-select-text">
+                  Selfies:
+                </ion-label>
+                <ion-input value="{{data.numOfSelfies}}" disabled></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label class="ion-select-text">
+                  Posts:
+                </ion-label>
+                <ion-input value="{{data.numOfPosts}}" disabled></ion-input>
+              </ion-item>
+            </ion-list>
+
+            <div style="text-align:center;">
+              <br>
+              <button ion-button (click)="data.numOfSelfies = data.numOfSelfies + 1" color="energized-v1">
+                Take selfie
+              </button>
+              <button ion-button (click)="data.numOfPosts = data.numOfPosts + 1" color="primary">
+                Create post
+              </button>
+              <button ion-button (click)="data.shareService.leaveSocialNetwork(data)" color="royal-v1">
+                Leave social network
+              </button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card *ngIf="data.hasSocialNetwork == 0">
+          <ion-card-header>
+            You don't have social network profile.
+          </ion-card-header>
+
+          <ion-card-content>
+            <div style="text-align:center;">
+              <br>
+              <button ion-button (click)="data.shareService.joinSocialNetwork(data)" color="royal-v1">
+                Join social network
+              </button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+
+      </ion-list>
+    </div>
+  </ion-scroll>
+</ion-content>

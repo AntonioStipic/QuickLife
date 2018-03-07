@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { PopoverController } from 'ionic-angular';
+import { PopoverController, Tabs } from 'ionic-angular';
 import { PopoverContentPage } from '../popover/popover';
 import { ShareService } from '../../services/share/share';
 
@@ -12,7 +12,7 @@ export class MePage {
   data: object;
   meTabs: string;
   assetsTabs: string;
-  
+
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService) {
     this.data = shareService.getData();
     this.data["shareService"] = shareService;
@@ -30,6 +30,11 @@ export class MePage {
 
   capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  changeTab(index) {
+    var t: Tabs = this.navCtrl.parent;
+    t.select(index);
   }
 
   /* sexualityConfirm (data) {

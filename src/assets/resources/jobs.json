@@ -92,6 +92,49 @@
             "experience": 0,
             "education": 1,
             "skills": []
+        },
+        {
+            "title": "Mathematics Professor",
+            "salary": "32-48",
+            "experience": 0,
+            "education": 2,
+            "skills": ["Mathematics", "Teaching"]
+        },
+        {
+            "title": "Chemistry Professor",
+            "salary": "32-48",
+            "experience": 0,
+            "education": 2,
+            "skills": ["Chemistry", "Teaching"]
+        },
+        {
+            "title": "Biology Professor",
+            "salary": "32-48",
+            "experience": 0,
+            "education": 2,
+            "skills": ["Biology", "Teaching"]
+        },
+        {
+            "title": "Social researcher",
+            "salary": "25-30",
+            "experience": 0,
+            "education": 2,
+            "skills": ["Sociology", "Teaching"]
+        },
+        {
+            "title": "Sociology Professor",
+            "salary": "32-48",
+            "experience": 0,
+            "education": 2,
+            "skills": ["Sociology", "Teaching"]
+        }
+        ,
+        {
+            "title": "Physics Professor",
+            "salary": "32-48",
+            "experience": 0,
+            "education": 2,
+            "skills": ["Physics", "Teaching"]
         }
 
     ]

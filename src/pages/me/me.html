@@ -178,7 +178,7 @@
       <div [hidden]="data.meAssets != 'House'">
         <ion-card>
           <ion-card-header>
-            <b>Owned:</b>
+            <b>Owned properties:</b>
           </ion-card-header>
           <!-- property listings -->
 
@@ -219,19 +219,19 @@
       <div [hidden]="data.meAssets != 'Car'">
         <ion-card>
           <ion-card-header>
-            <b>Owned:</b>
+            <b>Owned cars:</b>
           </ion-card-header>
           <ion-list>
             <button ion-item *ngFor="let car of data.cars">
               <ion-icon name="quicklife-car2" item-start></ion-icon>
-              
+
               <div>
-                  <b>{{car[0]}}</b>
-                  <br>Model: {{car[1]}}
-                  <br>Colour: {{car[2]}}
-                  <br>Value: ${{data.shareService.formatMoney(car[3])}}
-                </div>
-              
+                <b>{{car[0]}}</b>
+                <br>Model: {{car[1]}}
+                <br>Colour: {{car[2]}}
+                <br>Value: ${{data.shareService.formatMoney(car[3])}}
+              </div>
+
             </button>
           </ion-list>
         </ion-card>
@@ -319,18 +319,23 @@
             </ion-select>
           </ion-item>
 
-          <button ion-item (click)="data.shareService.goToClub(data, 0)" class="button-ion-item" [disabled]="data.age < 16">
+          <button ion-item (click)="data.shareService.goToClub(data, 0); changeTab(0)" class="button-ion-item" [disabled]="data.age < 16">
             <ion-icon name="quicklife-disco" class="miscListIcon"></ion-icon>
             <span class="absolutePosition">Go to club</span>
           </button>
 
-          <button ion-item (click)="data.shareService.goForADrive(data)" class="button-ion-item topLine" [disabled]="!data.cars.length > 0 || !data.passedDrivingTest">
+          <button ion-item (click)="data.shareService.socialNetworkModal(data)" class="button-ion-item"> <!--  [disabled]="data.age < 13" -->
+            <ion-icon name="quicklife-user" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition">Social Network</span>
+          </button>
+
+          <button ion-item (click)="data.shareService.goForADrive(data); changeTab(0)" class="button-ion-item topLine" [disabled]="!data.cars.length > 0 || !data.passedDrivingTest">
             <ion-icon name="quicklife-car" class="miscListIcon"></ion-icon>
             <span class="absolutePosition">Go for a drive</span>
           </button>
           <ion-item-divider color="light">Documents</ion-item-divider>
 
-          <button ion-item class="button-ion-item" [disabled]="data.shareService.passedDrivingTestButton(data)" (click)="data.shareService.takeDrivingTest(data)">
+          <button ion-item class="button-ion-item" [disabled]="data.shareService.passedDrivingTestButton(data)" (click)="data.shareService.takeDrivingTest(data); changeTab(0)">
             <ion-icon name="quicklife-steering-wheel" class="miscListIcon"></ion-icon>
             <span class="absolutePosition">{{data.shareService.passedDrivingTestText(data)}}</span>
             <ion-icon [name]="data.passedDrivingTest == 1?'md-checkbox-outline':'md-square-outline'" class="miscListIcon" item-right></ion-icon>

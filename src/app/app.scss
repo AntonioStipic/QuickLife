@@ -211,6 +211,9 @@ ion-icon {
   &[class*="quicklife-car2"] {
     mask-image: url(../assets/imgs/car2.svg);
   }
+  &[class*="quicklife-user"] {
+    mask-image: url(../assets/imgs/user.svg);
+  }
 }
 
 .modal_content ion-card {
@@ -246,4 +249,9 @@ ion-icon {
 .absolutePosition {
   position: absolute;
   
+}
+
+.gurniDolje {
+  position: absolute;
+  margin-top: 0.5em;
 }
