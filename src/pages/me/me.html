@@ -324,7 +324,7 @@
             <span class="absolutePosition">Go to club</span>
           </button>
 
-          <button ion-item (click)="data.shareService.socialNetworkModal(data)" class="button-ion-item"> <!--  [disabled]="data.age < 13" -->
+          <button ion-item (click)="data.shareService.socialNetworkModal(data)" class="button-ion-item" [disabled]="data.age < 13">
             <ion-icon name="quicklife-user" class="miscListIcon"></ion-icon>
             <span class="absolutePosition">Social Network</span>
           </button>
