@@ -127,8 +127,7 @@
             "experience": 0,
             "education": 2,
             "skills": ["Sociology", "Teaching"]
-        }
-        ,
+        },
         {
             "title": "Physics Professor",
             "salary": "32-48",

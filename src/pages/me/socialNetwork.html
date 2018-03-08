@@ -1,7 +1,7 @@
 <ion-content class="main-view">
-  <ion-scroll scrollX="true" scrollY="true" style="width: 100%; height: 100%">
+  <ion-scroll scrollX="false" scrollY="true" style="width: 100%; height: 100%; word-wrap: break-word;">
     <div class="overlay" (click)="dismiss()"></div>
-    <div class="modal_content maliMarginGore">
+    <div class="modal_content maliMarginGore josMaloMargin">
       <ion-card>
         <ion-card-header>
           <b class="gurniDolje">Social Network</b>
@@ -37,10 +37,10 @@
 
             <div style="text-align:center;">
               <br>
-              <button ion-button (click)="data.numOfSelfies = data.numOfSelfies + 1" color="energized-v1">
+              <button ion-button (click)="data.shareService.takeSelfie(data)" color="energized-v1">
                 Take selfie
               </button>
-              <button ion-button (click)="data.numOfPosts = data.numOfPosts + 1" color="primary">
+              <button ion-button (click)="data.shareService.createPost(data)" color="primary">
                 Create post
               </button>
               <button ion-button (click)="data.shareService.leaveSocialNetwork(data)" color="royal-v1">
@@ -51,12 +51,9 @@
         </ion-card>
 
         <ion-card *ngIf="data.hasSocialNetwork == 0">
-          <ion-card-header>
-            You don't have social network profile.
-          </ion-card-header>
-
           <ion-card-content>
             <div style="text-align:center;">
+              You don't have social network profile.
               <br>
               <button ion-button (click)="data.shareService.joinSocialNetwork(data)" color="royal-v1">
                 Join social network

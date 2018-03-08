@@ -57,12 +57,22 @@ export class HomePage {
         console.log(error);
       });
   }
+  /* ionViewDidLoad() {
+    
+  } */
 
   openPopover(myEvent) {
     let popover = this.popoverCtrl.create(PopoverContentPage);
     popover.present({
       ev: myEvent,
     });
+  }
+
+  changeTabFalse(data) {
+    setTimeout(function () {
+      data.changeTabTrue = 0;
+    }, 100);
+    //data.changeTabTrue = 0;
   }
 
   willIDie(data) {
@@ -164,6 +174,7 @@ export class HomePage {
     data.age += 1;
     data.years.push({ "year": data.age, "events": [] });
     data.gotJobNum = -1;
+    data.selfiesPerYear = 0;
 
     if (data.finance < 0) {
       data.inDebt = 1;

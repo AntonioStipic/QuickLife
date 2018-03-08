@@ -32,9 +32,13 @@ export class MePage {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  changeTab(index) {
+  changeTab(index, data) {
     var t: Tabs = this.navCtrl.parent;
     t.select(index);
+    //
+    //setTimeout(function () {
+      //data.changeTabTrue = 0;
+    //}, 100);
   }
 
   /* sexualityConfirm (data) {

@@ -23,6 +23,10 @@
           <div [innerHtml]="event">
 
           </div>
+          <div *ngIf="data.changeTabTrue == 1">
+            {{lastEvent.scrollIntoView()}}
+            {{changeTabFalse(data)}}
+          </div>
           {{lastEvent.scrollIntoView()}}
         </ion-card-content>
       </ion-card>

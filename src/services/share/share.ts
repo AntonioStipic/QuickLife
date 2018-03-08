@@ -69,13 +69,13 @@ export class ShareService {
     }
 
     socialNetworkModal(data) {
-        let socialModal = this.modalCtrl.create(socialNetworkModal, { data: data }, {
+        data.socialModal = this.modalCtrl.create(socialNetworkModal, { data: data }, {
             showBackdrop: false,
             enableBackdropDismiss: false,
             enterAnimation: 'modal-scale-up-enter',
             leaveAnimation: 'modal-scale-up-leave'
         });
-        socialModal.present();
+        data.socialModal.present();
     }
 
     setData(data) {
@@ -240,7 +240,7 @@ export class ShareService {
                         if (warning == 1) {
                             messageText = "You got away with a warning.";
                             releasedWith = "released with warning";
-                            
+
                             this.handleHappiness(data, "-", 5);
                         } else {
                             messageText = "Officer wrote you a speeding ticket. You had to pay $200.";
@@ -260,8 +260,8 @@ export class ShareService {
                     text: 'Accelerate',
                     handler: () => {
                         let speed = this.randomAtoB(150, 200);
-                        let policeCars = this.randomAtoB(2,3);
-                        let loseLicense = this.randomAtoB(0,1);
+                        let policeCars = this.randomAtoB(2, 3);
+                        let loseLicense = this.randomAtoB(0, 1);
                         let textToAdd = "";
                         let speedingTicket = 2000 / 100 * speed;
                         if (loseLicense == 1) {
@@ -293,7 +293,7 @@ export class ShareService {
                                         this.handleHappiness(data, "-", 10);
                                     }
                                 }
-                            },{
+                            }, {
                                 text: 'Escape them',
                                 handler: () => {
                                     let willEscape = this.randomAtoB(0, 1);
@@ -933,6 +933,9 @@ export class ShareService {
         // ID of property in which the player is living
         data.livingIn = "";
 
+        // If this is true then function on me.html will activate which will change tab to 0
+        data.changeTabTrue = 0;
+
         // List of colors
         data.colors = ["Red", "Black", "Yellow", "Blue", "White", "Silver", "Grey", "Green"];
 
@@ -941,6 +944,9 @@ export class ShareService {
 
         // Boolean to check if player has depression
         data.hasDepression = 0;
+
+        // Amount of selfies player can take in one year
+        data.selfiesPerYear = 0;
 
         // Booleans to check whether player broke something in last year
         data.brokeLegLastYear = 0;
@@ -1056,6 +1062,56 @@ export class ShareService {
             });
             alertic.present();
         }
+    }
+
+    takeSelfie(data) {
+        if (data.selfiesPerYear < 4) {
+            data.numOfSelfies += 1;
+            let likes = data.numOfSocialFans * data.appearance * data.fitness / 100 / 50 * this.randomAtoB(100, 200) / 100;
+            let predznak = this.randomAtoB(0, 1);
+            if (predznak == 0) predznak = 1;
+            else predznak = -1;
+
+            likes = likes + (this.randomAtoB(0, data.numOfSocialFans / 2) * predznak);
+            if (likes < 5) likes = this.randomAtoB(5, 10);
+            let likesFinal = likes.toFixed(0);
+
+            let newSocialFans = 0;
+            if (likesFinal > data.numOfSocialFans) {
+                if (data.numOfSocialFans < this.randomAtoB(1800000, 2200000)) {
+                    newSocialFans = this.randomAtoB(0, parseInt(likesFinal) - data.numOfSocialFans);
+                } else {
+                    newSocialFans = this.randomAtoB(0, 1000);
+                }
+                if (newSocialFans > data.numOfSocialFans) newSocialFans = parseInt((newSocialFans / this.randomAtoB(1, 3)).toFixed(0));
+                data.numOfSocialFans = parseInt(data.numOfSocialFans) + newSocialFans;
+            }
+
+            //console.log(likesFinal, newSocialFans);
+
+            let textToAdd = ``;
+            if (newSocialFans > 0) textToAdd = `<br>I got ${newSocialFans} new followers.`;
+
+            data.years[data.age].events.push(`I took a selfie.<br>It got ${likesFinal} likes.${textToAdd}`);
+            data.changeTabTrue = 1;
+            data.socialModal.dismiss();
+            data.selfiesPerYear += 1;
+        } else {
+            let alert = this.alertCtrl.create({
+                subTitle: "Already?!",
+                message: "You can take only 4 selfies per year.",
+                buttons: ["Okay"]
+            });
+            alert.present();
+            data.socialModal.dismiss();
+        }
+    }
+
+    createPost(data) {
+        data.numOfPosts += 1;
+        data.years[data.age].events.push("I published a post.");
+        data.changeTabTrue = 1;
+        data.socialModal.dismiss();
     }
 
     capitalize(string) {
@@ -1697,6 +1753,8 @@ export class socialNetworkModal {
         this.data = shareService.getData();
         //console.log();
     }
+
+
 
     backButtonAction() {
         this.viewCtrl.dismiss();
