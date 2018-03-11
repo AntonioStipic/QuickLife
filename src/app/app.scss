@@ -214,6 +214,9 @@ ion-icon {
   &[class*="quicklife-user"] {
     mask-image: url(../assets/imgs/user.svg);
   }
+  &[class*="quicklife-genders"] {
+    mask-image: url(../assets/imgs/genders.svg);
+  }
 }
 
 .modal_content ion-card {

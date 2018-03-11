@@ -15,7 +15,7 @@ import { findLoveModal, propertyListingModal, carsForSaleModal, socialNetworkMod
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { PopoverContentPage } from '../pages/popover/popover';
+import { PopoverContentPage, customLifeModal } from '../pages/popover/popover';
 import { ShareService } from '../services/share/share';
 import { ProgressBarModule } from "angular-progress-bar"
 
@@ -38,7 +38,8 @@ import { HttpModule } from '@angular/http';
     findLoveModal,
     propertyListingModal,
     carsForSaleModal,
-    socialNetworkModal
+    socialNetworkModal,
+    customLifeModal
   ],
   imports: [
     BrowserModule,
@@ -59,7 +60,8 @@ import { HttpModule } from '@angular/http';
     findLoveModal,
     propertyListingModal,
     carsForSaleModal,
-    socialNetworkModal
+    socialNetworkModal,
+    customLifeModal
   ],
   providers: [
     StatusBar,

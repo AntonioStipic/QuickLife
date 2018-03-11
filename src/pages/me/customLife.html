@@ -1,0 +1,46 @@
+<ion-content class="main-view">
+  <div class="overlay" (click)="dismiss()"></div>
+  <div class="modal_content">
+    <ion-card>
+      <ion-card-header>
+        <b class="gurniDolje">Custom Life</b>
+        <button ion-button (click)="dismiss()" class="buttonright" color="primary" small>
+          <ion-icon name="md-close"></ion-icon>
+        </button>
+      </ion-card-header>
+    </ion-card>
+    <ion-list>
+
+      <ion-item>
+        <ion-label>Name</ion-label>
+        <ion-input type="text" [(ngModel)]="name"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Surname</ion-label>
+        <ion-input type="text" [(ngModel)]="surname"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label class="ion-select-text">
+          <ion-icon name="quicklife-genders"></ion-icon> Gender</ion-label>
+        <!--  class="miscListIcon" -->
+        <ion-select [(ngModel)]="gender" multiple="false" cancelText="Dismiss" okText="Ok">
+          <ion-option value="male">Male</ion-option>
+          <ion-option value="female">Female</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label class="ion-select-text">Nationality</ion-label>
+        <!--  class="miscListIcon" -->
+        <ion-select [(ngModel)]="nationality" multiple="false" cancelText="Dismiss" okText="Ok">
+          <ion-option value="Croatian">Croatian</ion-option>
+        </ion-select>
+      </ion-item>
+
+    </ion-list>
+
+    <button ion-button full (click)="startCustomLife(data, name, surname, gender, nationality)" [disabled]="this.name === undefined || this.surname === undefined">Play</button>
+  </div>
+</ion-content>

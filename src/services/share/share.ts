@@ -740,15 +740,25 @@ export class ShareService {
 
     createMe(data, names) {
         this.names = names;
-        data.gender = this.randomGender(data);
+        if (data.customLife == 1) {
+            data.name = data.customLifeInfo.name;
+            data.surname = data.customLifeInfo.surname;
+            data.genderFull = data.customLifeInfo.gender;
+
+            if (data.genderFull == "male") data.gender = "M";
+            else data.gender = "F";
+        } else {
+            data.gender = this.randomGender(data);
+            data.name = this.randomName(data, data.genderFull);
+
+            data.surname = this.randomSurname(data);            
+        }
         /* if (data.gender == "M") {
           
           //console.log(this.names["male"]);
         } */
 
-        data.name = this.randomName(data, data.genderFull);
-
-        data.surname = this.randomSurname(data);
+        data.customLife = 0;
 
         data.age = 0;
 

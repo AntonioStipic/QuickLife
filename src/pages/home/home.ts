@@ -69,9 +69,10 @@ export class HomePage {
   }
 
   changeTabFalse(data) {
+    console.log(1);
     setTimeout(function () {
       data.changeTabTrue = 0;
-    }, 100);
+    }, 500);
     //data.changeTabTrue = 0;
   }
 
@@ -86,11 +87,11 @@ export class HomePage {
     else if (data.age > 105) chance = 45;
     else if (data.age > 110) chance = 60;
     else if (data.age > 115) chance = 85;
-    else if (data.age > 122) chance = 100;
+    else if (data.age > 122) chance = 101;
 
     let rollDice = data.shareService.randomAtoB(1, 100);
 
-    if (rollDice < chance) {
+    if (rollDice <= chance) {
       data.alive = 0;
     }
   }
