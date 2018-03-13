@@ -220,6 +220,9 @@ ion-icon {
   &[class*="quicklife-date-conversation"] {
     mask-image: url(../assets/imgs/date_conversation.svg);
   }
+  &[class*="quicklife-rings"] {
+    mask-image: url(../assets/imgs/rings.svg);
+  }
 }
 
 .modal_content ion-card {

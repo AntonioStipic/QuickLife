@@ -37,7 +37,7 @@ export class MePage {
     t.select(index);
     //
     //setTimeout(function () {
-      //data.changeTabTrue = 0;
+    //data.changeTabTrue = 0;
     //}, 100);
   }
 

@@ -87,7 +87,7 @@ export class HomePage {
   }
 
   willIDie(data) {
-    let chance = 1;
+    let chance = 0.4;
 
     if (data.age > 50) chance = 4;
     else if (data.age > 60) chance = 14;
@@ -99,7 +99,7 @@ export class HomePage {
     else if (data.age > 115) chance = 85;
     else if (data.age > 122) chance = 101;
 
-    let rollDice = data.shareService.randomAtoB(1, 100);
+    let rollDice = data.shareService.randomAtoB(1, 10000) / 100;
 
     //console.log(chance, rollDice);
 

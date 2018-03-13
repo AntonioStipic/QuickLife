@@ -1157,7 +1157,7 @@ export class ShareService {
     }
 
     goOnADate(data) {
-        if (this.randomAtoB(0, 1) == 0) {
+        if (this.randomAtoB(0, 2) == 0) {
             let excuses = ["is too tired to do anything", "doesn't have time", "had family emergency", "had to go to the dentist"];
             let excuse = excuses[this.randomAtoB(0, excuses.length - 1)];
 
@@ -1170,7 +1170,7 @@ export class ShareService {
                 buttons: [{
                     text: "Okay",
                     handler: () => {
-                        
+
                     }
                 }]
             });
@@ -1180,7 +1180,7 @@ export class ShareService {
             let place = places[this.randomAtoB(0, places.length - 1)];
 
             let text = `${data.lover.name} and I went ${place}.`;
-            
+
             data.years[data.age].events.push(text);
             this.handleHappiness(data, "+", this.randomAtoB(2, 4));
             this.handleStability(data, "+", this.randomAtoB(2, 4));
@@ -1190,7 +1190,7 @@ export class ShareService {
                 buttons: [{
                     text: "Okay",
                     handler: () => {
-                        
+
                     }
                 }]
             });
@@ -1590,6 +1590,67 @@ export class ShareService {
             gender = "F";
         }
         return gender;
+    }
+
+    propose(data) {
+        let chance = 0;
+        if (data.age < 18) {
+            chance = 1;
+        } else {
+            if (data.lover.stability > 95) {
+                chance = 100;
+            } else if (data.lover.stability > 90) {
+                chance = 60;
+            } else if (data.lover.stability > 75) {
+                chance = 40;
+            } else if (data.lover.stability > 60) {
+                chance = 30;
+            } else if (data.lover.stability > 50) {
+                chance = 15;
+            } else if (data.lover.stability > 40) {
+                chance = 10;
+            } else {
+                chance = 2;
+            }
+        }
+
+        let accept = this.randomAtoB(1, 100) <= chance;
+
+        if (accept == true) {
+            //engaged
+            data.lover.status = "Engaged";
+            data.years[data.age].events.push(`I proposed to ${data.lover.name}.<br>${data.lover.name} accepted my marriage proposal.`);
+            let alert = this.alertCtrl.create({
+                title: `Soulmates`,
+                subTitle: `${data.lover.name} accepted my marriage proposal!`,
+                buttons: [{
+                    text: 'Okay',
+                    handler: () => {
+                        
+                    }
+                }]
+            });
+            alert.present();
+        } else {
+            data.years[data.age].events.push(`I proposed to ${data.lover.name}.<br>${data.lover.name} rejected my marriage proposal.`);
+            let alert = this.alertCtrl.create({
+                title: `Maybe next time...`,
+                subTitle: `${data.lover.name} rejected my marriage proposal!`,
+                buttons: [{
+                    text: 'Okay',
+                    handler: () => {
+                        
+                    }
+                }]
+            });
+            alert.present();
+        }
+        //console.log(accept);
+
+    }
+
+    getMarried(data) {
+        console.log("Yey, we married babe");
     }
 
     findLove(data) {
