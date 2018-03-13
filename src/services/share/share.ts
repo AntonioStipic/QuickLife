@@ -68,6 +68,16 @@ export class ShareService {
         vehicleModal.present();
     }
 
+    holidayModal(data) {
+        data.holidayModal = this.modalCtrl.create(holidayModal, { data: data }, {
+            showBackdrop: false,
+            enableBackdropDismiss: false,
+            enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave'
+        });
+        data.holidayModal.present();
+    }
+
     socialNetworkModal(data) {
         data.socialModal = this.modalCtrl.create(socialNetworkModal, { data: data }, {
             showBackdrop: false,
@@ -269,7 +279,7 @@ export class ShareService {
                         } else {
                             textToAdd = `Officer wrote you a speeding ticket of $${speedingTicket}.`;
                         }
-                        console.log(speed);
+                        //console.log(speed);
                         let accelerateAlert = this.alertCtrl.create({
                             subTitle: "Jesus take the wheel!",
                             message: `You're driving at the speed of ${speed} km/h!<br>As you look in the rear-view mirror you can see there are now ${policeCars} police cars behind you.`,
@@ -751,7 +761,7 @@ export class ShareService {
             data.gender = this.randomGender(data);
             data.name = this.randomName(data, data.genderFull);
 
-            data.surname = this.randomSurname(data);            
+            data.surname = this.randomSurname(data);
         }
         /* if (data.gender == "M") {
           
@@ -1117,6 +1127,78 @@ export class ShareService {
         }
     }
 
+    goToHoliday(data, vacation) {
+        //console.log(vacation);
+        if (vacation.price <= data.finance) {
+            data.finance -= vacation.price;
+            let moods = ["fantastic", "average", "okay", "exciting", "adventurous"];
+            let mood = moods[this.randomAtoB(0, moods.length - 1)];
+            let prefix = "";
+            if (mood.substring(0, 1) == "a" || mood.substring(0, 1) == "e" || mood.substring(0, 1) == "i" || mood.substring(0, 1) == "o" || mood.substring(0, 1) == "u") prefix = "an";
+            else prefix = "a";
+            let firstText = ``;
+            if (vacation.invitePartner == true) {
+                firstText = `I brought ${data.lover.name} with me.<br>`;
+                this.handleStability(data, "+", this.randomAtoB(6, 15));
+            }
+            let secondText = `${firstText}I had ${prefix} ${mood} vacation.`;
+            data.years[data.age].events.push(`I booked a holiday in ${vacation.travelTo}.<br>${secondText}`);
+            data.changeTabTrue = 1;
+            data.holidayModal.dismiss();
+            this.handleHappiness(data, "", this.randomAtoB(2, 8));
+        } else {
+            let alert = this.alertCtrl.create({
+                subTitle: "Shut up and take my money!",
+                message: `You can't afford to book this vacation. <br> It costs $${vacation.price}.`,
+                buttons: ["Okay"]
+            });
+            alert.present();
+        }
+    }
+
+    goOnADate(data) {
+        if (this.randomAtoB(0, 1) == 0) {
+            let excuses = ["is too tired to do anything", "doesn't have time", "had family emergency", "had to go to the dentist"];
+            let excuse = excuses[this.randomAtoB(0, excuses.length - 1)];
+
+            this.handleHappiness(data, "-", this.randomAtoB(2, 4));
+            this.handleStability(data, "-", this.randomAtoB(2, 4));
+
+            let alert = this.alertCtrl.create({
+                subTitle: "Oh, okay...",
+                message: `${data.lover.name} ${excuse} and isn't able to go on a date.`,
+                buttons: [{
+                    text: "Okay",
+                    handler: () => {
+                        
+                    }
+                }]
+            });
+            alert.present();
+        } else {
+            let places = ["to the cinema", "on a romantic dinner", "for a walk", "bowling", "for a coffee", "to the zoo"];
+            let place = places[this.randomAtoB(0, places.length - 1)];
+
+            let text = `${data.lover.name} and I went ${place}.`;
+            
+            data.years[data.age].events.push(text);
+            this.handleHappiness(data, "+", this.randomAtoB(2, 4));
+            this.handleStability(data, "+", this.randomAtoB(2, 4));
+            let alert = this.alertCtrl.create({
+                subTitle: "Time for romance",
+                message: text,
+                buttons: [{
+                    text: "Okay",
+                    handler: () => {
+                        
+                    }
+                }]
+            });
+            alert.present();
+
+        }
+    }
+
     createPost(data) {
         data.numOfPosts += 1;
         data.years[data.age].events.push("I published a post.");
@@ -1199,6 +1281,20 @@ export class ShareService {
         } else if (data.lastHappiness < 20 && data.happiness >= 20) {
             data.hasDepression = 0;
             data.years[data.age].events.push("I don't have depression anymore.");
+        }
+    }
+
+    handleStability(data, character, amount) {
+        if (character == "+") {
+            if (data.lover.stability + amount > 100) data.lover.stability = 100;
+            else data.lover.stability += amount;
+        } else if (character == "-") {
+            if ((data.lover.stability - amount) < 0) data.lover.stability = 0;
+            else data.lover.stability -= amount;
+        } else {
+            if (data.lover.stability + amount > 100) data.lover.stability = 100;
+            else if (data.lover.stability + amount < 0) data.lover.stability = 0;
+            else if (data.age > 12) data.lover.stability += amount;
         }
     }
 
@@ -1764,7 +1860,62 @@ export class socialNetworkModal {
         //console.log();
     }
 
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
 
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+@Component({
+    templateUrl: '../../pages/me/holidayModal.html'
+})
+export class holidayModal {
+    data: object;
+    travelTo;
+    hotelStars;
+    travelClass;
+    invitePartner;
+    varijacija;
+    vacation: object;
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
+        this.data = shareService.getData();
+
+        this.travelTo = this.data["countries"]["countries"][this.randomAtoB(0, this.data["countries"]["countries"].length)];
+        this.hotelStars = 1;
+        this.travelClass = "Economy Class";
+        this.invitePartner = false;
+        this.varijacija = this.randomAtoB(80, 120);
+        this.vacation = {};
+        //console.log();
+    }
+
+    travelPrice() {
+        let osnovica = 500;
+        osnovica = osnovica * (this.hotelStars / 2) * Math.sqrt(2);
+
+        if (this.travelClass == "Economy Class") osnovica += osnovica / 10;
+        else if (this.travelClass == "Business Class") osnovica += osnovica / 8;
+        else if (this.travelClass == "First Class") osnovica += osnovica / 5;
+        else if (this.travelClass == "Train") osnovica += osnovica / 8;
+        else if (this.travelClass == "Cruise") osnovica += osnovica / 4;
+
+        if (this.invitePartner == true) {
+            osnovica = osnovica * Math.sqrt(3);
+        }
+        this.vacation["travelClass"] = this.travelClass;
+        this.vacation["hotelStars"] = this.hotelStars;
+        this.vacation["invitePartner"] = this.invitePartner;
+        this.vacation["travelTo"] = this.travelTo;
+        this.vacation["price"] = (osnovica * this.varijacija / 100).toFixed(2);
+        return (osnovica * this.varijacija / 100).toFixed(2);
+    }
+
+    randomAtoB(A, B) {
+        return Math.floor(Math.random() * (B - A + 1) + A);
+    }
 
     backButtonAction() {
         this.viewCtrl.dismiss();

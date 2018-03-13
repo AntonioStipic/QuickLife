@@ -16,6 +16,7 @@ export class HomePage {
   names: object;
   jobs: object;
   cars: object;
+  countries: object;
 
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public alertCtrl: AlertController, private http: Http) {
     this.data = shareService.getData();
@@ -56,6 +57,16 @@ export class HomePage {
       }, error => {
         console.log(error);
       });
+
+    this.http.get("assets/resources/countries.json")
+      .subscribe(res => {
+        this.countries = res.json();
+        this.data["countries"] = this.countries;
+        //console.log(this.jobs[0])
+        //console.log(this.jobs);
+      }, error => {
+        console.log(error);
+      });
   }
   /* ionViewDidLoad() {
     
@@ -69,7 +80,6 @@ export class HomePage {
   }
 
   changeTabFalse(data) {
-    console.log(1);
     setTimeout(function () {
       data.changeTabTrue = 0;
     }, 500);
@@ -91,8 +101,48 @@ export class HomePage {
 
     let rollDice = data.shareService.randomAtoB(1, 100);
 
+    //console.log(chance, rollDice);
+
     if (rollDice <= chance) {
       data.alive = 0;
+    }
+  }
+
+  offerDrugs(data) {
+    let chance = 0;
+
+    if (data.age >= 18) {
+      chance = 6;
+    }
+
+    if (data.shareService.randomAtoB(1, 100) <= chance) {
+      let places = ["on the street", "on the sidewalk", "in downtown", "by the bus station", "by the tram station", "in the park"];
+      let place = places[data.shareService.randomAtoB(0, places.length - 1)];
+
+      let gender = data.shareService.randomAtoB(0, 1);
+      if (gender == 1) gender = "He";
+      else gender = "She";
+
+      let drugs = ["weed", "ecstasy", "meth", "cocaine", "heroin", "crack", "MDMA", "LSD"];
+      let drug = drugs[data.shareService.randomAtoB(0, drugs.length - 1)];
+      let text = `A stranger approaches you ${place}. ${gender} offers you ${drug}.`;
+
+      let alert = this.alertCtrl.create({
+        title: 'Drugs',
+        subTitle: text,
+        buttons: [{
+          text: 'Take',
+          handler: () => {
+            data.years[data.age].events.push(`I took ${drug}.`);
+          }
+        }, {
+          text: 'Leave',
+          handler: () => {
+            //console.log("You left it")
+          }
+        }]
+      });
+      alert.present();
     }
   }
 
@@ -206,6 +256,7 @@ export class HomePage {
 
     this.willParentsDie(data);
     this.regulateHappiness(data);
+    this.offerDrugs(data);
 
     if (data.havePartner == 1) {
       this.willPartnerBreakUp(data);

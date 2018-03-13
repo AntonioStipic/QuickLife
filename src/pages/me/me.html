@@ -319,20 +319,31 @@
             </ion-select>
           </ion-item>
 
-          <button ion-item (click)="data.shareService.goToClub(data, 0); changeTab(0, data)" class="button-ion-item" [disabled]="data.age < 16">
+          <button ion-item (click)="data.shareService.goToClub(data, 0); changeTab(0, data)" class="button-ion-item bottomLine" [disabled]="data.age < 16">
             <ion-icon name="quicklife-disco" class="miscListIcon"></ion-icon>
             <span class="absolutePosition">Go to club</span>
           </button>
 
-          <button ion-item (click)="data.shareService.socialNetworkModal(data)" class="button-ion-item" [disabled]="data.age < 13">
+          <button ion-item (click)="data.shareService.socialNetworkModal(data)" class="button-ion-item bottomLine" [disabled]="data.age < 13">
             <ion-icon name="quicklife-user" class="miscListIcon"></ion-icon>
             <span class="absolutePosition">Social Network</span>
           </button>
 
-          <button ion-item (click)="data.shareService.goForADrive(data); changeTab(0, data)" class="button-ion-item topLine" [disabled]="!data.cars.length > 0 || !data.passedDrivingTest">
+          <button ion-item (click)="data.shareService.goForADrive(data); changeTab(0, data)" class="button-ion-item topLine bottomLine" [disabled]="!data.cars.length > 0 || !data.passedDrivingTest">
             <ion-icon name="quicklife-car" class="miscListIcon"></ion-icon>
             <span class="absolutePosition">Go for a drive</span>
           </button>
+
+          <button ion-item (click)="data.shareService.holidayModal(data)" class="button-ion-item topLine bottomLine" [disabled]="data.age < 18">
+            <ion-icon name="ios-plane" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition"> Book Holiday</span>
+          </button>
+
+          <button ion-item (click)="data.shareService.goOnADate(data); changeTab(0, data)" class="button-ion-item topLine" [disabled]="!data.havePartner">
+            <ion-icon name="quicklife-date-conversation" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition"> Go on a date</span>
+          </button>
+
           <ion-item-divider color="light">Documents</ion-item-divider>
 
           <button ion-item class="button-ion-item" [disabled]="data.shareService.passedDrivingTestButton(data)" (click)="data.shareService.takeDrivingTest(data); changeTab(0, data)">

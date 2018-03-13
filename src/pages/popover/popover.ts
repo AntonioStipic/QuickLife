@@ -23,7 +23,6 @@ export class PopoverContentPage {
   }
 
   customLife(data) {
-    data.customLife = 1;
     this.viewCtrl.dismiss();
     data.customLifeModal = this.modalCtrl.create(customLifeModal, { data: data }, {
       showBackdrop: false,
@@ -47,10 +46,12 @@ export class customLifeModal {
   nationality = "Croatian";
   constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController, public navCtrl: NavController) {
     this.data = shareService.getData();
+
     //console.log();
   }
 
   startCustomLife(data, name, surname, gender, nationality) {
+    data.customLife = 1;
     data.customLifeInfo = {name: name, surname: surname, gender: gender, nationality: nationality};
     this.navCtrl.push(TabsPage, {}, { animate: false });
   }

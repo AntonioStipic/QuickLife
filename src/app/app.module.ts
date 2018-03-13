@@ -10,7 +10,7 @@ import { FamilyPage } from '../pages/family/family';
 import { EducationPage } from '../pages/education/education';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
-import { findLoveModal, propertyListingModal, carsForSaleModal, socialNetworkModal } from '../services/share/share';
+import { findLoveModal, propertyListingModal, carsForSaleModal, socialNetworkModal, holidayModal } from '../services/share/share';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -39,7 +39,8 @@ import { HttpModule } from '@angular/http';
     propertyListingModal,
     carsForSaleModal,
     socialNetworkModal,
-    customLifeModal
+    customLifeModal,
+    holidayModal
   ],
   imports: [
     BrowserModule,
@@ -61,7 +62,8 @@ import { HttpModule } from '@angular/http';
     propertyListingModal,
     carsForSaleModal,
     socialNetworkModal,
-    customLifeModal
+    customLifeModal,
+    holidayModal
   ],
   providers: [
     StatusBar,

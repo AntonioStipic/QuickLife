@@ -217,6 +217,9 @@ ion-icon {
   &[class*="quicklife-genders"] {
     mask-image: url(../assets/imgs/genders.svg);
   }
+  &[class*="quicklife-date-conversation"] {
+    mask-image: url(../assets/imgs/date_conversation.svg);
+  }
 }
 
 .modal_content ion-card {
