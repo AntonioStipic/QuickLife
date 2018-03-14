@@ -1176,7 +1176,7 @@ export class ShareService {
             });
             alert.present();
         } else {
-            let places = ["to the cinema", "on a romantic dinner", "for a walk", "bowling", "for a coffee", "to the zoo"];
+            let places = ["to the cinema", "on a romantic dinner", "for a walk", "bowling", "for a coffee", "to the zoo", "to the museum", "to the art gallery", "ice skating", "to concert"];
             let place = places[this.randomAtoB(0, places.length - 1)];
 
             let text = `${data.lover.name} and I went ${place}.`;

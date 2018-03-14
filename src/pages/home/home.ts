@@ -444,8 +444,10 @@ export class HomePage {
       }
 
     } else {
+      let causes = ["a heart attack", "a lung cancer", "a tuberculosis", "a stroke", "a chronic obstructive pulmonary disease"];
+      let cause = causes[data.shareService.randomAtoB(0, causes.length - 1)];
       data.shareService.disableAll(data);
-      data.years[data.age].events.push("I died.");
+      data.years[data.age].events.push(`I died from ${cause}.`);
     }
 
   }
