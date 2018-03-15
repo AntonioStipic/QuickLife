@@ -192,13 +192,17 @@ export class ShareService {
 
             data.propertyModal.dismiss();
 
+            let textToAdd = "";
+
             if (data.posjedi.length == 1) {
                 data.livingIn = property[data.propertyValueIndex + 1];
+                textToAdd = " and moved out of my parent's house";
             }
             let preposition = "";
             if (property[0] == "Apartment") preposition = "an";
             else preposition = "a";
-            data.years[data.age].events.push(`I bought ${preposition} ${property[0].toLowerCase()}.`);
+
+            data.years[data.age].events.push(`I bought ${preposition} ${property[0].toLowerCase()}${textToAdd}.`);
             let alert = this.alertCtrl.create({
                 title: "Congratulations!",
                 subTitle: `You bought ${property[0].toLowerCase()} for $${this.formatMoney(property[data.propertyValueIndex])}!`,
@@ -1261,14 +1265,16 @@ export class ShareService {
         data.posjedi.push(property);
 
         data.propertyModal.dismiss();
+        let textToAdd = "";
 
         if (data.posjedi.length == 1) {
             data.livingIn = property[data.propertyValueIndex + 1];
+            textToAdd = " and moved out of my parent's house";
         }
         let preposition = "";
         if (property[0] == "Apartment") preposition = "an";
         else preposition = "a";
-        data.years[data.age].events.push(`I bought ${preposition} ${property[0].toLowerCase()}.`);
+        data.years[data.age].events.push(`I bought ${preposition} ${property[0].toLowerCase()}${textToAdd}.`);
         let alert = this.alertCtrl.create({
             title: "Congratulations!",
             subTitle: `You bought ${property[0].toLowerCase()} for $${this.formatMoney(property[data.propertyValueIndex])}!`,
@@ -1534,8 +1540,31 @@ export class ShareService {
                                 }, {
                                     text: 'One night stand',
                                     handler: () => {
-                                        //this.goForDate(data, tmpPerson);
-                                        data.years[data.age].events.push(`I had a one night stand.`);
+                                        let textToAdd = "";
+                                        if (data.havePartner == 1) {
+                                            //this.goForDate(data, tmpPerson);
+                                            let chance = this.randomAtoB(0, 2);
+                                            if (chance == 0) {
+                                                let preposition = "";
+                                                if (data.lover.gender == "male") preposition = "him";
+                                                else preposition = "her";
+                                                textToAdd = `<br>${data.lover.name} found out I cheated on ${preposition}.`;
+                                                this.handleStability(data, "-", 100);
+                                                let chance2 = this.randomAtoB(0, 1);
+
+                                                if (chance2 == 0) {
+                                                    let preposition2 = "";
+                                                    if (preposition == "him") preposition2 = "He";
+                                                    else preposition2 = "She";
+                                                    textToAdd += `<br>${preposition2} broke up with me.`;
+                                                    data.havePartner = 0;
+                                                    this.handleHappiness(data, "-", 50);
+                                                    data.lover = { stability: 50, time: 0 };
+                                                }
+                                            }
+
+                                        }
+                                        data.years[data.age].events.push(`I had a one night stand.${textToAdd}`);
                                     }
                                 }, {
                                     text: 'Ignore',
@@ -1601,6 +1630,7 @@ export class ShareService {
         if (data.appearance > 80) chances += 20;
         if (data.appearance > 70 && data.appearance <= 80) chances += 10;
         if (data.intelligence > 70) chances += 10;
+        if (data.age > 25 && data.age < 50 && data.posjedi.length == 0) chances -= 40;
 
         let doTheyLikeMe = this.randomAtoB(1, 100) <= chances;
 
@@ -1618,12 +1648,38 @@ export class ShareService {
             data.years[data.age].events.push(`I'm dating ${lover.name} ${lover.surname}.`);
             alert.present();
         } else {
-            let randomHobby = this.randomAtoB(0, data.likingHobbies.length - 1);
-            let subtitle = "Uh-oh!";
-            if (data.likingHobbies[randomHobby] == "shoes") subtitle = "What are thooose?!";
 
-            let rejectionAction = data.rejections[this.randomAtoB(0, data.rejections.length - 1)];
-            let rejectingText = `${lover["name"]} disliked your ${data.likingHobbies[randomHobby]}. <br> ${lover["name"]} ${rejectionAction}.`;
+            let randomHobby = 0;
+            let subtitle = "Uh-oh!";
+            let rejectingText = "";
+            if (data.age > 25 && data.age < 50 && data.posjedi.length == 0) {
+                if (this.randomAtoB(0, 2) == 0) {
+                    randomHobby = this.randomAtoB(0, data.likingHobbies.length - 1);
+                    if (data.likingHobbies[randomHobby] == "shoes") subtitle = "What are thooose?!";
+
+                    let rejectionAction = data.rejections[this.randomAtoB(0, data.rejections.length - 1)];
+                    let preposition = "";
+                    if (lover["gender"] == "male") preposition = "He";
+                    else preposition = "She";
+                    rejectingText = `${lover["name"]} disliked your ${data.likingHobbies[randomHobby]}. <br> ${preposition} ${rejectionAction}.`;
+                } else {
+                    let rejectionAction = data.rejections[this.randomAtoB(0, data.rejections.length - 1)];
+                    let preposition = "";
+                    if (lover["gender"] == "male") preposition = "He";
+                    else preposition = "She";
+                    rejectingText = `${lover["name"]} doesn't want to date you because you're still living with your parents. <br> ${preposition} ${rejectionAction}.`;
+                }
+            } else {
+                randomHobby = this.randomAtoB(0, data.likingHobbies.length - 1);
+                if (data.likingHobbies[randomHobby] == "shoes") subtitle = "What are thooose?!";
+
+                let rejectionAction = data.rejections[this.randomAtoB(0, data.rejections.length - 1)];
+                let preposition = "";
+                if (lover["gender"] == "male") preposition = "He";
+                else preposition = "She";
+                rejectingText = `${lover["name"]} disliked your ${data.likingHobbies[randomHobby]}. <br> ${preposition} ${rejectionAction}.`;
+            }
+
             // This opens when parner doesn't like you
             let alert = this.alertCtrl.create({
                 subTitle: subtitle,

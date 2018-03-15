@@ -178,11 +178,14 @@
       <div [hidden]="data.meAssets != 'House'">
         <ion-card>
           <ion-card-header>
-            <b>Owned properties:</b>
+            <b>Owned properties:</b> <b *ngIf="data.posjedi.length == 0">None</b>
           </ion-card-header>
           <!-- property listings -->
 
           <ion-list>
+            <ion-item *ngIf="data.posjedi.length == 0">
+                <ion-label>You're living with your parents.</ion-label>
+            </ion-item>
             <button ion-item *ngFor="let property of data.posjedi">
               <ion-icon [name]="(property[0] == 'House')? 'ios-home-outline':'quicklife-apartment'" item-start></ion-icon>
               <div *ngIf="property[0] == 'House'" class="propertyInfo">
@@ -219,7 +222,7 @@
       <div [hidden]="data.meAssets != 'Car'">
         <ion-card>
           <ion-card-header>
-            <b>Owned cars:</b>
+            <b>Owned cars:</b> <b *ngIf="data.cars.length == 0">None</b>
           </ion-card-header>
           <ion-list>
             <button ion-item *ngFor="let car of data.cars">
