@@ -705,13 +705,48 @@ export class ShareService {
             checked: true
         }); ?/
         */
-        alert.addButton('Cancel');
+        alert.addButton({
+            text: 'Cancel',
+            role: 'cancel',
+            handler: () => {
+                if (data.dontAskForDrivingTestOn18 == 1) {
+                    this.checkDrivingTest(data);
+                    data.dontAskForDrivingTestOn18 = 0;
+                }
+            }
+        });
         alert.addButton({
             text: 'OK',
             handler: selectedMajor => {
                 data.currentCollegeMajor = selectedMajor;
                 this.goToCollege(data);
+                if (data.dontAskForDrivingTestOn18 == 1) {
+                    this.checkDrivingTest(data);
+                    data.dontAskForDrivingTestOn18 = 0;
+                }
             }
+        });
+        alert.present();
+    }
+
+    checkDrivingTest(data) {
+        let alert = this.alertCtrl.create({
+            enableBackdropDismiss: false,
+            title: 'Back on track',
+            message: `You're old enough to take a driving test.<br>Will you take it?`,
+            buttons: [
+                {
+                    text: 'Yes',
+                    handler: () => {
+                        //console.log("I started High School");
+                        data.shareService.takeDrivingTest(data);
+                    }
+                },
+                {
+                    text: 'No',
+                    role: 'cancel'
+                }
+            ]
         });
         alert.present();
     }
@@ -950,6 +985,9 @@ export class ShareService {
         // List with all properties that player owns
         data.posjedi = [];
 
+        // If true, don't ask but wait for player to choose college and then ask him for driving test
+        data.dontAskForDrivingTestOn18 = 0;
+
         // ID of property in which the player is living
         data.livingIn = "";
 
@@ -1030,7 +1068,7 @@ export class ShareService {
         if (data.finance >= 80) {
             data.finance -= 80;
             let chance = this.randomAtoB(0, 120 - data.intelligence);
-            if (chance < 35) {
+            if (chance < 30) {
                 data.passedDrivingTest = 1;
                 data.drivingTestCount += 1;
 
@@ -1626,7 +1664,7 @@ export class ShareService {
                 buttons: [{
                     text: 'Okay',
                     handler: () => {
-                        
+
                     }
                 }]
             });
@@ -1639,7 +1677,7 @@ export class ShareService {
                 buttons: [{
                     text: 'Okay',
                     handler: () => {
-                        
+
                     }
                 }]
             });

@@ -317,6 +317,10 @@ export class HomePage {
       }
 
       if (data.goingToHighSchoolYears == 4) {
+        
+        // If this is true wait for player to select which college and then ask for driving.
+        data.dontAskForDrivingTestOn18 = 1;
+
         var percentH = ((data.learnedHighSchool / 1.2) + (data.intelligence / 12)) / 12;
         //console.log(data.learnedHighSchool);
         if (percentH < 0.1) {
@@ -441,6 +445,8 @@ export class HomePage {
           }
         }
 
+      } else if (data.age == 18) {
+        if (data.dontAskForDrivingTestOn18 == 0) this.checkDrivingTest(data);
       }
 
     } else {
@@ -450,6 +456,28 @@ export class HomePage {
       data.years[data.age].events.push(`I died from ${cause}.`);
     }
 
+  }
+
+  checkDrivingTest(data) {
+    let alert = this.alertCtrl.create({
+      enableBackdropDismiss: false,
+      title: 'Back on track',
+      message: `You're old enough to take a driving test.<br>Will you take it?`,
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            //console.log("I started High School");
+            data.shareService.takeDrivingTest(data);
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    });
+    alert.present();
   }
 
   checkGoToHighSchool(data) {
@@ -489,7 +517,13 @@ export class HomePage {
         },
         {
           text: 'No',
-          role: 'cancel'
+          role: 'cancel',
+          handler: () => {
+            if (data.dontAskForDrivingTestOn18 == 1) {
+              this.checkDrivingTest(data);
+              data.dontAskForDrivingTestOn18 = 0;
+            }
+          }
         }
       ]
     });
