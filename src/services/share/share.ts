@@ -41,9 +41,9 @@ export class ShareService {
     findLoveModal(lover) {
         let profileModal = this.modalCtrl.create(findLoveModal, { lover: lover }, {
             showBackdrop: false,
-            enableBackdropDismiss: false,
-            enterAnimation: 'modal-scale-up-enter',
-            leaveAnimation: 'modal-scale-up-leave'
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
         });
         profileModal.present();
     }
@@ -51,9 +51,9 @@ export class ShareService {
     propertyListingModal(data, posjedi) {
         data.propertyModal = this.modalCtrl.create(propertyListingModal, { data: data, posjedi: posjedi }, {
             showBackdrop: false,
-            enableBackdropDismiss: false,
-            enterAnimation: 'modal-scale-up-enter',
-            leaveAnimation: 'modal-scale-up-leave'
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
         });
         data.propertyModal.present();
     }
@@ -61,9 +61,9 @@ export class ShareService {
     carsForSaleModal(data, cars) {
         let vehicleModal = this.modalCtrl.create(carsForSaleModal, { data: data, cars: cars }, {
             showBackdrop: false,
-            enableBackdropDismiss: false,
-            enterAnimation: 'modal-scale-up-enter',
-            leaveAnimation: 'modal-scale-up-leave'
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
         });
         vehicleModal.present();
     }
@@ -71,19 +71,29 @@ export class ShareService {
     holidayModal(data) {
         data.holidayModal = this.modalCtrl.create(holidayModal, { data: data }, {
             showBackdrop: false,
-            enableBackdropDismiss: false,
-            enterAnimation: 'modal-scale-up-enter',
-            leaveAnimation: 'modal-scale-up-leave'
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
         });
         data.holidayModal.present();
+    }
+
+    mortgageModal(data, property, interestRate) {
+        data.mortgageModal = this.modalCtrl.create(mortgageModal, { data: data, property: property, interestRate: interestRate }, {
+            showBackdrop: false,
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
+        });
+        data.mortgageModal.present();
     }
 
     socialNetworkModal(data) {
         data.socialModal = this.modalCtrl.create(socialNetworkModal, { data: data }, {
             showBackdrop: false,
-            enableBackdropDismiss: false,
-            enterAnimation: 'modal-scale-up-enter',
-            leaveAnimation: 'modal-scale-up-leave'
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
         });
         data.socialModal.present();
     }
@@ -170,36 +180,78 @@ export class ShareService {
     }
 
     buyProperty(data, property) {
-        //console.log(property);
         data.propertyValueIndex = 0;
         if (property[0] == "House") data.propertyValueIndex = 4;
         else if (property[0] == "Apartment" || property[0] == "Condo") data.propertyValueIndex = 3;
-        data.finance -= property[data.propertyValueIndex];
-        data.ownedProperties.push(property[data.propertyValueIndex + 1]);
-        data.posjedi.push(property);
 
-        data.propertyModal.dismiss();
+        if (data.finance >= property[data.propertyValueIndex]) {
+            //console.log(property);
+            data.finance -= property[data.propertyValueIndex];
+            data.ownedProperties.push(property[data.propertyValueIndex + 1]);
+            data.posjedi.push(property);
 
-        if (data.posjedi.length == 1) {
-            data.livingIn = property[data.propertyValueIndex + 1];
+            data.propertyModal.dismiss();
+
+            if (data.posjedi.length == 1) {
+                data.livingIn = property[data.propertyValueIndex + 1];
+            }
+            let preposition = "";
+            if (property[0] == "Apartment") preposition = "an";
+            else preposition = "a";
+            data.years[data.age].events.push(`I bought ${preposition} ${property[0].toLowerCase()}.`);
+            let alert = this.alertCtrl.create({
+                title: "Congratulations!",
+                subTitle: `You bought ${property[0].toLowerCase()} for $${this.formatMoney(property[data.propertyValueIndex])}!`,
+                buttons: [
+                    {
+                        text: 'Okay',
+                        handler: () => {
+                            //console.log('Cancel clicked');
+
+                        }
+                    }]
+            });
+            alert.present();
+        } else {
+            if (data.repaymentTerm > 0) {
+                let alert = this.alertCtrl.create({
+                    title: "Bad news!",
+                    subTitle: `You already have a mortgage!`,
+                    buttons: ["Okay"]
+                });
+                alert.present();
+            } else if (data.finance >= property[data.propertyValueIndex] / 10) {
+                let interestRate = this.randomAtoB(1, 12);
+                let alert = this.alertCtrl.create({
+                    title: "Bad news!",
+                    subTitle: `You can't afford this ${property[0].toLowerCase()}.<br>Do you want to get a mortgage with a ${interestRate}% interest rate?`,
+                    buttons: [
+                        {
+                            text: 'Yes',
+                            handler: () => {
+                                //console.log('Yes');
+                                this.mortgageModal(data, property, interestRate);
+                            }
+                        },
+                        {
+                            text: 'No',
+                            role: 'cancel',
+                            handler: () => {
+                                //console.log('No');
+
+                            }
+                        }]
+                });
+                alert.present();
+            } else {
+                let alert = this.alertCtrl.create({
+                    title: "Bad news!",
+                    subTitle: `You don't have enough money for the minimum deposit for this ${property[0].toLowerCase()}.`,
+                    buttons: ["Okay"]
+                });
+                alert.present();
+            }
         }
-        let preposition = "";
-        if (property[0] == "Apartment") preposition = "an";
-        else preposition = "a";
-        data.years[data.age].events.push(`I bought ${preposition} ${property[0].toLowerCase()}.`);
-        let alert = this.alertCtrl.create({
-            title: "Congratulations!",
-            subTitle: `You bought ${property[0].toLowerCase()} for $${this.formatMoney(property[data.propertyValueIndex])}!`,
-            buttons: [
-                {
-                    text: 'Okay',
-                    handler: () => {
-                        //console.log('Cancel clicked');
-
-                    }
-                }]
-        });
-        alert.present();
     }
 
     buyVehicle(data, car) {
@@ -822,7 +874,7 @@ export class ShareService {
 
         // Balance player has at the beggining of game
         data.finance = 100;
-        //data.finance = 100000000;
+        //data.finance = 100000;
 
         // Player is none sexuality until 12th yo
         data.sexuality = "None";
@@ -1192,6 +1244,44 @@ export class ShareService {
             });
             alert.present();
         }
+    }
+
+    getMortgage(data, repaymentTerm, monthlyPayment, deposit, interestRate, property) {
+        //console.log(repaymentTerm, monthlyPayment);
+        data.repaymentTerm = repaymentTerm;
+        data.monthlyPayment = parseFloat(monthlyPayment);
+        data.outcome += parseFloat(monthlyPayment);
+        data.finance -= deposit;
+        data.interestRate = interestRate;
+
+        data.changeTabTrue = 1;
+        data.mortgageModal.dismiss();
+
+        data.ownedProperties.push(property[data.propertyValueIndex + 1]);
+        data.posjedi.push(property);
+
+        data.propertyModal.dismiss();
+
+        if (data.posjedi.length == 1) {
+            data.livingIn = property[data.propertyValueIndex + 1];
+        }
+        let preposition = "";
+        if (property[0] == "Apartment") preposition = "an";
+        else preposition = "a";
+        data.years[data.age].events.push(`I bought ${preposition} ${property[0].toLowerCase()}.`);
+        let alert = this.alertCtrl.create({
+            title: "Congratulations!",
+            subTitle: `You bought ${property[0].toLowerCase()} for $${this.formatMoney(property[data.propertyValueIndex])}!`,
+            buttons: [
+                {
+                    text: 'Okay',
+                    handler: () => {
+                        //console.log('Cancel clicked');
+
+                    }
+                }]
+        });
+        alert.present();
     }
 
     goOnADate(data) {
@@ -1957,6 +2047,42 @@ export class socialNetworkModal {
     constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
         this.data = shareService.getData();
         //console.log();
+    }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+@Component({
+    templateUrl: '../../pages/me/mortgage.html'
+})
+export class mortgageModal {
+    data: object;
+    property: object;
+    deposit = 0;
+    repaymentTerm = 5;
+    interestRate = 0;
+
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
+        this.data = shareService.getData();
+        this.property = params.get("property");
+        this.interestRate = params.get("interestRate");
+
+        this.deposit = parseInt((this.property[this.data["propertyValueIndex"]] / 10).toFixed(2));
+        //console.log();
+    }
+
+    monthlyPayment(data, property) {
+        let ostalo = property[data.propertyValueIndex] - this.deposit;
+        let perYear = ostalo / this.repaymentTerm;
+        let perMonth = (perYear / 12 + perYear / 12 / 100 * this.interestRate).toFixed(2);
+
+        return perMonth;
     }
 
     backButtonAction() {

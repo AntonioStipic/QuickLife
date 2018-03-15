@@ -61,12 +61,20 @@
   <ion-scroll scrollX="true" scrollY="true" style="width: 100%; height: 100%">
     <div class="overlay" (click)="dismiss()"></div>
     <div class="modal_content maliMarginGore">
-      <b class="h2">Cars for sale:</b>
+      <!-- <b class="h2">Cars for sale:</b>
       <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1">
         <ion-icon name="md-close"></ion-icon>
       </button>
       <br>
-      <br>
+      <br> -->
+      <ion-card>
+        <ion-card-header>
+          <b class="gurniDolje">Cars for sale:</b>
+          <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1" small>
+            <ion-icon name="md-close"></ion-icon>
+          </button>
+        </ion-card-header>
+      </ion-card>
       <ion-list>
 
         <ion-card>

@@ -1,5 +1,5 @@
 {
-    "male": ["Antonio", "Ivan", "Josip", "Saša", "Dino", "Matija", "Marko", "Filip", "Patrik", "Marin", "Luka", "Matko", "Fran", "Jakov", "Zvonimir", "David", "Damir", "Mirko", "Leon", "Alen", "Nikola", "Damjan", "Robert", "Ivor", "Bruno", "Antun", "Branimir", "Branko"],
-    "female": ["Ivana", "Marija", "Petra", "Ana", "Leonarda", "Lucija", "Sara", "Lara", "Danijela", "Mia", "Lana", "Marta", "Lea", "Tea", "Marijana", "Ivona", "Elena", "Doris", "Ena", "Jelena", "Nina", "Antonija", "Branka", "Barbara", "Filipa", "Gabrijela", "Iva"],
+    "male": ["Antonio", "Ivan", "Josip", "Saša", "Dino", "Matija", "Marko", "Filip", "Patrik", "Marin", "Luka", "Matko", "Fran", "Jakov", "Zvonimir", "David", "Damir", "Mirko", "Leon", "Alen", "Nikola", "Damjan", "Robert", "Ivor", "Bruno", "Antun", "Branimir", "Branko", "Ante", "Karlo", "Dominik", "Andrija"],
+    "female": ["Leonarda", "Ivana", "Marija", "Petra", "Ana", "Lucija", "Sara", "Lara", "Danijela", "Mia", "Lana", "Marta", "Lea", "Tea", "Marijana", "Ivona", "Elena", "Doris", "Ena", "Jelena", "Nina", "Antonija", "Branka", "Barbara", "Filipa", "Gabrijela", "Iva", "Klara", "Ema", "Laura", "Karla", "Josipa"],
     "surname": ["Stipić", "Nago", "Marković", "Grubišić", "Horvat", "Kovačević", "Marić", "Babić", "Novak", "Jurić", "Vuković", "Knežević", "Petrović", "Bošnjak", "Martinović", "Mihaljević", "Tokić", "Primorac", "Orešković", "Josipović", "Mišić", "Savić", "Mamić", "Kolarić", "Burić", "Katić", "Pavelić", "Dukić", "Kovačić", "Ilić", "Ivanković", "Kovač", "Mandić", "Pavić", "Radić", "Štimac"]
 }

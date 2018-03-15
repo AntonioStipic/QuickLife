@@ -280,6 +280,15 @@ export class HomePage {
     if (data.alive) {
       this.data["shareService"].updateJobs(this.data, this.jobs);
 
+      if (data.repaymentTerm > 0) {
+        data.finance -= data.monthlyPayment * 12;
+        data.repaymentTerm -= 1;
+        if (data.repaymentTerm == 0) {
+          data.outcome -= data.monthlyPayment;
+          data.years[data.age].events.push("I've paid off my mortgage.");
+        }
+      }
+
       if (data.father.alive == 1) {
         data.father.age += 1;
       }
@@ -317,7 +326,7 @@ export class HomePage {
       }
 
       if (data.goingToHighSchoolYears == 4) {
-        
+
         // If this is true wait for player to select which college and then ask for driving.
         data.dontAskForDrivingTestOn18 = 1;
 
