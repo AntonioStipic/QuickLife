@@ -96,7 +96,7 @@
               Parking space: {{property[2]}}
               <br> Price: ${{data.shareService.formatMoney(property[3])}}
 
-              <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 0" small (click)="data.shareService.buyProperty(data, property)">
+              <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 18" small (click)="data.shareService.buyProperty(data, property)">
                 <!--  || data.finance < property[3] < 18-->
                 Buy
               </button>
@@ -107,7 +107,7 @@
               <br> Garden: {{property[3]}}
               <br> Price: ${{data.shareService.formatMoney(property[4])}}
 
-              <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 0" small (click)="data.shareService.buyProperty(data, property)">
+              <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 18" small (click)="data.shareService.buyProperty(data, property)">
                 <!-- data.age < 16 || data.finance < property[4] < 18 -->
                 Buy
               </button>
