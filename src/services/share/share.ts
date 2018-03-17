@@ -68,6 +68,16 @@ export class ShareService {
         vehicleModal.present();
     }
 
+    weddingModal(data) {
+        data.weddingModal = this.modalCtrl.create(weddingModal, { data: data }, {
+            showBackdrop: false,
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
+        });
+        data.weddingModal.present();
+    }
+
     holidayModal(data) {
         data.holidayModal = this.modalCtrl.create(holidayModal, { data: data }, {
             showBackdrop: false,
@@ -877,8 +887,8 @@ export class ShareService {
         data.happiness = this.randomAtoB(50, 100);
 
         // Balance player has at the beggining of game
-        data.finance = 100;
-        //data.finance = 100000;
+        //data.finance = 100;
+        data.finance = 100000;
 
         // Player is none sexuality until 12th yo
         data.sexuality = "None";
@@ -1833,8 +1843,39 @@ export class ShareService {
 
     }
 
-    getMarried(data) {
-        console.log("Yey, we married babe");
+    getMarried(data, price, honeymoon) {
+        //console.log("Yey, we married babe, for the $" + price);
+        if (data.finance < price) {
+            let alert = this.alertCtrl.create({
+                title: `Bad news!`,
+                subTitle: `You can't afford to pay for wedding. Pick cheaper option.`,
+                buttons: [{
+                    text: 'Okay',
+                    handler: () => {
+
+                    }
+                }]
+            });
+            alert.present();
+        } else {
+            data.weddingModal.dismiss();
+            data.finance -= price;
+            data.years[data.age].events.push(`I married ${data.lover.name}.<br>We went to ${honeymoon} for our honeymoon.`);
+            data.lover.status = "Married";
+            this.handleHappiness(data, "+", this.randomAtoB(5, 20));
+            let alert = this.alertCtrl.create({
+                title: `Congratulations!`,
+                subTitle: `You married ${data.lover.name}.`,
+                buttons: [{
+                    text: 'Okay',
+                    role: 'cancel',
+                    handler: () => {
+                        data.changeTabTrue = 1;
+                    }
+                }]
+            });
+            alert.present();
+        }
     }
 
     findLove(data) {
@@ -2164,7 +2205,7 @@ export class holidayModal {
     constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
         this.data = shareService.getData();
 
-        this.travelTo = this.data["countries"]["countries"][this.randomAtoB(0, this.data["countries"]["countries"].length)];
+        this.travelTo = this.data["countries"]["countries"][this.randomAtoB(0, this.data["countries"]["countries"].length - 1)];
         this.hotelStars = 1;
         this.travelClass = "Economy Class";
         this.invitePartner = false;
@@ -2191,6 +2232,69 @@ export class holidayModal {
         this.vacation["invitePartner"] = this.invitePartner;
         this.vacation["travelTo"] = this.travelTo;
         this.vacation["price"] = (osnovica * this.varijacija / 100).toFixed(2);
+        return (osnovica * this.varijacija / 100).toFixed(2);
+    }
+
+    randomAtoB(A, B) {
+        return Math.floor(Math.random() * (B - A + 1) + A);
+    }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+@Component({
+    templateUrl: '../../pages/me/wedding.html'
+})
+export class weddingModal {
+    data: object;
+    travelTo;
+    hotelStars;
+    travelClass;
+    varijacija;
+    varijacija2;
+    vacation: object;
+    band = 0;
+    caterer = 0;
+    florist = 0;
+    photographer = 0;
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
+        this.data = shareService.getData();
+
+        this.travelTo = this.data["countries"]["countries"][this.randomAtoB(0, this.data["countries"]["countries"].length - 1)];
+        this.hotelStars = 1;
+        this.travelClass = "Economy Class";
+
+        this.varijacija = this.randomAtoB(80, 120);
+        this.varijacija2 = this.randomAtoB(1000, 3000);
+        this.vacation = {};
+        //console.log();
+    }
+
+    weddingPrice() {
+        let osnovica = 2000;
+        osnovica = osnovica * (this.hotelStars / 2) * Math.sqrt(2);
+
+        if (this.travelClass == "Economy Class") osnovica += osnovica / 10;
+        else if (this.travelClass == "Business Class") osnovica += osnovica / 8;
+        else if (this.travelClass == "First Class") osnovica += osnovica / 5;
+        else if (this.travelClass == "Train") osnovica += osnovica / 8;
+        else if (this.travelClass == "Cruise") osnovica += osnovica / 4;
+
+        this.vacation["travelClass"] = this.travelClass;
+        this.vacation["hotelStars"] = this.hotelStars;
+        this.vacation["travelTo"] = this.travelTo;
+        this.vacation["price"] = (osnovica * this.varijacija / 100).toFixed(2);
+
+        if (this.band == 1) osnovica += this.varijacija2;
+        if (this.photographer == 1) osnovica += this.varijacija2;
+        if (this.caterer == 1) osnovica += this.varijacija2;
+        if (this.florist == 1) osnovica += this.varijacija2;
         return (osnovica * this.varijacija / 100).toFixed(2);
     }
 
