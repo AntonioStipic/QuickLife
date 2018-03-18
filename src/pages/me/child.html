@@ -1,0 +1,35 @@
+<ion-content class="main-view">
+  <ion-scroll scrollX="false" scrollY="true" style="width: 100%; height: 100%;">
+    <div class="overlay"></div>
+    <div class="modal_content maliMarginGore modalMarginTop">
+      <ion-card>
+        <ion-card-header class="childGenderAnnouncement">
+          <!-- <b class="gurniDolje">It's a {{child.childGender}}!</b> -->
+          <h1 ion-text class="gurniDolje" class="childGenderAnnouncement">It's a {{child.childGender}}!</h1>
+          <!-- <button ion-button (click)="dismiss()" class="buttonright hideByZ" color="primary" small>
+            <ion-icon name="md-close"></ion-icon>
+          </button> -->
+        </ion-card-header>
+      </ion-card>
+      <ion-list>
+
+        <ion-card>
+          <ion-card-content>
+            <ion-list>
+              <ion-item class="inputOutline">
+                <ion-input id="childNameInput" type="text" placeholder="Enter name..." round [(ngModel)]="childName"></ion-input>
+              </ion-item>
+              <button style="text-transform: none;" ion-button color="primary" class="buttonright" (click)="data.shareService.choosenChildName(data, child, childName)">
+                Select name
+              </button>
+              <button style="text-transform: none;" ion-button color="primary" class="buttonright" (click)="randomName(data)">
+                Random name
+              </button>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+
+      </ion-list>
+    </div>
+  </ion-scroll>
+</ion-content>

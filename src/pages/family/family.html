@@ -18,6 +18,9 @@
       <ion-segment-button value="SO">
         Partner
       </ion-segment-button>
+      <ion-segment-button value="Children">
+        Children
+      </ion-segment-button>
     </ion-segment>
   </div>
 
@@ -59,22 +62,23 @@
           </button>
         </ion-list> -->
 
-
       <ion-card>
         <div [hidden]="!data.havePartner">
           <ion-card-header>
-            <b>Relationship</b>
+            <b *ngIf="data.lover.status == 'Relationship'">Relationship</b>
+            <b *ngIf="data.lover.status == 'Engaged'">Engagement</b>
+            <b *ngIf="data.lover.status == 'Married'">Marriage</b>
           </ion-card-header>
           <ion-card-content>
             <ion-list>
               <div ion-item>
-                  <label>Status: {{data.lover.status}}</label>
+                <label>Status: {{data.lover.status}}</label>
               </div>
               <div ion-item>
-                  <label>Name: {{data.lover.name}} {{data.lover.surname}}</label>
+                <label>Name: {{data.lover.name}} {{data.lover.surname}}</label>
               </div>
               <div ion-item>
-                  <label>Dating: {{data.lover.time}} {{data.lover.time == 1?"year":"years"}}</label>
+                <label>Dating: {{data.lover.time}} {{data.lover.time == 1?"year":"years"}}</label>
               </div>
               <div ion-item>
                 <label>Stability: {{data.lover["stability"].toFixed(0)}}%
@@ -86,15 +90,37 @@
                   </div>
                 </label>
               </div>
-              
-              <button ion-button color="danger" small (click)="data.shareService.breakUp(data)">Break up</button>
-              <button ion-button color="energized-v1" small (click)="data.shareService.propose(data); changeTab(0, data)" [hidden]="data.lover.status != 'Relationship'">
-                Propose<ion-icon id="clockIcon" name="quicklife-ring"></ion-icon>
-              </button>
+              <ion-grid>
+                <ion-row>
+                  <ion-col width-45>
+                    <button ion-button full color="danger" (click)="data.shareService.breakUp(data)">
+                      Break up
+                      <ion-icon id="clockIcon" name="quicklife-broken-heart"></ion-icon>
+                    </button>
+                  </ion-col>
+                  <ion-col width-45>
+                    <button ion-button full color="secondary" (click)="data.shareService.makeBaby(data)" [disabled]="data.isPregnant == 1 || data.lover.isPregnant == 1">
+                      Make baby
+                      <ion-icon id="clockIcon" name="quicklife-baby"></ion-icon>
+                    </button>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col width-50>
+                    <button ion-button full color="energized-v1" (click)="data.shareService.propose(data); changeTab(0, data)" [hidden]="data.lover.status != 'Relationship'">
+                      Propose
+                      <ion-icon id="clockIcon" name="quicklife-ring"></ion-icon>
+                    </button>
 
-              <button ion-button color="energized-v1" small (click)="data.shareService.weddingModal(data);" [hidden]="data.lover.status != 'Engaged'"> <!-- data.lover.status != 'Engaged' -->
-                Get married<ion-icon id="clockIcon" name="quicklife-rings"></ion-icon>
-              </button>
+                    <button ion-button full color="energized-v1" (click)="data.shareService.weddingModal(data); changeTab(0, data)" [hidden]="data.lover.status != 'Engaged'">
+                      <!-- data.lover.status != 'Engaged' -->
+                      Get married
+                      <ion-icon id="clockIcon" name="quicklife-rings"></ion-icon>
+                    </button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+
             </ion-list>
           </ion-card-content>
 
@@ -113,17 +139,31 @@
 
       </ion-card>
 
-
-
-
-
-      <ion-footer no-shadow [hidden]="data.havePartner == 1">
+      <ion-footer no-shadow [hidden]="data.havePartner == 1" position="bottom">
         <ion-toolbar position="bottom">
           <button ion-button full round color="danger" (click)="data.shareService.findLove(data)" [disabled]="data.shareService.isFindLoveEnabled(data)">Find love
             <ion-icon id="clockIcon" name="md-heart"></ion-icon>
           </button>
         </ion-toolbar>
       </ion-footer>
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'Children'">
+
+      <ion-card>
+        <ion-list>
+          <ion-item *ngIf="data.children.length == 0">
+            <ion-label><b>You don't have children.</b></ion-label>
+          </ion-item>
+          <button ion-item *ngFor="let child of data.children">
+            <ion-icon item-start></ion-icon>
+            <div>
+              {{child.name}} ({{child.age}} years old)
+            </div>
+          </button>
+        </ion-list>
+      </ion-card>
+
     </ion-list>
   </div>
 </ion-content>

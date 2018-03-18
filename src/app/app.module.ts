@@ -10,10 +10,12 @@ import { FamilyPage } from '../pages/family/family';
 import { EducationPage } from '../pages/education/education';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
-import { findLoveModal, propertyListingModal, carsForSaleModal, socialNetworkModal, holidayModal, mortgageModal, weddingModal } from '../services/share/share';
+import { findLoveModal, propertyListingModal, carsForSaleModal, socialNetworkModal, holidayModal, mortgageModal, weddingModal, childModal } from '../services/share/share';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+
+import { Keyboard } from '@ionic-native/keyboard';
 
 import { PopoverContentPage, customLifeModal } from '../pages/popover/popover';
 import { ShareService } from '../services/share/share';
@@ -42,13 +44,21 @@ import { HttpModule } from '@angular/http';
     customLifeModal,
     holidayModal,
     mortgageModal,
-    weddingModal
+    weddingModal,
+    childModal
   ],
   imports: [
     BrowserModule,
     HttpModule,
     ProgressBarModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp, {
+      platforms: {
+        android: {
+          scrollAssist: false,
+          autoFocusAssist: false
+        }
+      }
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -67,12 +77,14 @@ import { HttpModule } from '@angular/http';
     customLifeModal,
     holidayModal,
     mortgageModal,
-    weddingModal
+    weddingModal,
+    childModal
   ],
   providers: [
     StatusBar,
     SplashScreen,
     ShareService,
+    Keyboard,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })

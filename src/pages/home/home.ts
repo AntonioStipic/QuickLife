@@ -244,6 +244,12 @@ export class HomePage {
       data.inDebt = 0;
     }
 
+    for (let i = 0; i < data.children.length; i++) {
+      if (data.children[i].alive == 1) {
+        data.children[i].age += 1;
+      }
+    }
+
     if (data.startSmokingAgain == 1) {
       data.smoking = 1;
       data.startSmokingAgain = 0;
@@ -259,6 +265,12 @@ export class HomePage {
     this.offerDrugs(data);
 
     if (data.havePartner == 1) {
+      data.shareService.handleStability(data, "+", data.shareService.randomAtoB(0, 4));
+      if (data.lover.isPregnant == 1) {
+        data.lover.isPregnant = 0;
+        
+        data.shareService.gaveBirth(data, 1);
+      }
       this.willPartnerBreakUp(data);
     }
 
@@ -287,6 +299,11 @@ export class HomePage {
           data.outcome -= data.monthlyPayment;
           data.years[data.age].events.push("I've paid off my mortgage.");
         }
+      }
+
+      if (data.isPregnant == 1) {
+        data.isPregnant = 0;
+        data.shareService.gaveBirth(data, 0);
       }
 
       if (data.father.alive == 1) {

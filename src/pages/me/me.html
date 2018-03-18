@@ -29,7 +29,7 @@
 
 <ion-content>
 
-  <div [ngSwitch]="meTabs" swipeSegment>
+  <div [ngSwitch]="meTabs">
     <ion-list *ngSwitchCase="'Info'">
       <ion-card>
 
@@ -178,13 +178,14 @@
       <div [hidden]="data.meAssets != 'House'">
         <ion-card>
           <ion-card-header>
-            <b>Owned properties:</b> <b *ngIf="data.posjedi.length == 0">None</b>
+            <b>Owned properties:</b>
+            <b *ngIf="data.posjedi.length == 0">None</b>
           </ion-card-header>
           <!-- property listings -->
 
           <ion-list>
             <ion-item *ngIf="data.posjedi.length == 0">
-                <ion-label>You're living with your parents.</ion-label>
+              <ion-label>You're living with your parents.</ion-label>
             </ion-item>
             <button ion-item *ngFor="let property of data.posjedi">
               <ion-icon [name]="(property[0] == 'House')? 'ios-home-outline':'quicklife-apartment'" item-start></ion-icon>
@@ -208,21 +209,13 @@
             </button>
           </ion-list>
         </ion-card>
-
-
-        <ion-footer no-shadow [hidden]="data.meAssets != 'House'">
-          <ion-toolbar position="bottom">
-            <button ion-button full round color="royal-v1" (click)="data.shareService.propertyListings(data)">Property listings
-              <ion-icon id="clockIcon" name="quicklife-city"></ion-icon>
-            </button>
-          </ion-toolbar>
-        </ion-footer>
       </div>
 
       <div [hidden]="data.meAssets != 'Car'">
         <ion-card>
           <ion-card-header>
-            <b>Owned cars:</b> <b *ngIf="data.cars.length == 0">None</b>
+            <b>Owned cars:</b>
+            <b *ngIf="data.cars.length == 0">None</b>
           </ion-card-header>
           <ion-list>
             <button ion-item *ngFor="let car of data.cars">
@@ -239,13 +232,13 @@
           </ion-list>
         </ion-card>
 
-        <ion-footer no-shadow [hidden]="data.meAssets != 'Car'">
+        <!-- <ion-footer no-shadow [hidden]="data.meAssets != 'Car'">
           <ion-toolbar position="bottom">
             <button ion-button full round color="royal-v1" (click)="data.shareService.carsForSale(data)">Cars for sale
               <ion-icon id="clockIcon" name="quicklife-buy-car"></ion-icon>
             </button>
           </ion-toolbar>
-        </ion-footer>
+        </ion-footer> -->
       </div>
     </ion-list>
 
@@ -332,7 +325,8 @@
             <span class="absolutePosition">Social Network</span>
           </button>
 
-          <button ion-item (click)="data.shareService.goForADrive(data); changeTab(0, data)" class="button-ion-item topLine bottomLine" [disabled]="!data.cars.length > 0 || !data.passedDrivingTest">
+          <button ion-item (click)="data.shareService.goForADrive(data); changeTab(0, data)" class="button-ion-item topLine bottomLine"
+            [disabled]="!data.cars.length > 0 || !data.passedDrivingTest">
             <ion-icon name="quicklife-car" class="miscListIcon"></ion-icon>
             <span class="absolutePosition">Go for a drive</span>
           </button>
@@ -364,3 +358,17 @@
     </ion-list>
   </div>
 </ion-content>
+
+<ion-footer no-shadow [hidden]="meTabs != 'Assets'">
+  <ion-toolbar position="bottom" [hidden]="data.meAssets != 'House'">
+    <button ion-button full round color="royal-v1" (click)="data.shareService.propertyListings(data)">Property listings
+      <ion-icon id="clockIcon" name="quicklife-city"></ion-icon>
+    </button>
+  </ion-toolbar>
+
+  <ion-toolbar position="bottom" [hidden]="data.meAssets != 'Car'">
+      <button ion-button full round color="royal-v1" (click)="data.shareService.carsForSale(data)">Cars for sale
+        <ion-icon id="clockIcon" name="quicklife-buy-car"></ion-icon>
+      </button>
+    </ion-toolbar>
+</ion-footer>

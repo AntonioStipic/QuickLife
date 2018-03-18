@@ -106,16 +106,16 @@ ion-modal {
   overflow: hidden;
 }
 
-.maliMarginGore{
-  margin-top: 50px!important;
+.maliMarginGore {
+  margin-top: 50px !important;
 }
 
 .buttonright {
   float: right;
 }
 
-.smallPadding{
-  margin-bottom: 10px!important;
+.smallPadding {
+  margin-bottom: 10px !important;
 }
 
 .progressBarRoyal {
@@ -223,10 +223,16 @@ ion-icon {
   &[class*="quicklife-rings"] {
     mask-image: url(../assets/imgs/rings.svg);
   }
+  &[class*="quicklife-baby"] {
+    mask-image: url(../assets/imgs/baby.svg);
+  }
+  &[class*="quicklife-broken-heart"] {
+    mask-image: url(../assets/imgs/broken_heart.svg);
+  }
 }
 
 .modal_content ion-card {
-  width: 96%!important;
+  width: 96% !important;
 }
 
 .h2 {
@@ -243,12 +249,10 @@ ion-icon {
   padding-left: 5%!important;
   padding-bottom: 5%!important;
   padding-right: 0%!important; ?*/
-  padding-top: 5%!important;
-  padding-bottom: 5%!important;
-  margin-right: 5%!important;
-  margin-left: 5%!important;
-
-  //border-left: 1px solid black;
+  padding-top: 5% !important;
+  padding-bottom: 5% !important;
+  margin-right: 5% !important;
+  margin-left: 5% !important; //border-left: 1px solid black;
 }
 
 .propertyInfo {
@@ -257,18 +261,50 @@ ion-icon {
 
 .absolutePosition {
   position: absolute;
-  
 }
 
 .gurniDolje {
   position: absolute;
-  margin-top: 0.5em;
+  margin-top: 0.15em!important;
 }
 
 .josMaloMargin {
-  margin-top: 20vh!important;
+  margin-top: 20vh !important;
 }
 
 .listItem {
   margin-left: 1em;
+}
+
+/* ion-footer {
+  position: fixed;
+  bottom: 5.6rem;
+}
+
+.remMargin {
+  padding-bottom: 5.6rem!important;
+} */
+
+.inputOutline {
+  margin-bottom: 1em;
+}
+
+#childNameInput::after {
+  border-bottom-color: transparent !important;
+}
+
+#childNameInput {
+  border-bottom-color: transparent !important;
+}
+
+.modalMarginTop {
+  margin-top: 30vh!important;
+}
+
+.hideByZ {
+  z-index: -100;
+}
+
+.childGenderAnnouncement {
+  text-align: center;
 }
