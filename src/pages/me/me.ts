@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 import { PopoverController, Tabs } from 'ionic-angular';
 import { PopoverContentPage } from '../popover/popover';
 import { ShareService } from '../../services/share/share';
+import { Events } from 'ionic-angular';
 
 @Component({
   selector: 'page-me',
@@ -13,13 +14,19 @@ export class MePage {
   meTabs: string;
   assetsTabs: string;
 
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public events: Events) {
     this.data = shareService.getData();
     this.data["shareService"] = shareService;
 
     this.meTabs = "Info";
     this.assetsTabs = "House";
+
+    events.subscribe("goToHome", () => {
+      this.changeTab(0);
+    });
   }
+
+  
 
   openPopover(myEvent) {
     let popover = this.popoverCtrl.create(PopoverContentPage);
@@ -32,7 +39,7 @@ export class MePage {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  changeTab(index, data) {
+  changeTab(index) {
     var t: Tabs = this.navCtrl.parent;
     t.select(index);
     //

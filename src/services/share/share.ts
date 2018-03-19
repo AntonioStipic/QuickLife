@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Component } from '@angular/core';
 import { AlertController, App } from 'ionic-angular';
 import { ModalController, NavParams, ViewController } from 'ionic-angular';
+import { Events } from 'ionic-angular';
 
 
 @Injectable()
@@ -11,7 +12,7 @@ export class ShareService {
     names: object;
     cars: object;
 
-    constructor(public app: App, public alertCtrl: AlertController, public modalCtrl: ModalController) {
+    constructor(public app: App, public alertCtrl: AlertController, public modalCtrl: ModalController, public events: Events) {
         this.data = {};
     }
 
@@ -1236,7 +1237,8 @@ export class ShareService {
             if (newSocialFans > 0) textToAdd = `<br>I got ${newSocialFans} new followers.`;
 
             data.years[data.age].events.push(`I took a selfie.<br>It got ${likesFinal} likes.${textToAdd}`);
-            data.changeTabTrue = 1;
+            //data.changeTabTrue = 1;
+            this.events.publish("goToHome");
             data.socialModal.dismiss();
             data.selfiesPerYear += 1;
         } else {
@@ -1266,7 +1268,8 @@ export class ShareService {
             }
             let secondText = `${firstText}I had ${prefix} ${mood} vacation.`;
             data.years[data.age].events.push(`I booked a holiday in ${vacation.travelTo}.<br>${secondText}`);
-            data.changeTabTrue = 1;
+            this.events.publish("goToHome");
+            //data.changeTabTrue = 1;
             data.holidayModal.dismiss();
             this.handleHappiness(data, "", this.randomAtoB(2, 8));
         } else {
@@ -1349,7 +1352,8 @@ export class ShareService {
         data.finance -= deposit;
         data.interestRate = interestRate;
 
-        data.changeTabTrue = 1;
+        //data.changeTabTrue = 1;
+        this.events.publish("goToHome");
         data.mortgageModal.dismiss();
 
         data.ownedProperties.push(property[data.propertyValueIndex + 1]);
@@ -1427,7 +1431,8 @@ export class ShareService {
     createPost(data) {
         data.numOfPosts += 1;
         data.years[data.age].events.push("I published a post.");
-        data.changeTabTrue = 1;
+        this.events.publish("goToHome");
+        //data.changeTabTrue = 1;
         data.socialModal.dismiss();
     }
 
@@ -2189,7 +2194,8 @@ export class ShareService {
                 buttons: [{
                     text: 'Okay',
                     handler: () => {
-                        data.changeTabTrue = 1;
+                        //data.changeTabTrue = 1;
+                        this.events.publish("goToHome");
                     }
                 }]
             });

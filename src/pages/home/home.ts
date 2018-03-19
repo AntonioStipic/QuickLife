@@ -79,12 +79,12 @@ export class HomePage {
     });
   }
 
-  changeTabFalse(data) {
+  /* changeTabFalse(data) {
     setTimeout(function () {
       data.changeTabTrue = 0;
     }, 500);
     //data.changeTabTrue = 0;
-  }
+  } */
 
   willIDie(data) {
     let chance = 0.4;

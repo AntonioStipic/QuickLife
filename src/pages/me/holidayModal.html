@@ -1,65 +1,62 @@
-<ion-content class="main-view">
-  <ion-scroll scrollX="false" scrollY="true" style="width: 100%; height: 100%;">
-    <div class="overlay" (click)="dismiss()"></div>
-    <div class="modal_content maliMarginGore josMaloMargin">
-      <ion-card>
-        <ion-card-header>
-          <b class="gurniDolje">Holiday</b>
-          <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1" small>
-            <ion-icon name="md-close"></ion-icon>
+<div class="modalOverlay" (click)="dismiss()"></div>
+
+<div class="modalContent">
+  <ion-card>
+    <ion-card-header>
+      <b class="gurniDolje">Holiday</b>
+      <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1" small>
+        <ion-icon name="md-close"></ion-icon>
+      </button>
+    </ion-card-header>
+  </ion-card>
+  <ion-list>
+
+    <ion-card>
+      <ion-card-content>
+        <ion-list>
+          <ion-item>
+            <ion-label class="ion-select-text">Travel to:</ion-label>
+            <ion-select [(ngModel)]="travelTo" multiple="false" cancelText="Dismiss" okText="Ok">
+              <ion-option *ngFor="let country of data.shareService.shuffle(data.countries.countries)" value="{{country}}">{{country}}</ion-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label class="ion-select-text">Hotel stars:</ion-label>
+            <ion-select [(ngModel)]="hotelStars" multiple="false" cancelText="Dismiss" okText="Ok">
+              <ion-option value="1">1</ion-option>
+              <ion-option value="2">2</ion-option>
+              <ion-option value="3">3</ion-option>
+              <ion-option value="4">4</ion-option>
+              <ion-option value="5">5</ion-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label class="ion-select-text">Travel class:</ion-label>
+            <ion-select [(ngModel)]="travelClass" multiple="false" cancelText="Dismiss" okText="Ok">
+              <ion-option value="Economy Class">Economy Class</ion-option>
+              <ion-option value="Business Class">Business Class</ion-option>
+              <ion-option value="First Class">First Class</ion-option>
+              <ion-option value="Train">Train</ion-option>
+              <ion-option value="Cruise">Cruise</ion-option>
+            </ion-select>
+          </ion-item>
+          <ion-item [hidden]="!data.havePartner">
+            <ion-label>Invite partner</ion-label>
+            <ion-checkbox color="royal-v1" [(ngModel)]="invitePartner" item-right></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label class="ion-select-text">
+              <b>Price:</b>
+            </ion-label>
+            <ion-input value="${{travelPrice()}}" text-right disabled></ion-input>
+          </ion-item>
+          <button ion-button color="royal-v1" (click)="data.shareService.goToHoliday(data, vacation)" class="buttonright" [disabled]="travelTo === undefined || hotelStars === undefined || travelClass === undefined">
+            Book Holiday
           </button>
-        </ion-card-header>
-      </ion-card>
-      <ion-list>
 
-        <ion-card>
-          <ion-card-content>
-            <ion-list>
-              <ion-item>
-                <ion-label class="ion-select-text">Travel to:</ion-label>
-                <ion-select [(ngModel)]="travelTo" multiple="false" cancelText="Dismiss" okText="Ok">
-                  <ion-option *ngFor="let country of data.shareService.shuffle(data.countries.countries)" value="{{country}}">{{country}}</ion-option>
-                </ion-select>
-              </ion-item>
-              <ion-item>
-                <ion-label class="ion-select-text">Hotel stars:</ion-label>
-                <ion-select [(ngModel)]="hotelStars" multiple="false" cancelText="Dismiss" okText="Ok">
-                  <ion-option value="1">1</ion-option>
-                  <ion-option value="2">2</ion-option>
-                  <ion-option value="3">3</ion-option>
-                  <ion-option value="4">4</ion-option>
-                  <ion-option value="5">5</ion-option>
-                </ion-select>
-              </ion-item>
-              <ion-item>
-                <ion-label class="ion-select-text">Travel class:</ion-label>
-                <ion-select [(ngModel)]="travelClass" multiple="false" cancelText="Dismiss" okText="Ok">
-                  <ion-option value="Economy Class">Economy Class</ion-option>
-                  <ion-option value="Business Class">Business Class</ion-option>
-                  <ion-option value="First Class">First Class</ion-option>
-                  <ion-option value="Train">Train</ion-option>
-                  <ion-option value="Cruise">Cruise</ion-option>
-                </ion-select>
-              </ion-item>
-              <ion-item [hidden]="!data.havePartner">
-                <ion-label>Invite partner</ion-label>
-                <ion-checkbox color="royal-v1" [(ngModel)]="invitePartner" item-right></ion-checkbox>
-              </ion-item>
-              <ion-item>
-                <ion-label class="ion-select-text">
-                  <b>Price:</b>
-                </ion-label>
-                <ion-input value="${{travelPrice()}}" text-right disabled></ion-input>
-              </ion-item>
-                <button ion-button color="royal-v1" (click)="data.shareService.goToHoliday(data, vacation)" class="buttonright" [disabled]="travelTo === undefined || hotelStars === undefined || travelClass === undefined">
-                  Book Holiday
-                </button>
-              
-            </ion-list>
-          </ion-card-content>
-        </ion-card>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
 
-      </ion-list>
-    </div>
-  </ion-scroll>
-</ion-content>
+  </ion-list>
+</div>
