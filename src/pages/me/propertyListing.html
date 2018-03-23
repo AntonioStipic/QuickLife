@@ -1,123 +1,56 @@
-<!-- <ion-header>
-  <ion-navbar *navbar>
-    <ion-title>
-      Matchmaker
-    </ion-title>
-  </ion-navbar>
+<ion-scroll scrollX="false" scrollY="true" style="width: 100%; height: 100%; word-wrap: break-word;">
+  <div class="modalOverlay" (click)="dismiss()"></div>
 
-<ion-content class="has-header">
-  <ion-list>
-    <div ion-item>
-      <label>Name: </label>
-    </div>
+  <div class="modalContent marginTop10">
+    <ion-card>
+      <ion-card-header>
+        <b class="gurniDolje">Property listings:</b>
+        <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1" small>
+          <ion-icon name="md-close"></ion-icon>
+        </button>
+      </ion-card-header>
+    </ion-card>
+    <ion-list>
 
-    <div ion-item>
-      <label>Gender: </label>
-    </div>
-
-    <div ion-item>
-      <label>Age: </label>
-    </div>
-
-    <div ion-item>
-      <label>Nationality: Croatian</label>
-    </div>
-
-    <div ion-item>
-      <label>Appearance: %
-        <br>
-        <div class="progressBar">
-          <div class="progress-bar">
-            <span class="progress-bar-fill" [ngStyle]="{'width': '50px!important'}"></span>
-          </div>
-        </div>
-      </label>
-    </div>
-
-
-
-  </ion-list>
-</ion-content> -->
-
-<!-- <ion-content id="findLoveModal">
-  <button ion-button (click)="dismiss()">
-    <span ion-text color="primary" showWhen="ios">Cancel</span>
-    <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
-  </button>
-  <ion-list>
-    <ion-item>
-      <ion-avatar item-start>
-        <img src="">
-      </ion-avatar>
-      <h2>toni</h2>
-      <p>hehe</p>
-    </ion-item>
-
-
-  </ion-list>
-</ion-content> -->
-
-<ion-content class="main-view">
-  <ion-scroll scrollX="true" scrollY="true" style="width: 100%; height: 100%">
-    <div class="overlay" (click)="dismiss()"></div>
-    <div class="modal_content maliMarginGore">
-      <!-- <b class="h2">Property listings:</b>
-      <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1">
-        <ion-icon name="md-close"></ion-icon>
-      </button>
-      <br>
-      <br>-->
       <ion-card>
         <ion-card-header>
-          <b class="gurniDolje">Property listings:</b>
-          <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1" small>
-            <ion-icon name="md-close"></ion-icon>
-          </button>
+          <b>Current balance:</b> ${{data.shareService.formatMoney(data.finance)}}
         </ion-card-header>
       </ion-card>
-      <ion-list>
 
-        <ion-card>
-          <ion-card-header>
-            <b>Current balance:</b> ${{data.shareService.formatMoney(data.finance)}}
-          </ion-card-header>
-        </ion-card>
+      <ion-card *ngFor="let property of posjedi">
+        <ion-card-header>
+          <b>{{property[0]}}</b>
+        </ion-card-header>
 
-        <ion-card *ngFor="let property of posjedi">
-          <ion-card-header>
-            <b>{{property[0]}}</b>
-          </ion-card-header>
+        <ion-card-content>
+          {{property[1] == 1? "1 bedroom":(property[1] + " bedrooms")}}
+          <br>
 
-          <ion-card-content>
-            {{property[1] == 1? "1 bedroom":(property[1] + " bedrooms")}}
-            <br>
+          <div *ngIf="property[0] == 'Apartment' || property[0] == 'Condo'">
+            Parking space: {{property[2]}}
+            <br> Price: ${{data.shareService.formatMoney(property[3])}}
 
-            <div *ngIf="property[0] == 'Apartment' || property[0] == 'Condo'">
-              Parking space: {{property[2]}}
-              <br> Price: ${{data.shareService.formatMoney(property[3])}}
+            <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 18" small (click)="data.shareService.buyProperty(data, property)">
+              <!--  || data.finance < property[3] < 18-->
+              Buy
+            </button>
+          </div>
 
-              <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 18" small (click)="data.shareService.buyProperty(data, property)">
-                <!--  || data.finance < property[3] < 18-->
-                Buy
-              </button>
-            </div>
+          <div *ngIf="property[0] == 'House'">
+            Garage: {{property[2]}}
+            <br> Garden: {{property[3]}}
+            <br> Price: ${{data.shareService.formatMoney(property[4])}}
 
-            <div *ngIf="property[0] == 'House'">
-              Garage: {{property[2]}}
-              <br> Garden: {{property[3]}}
-              <br> Price: ${{data.shareService.formatMoney(property[4])}}
+            <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 18" small (click)="data.shareService.buyProperty(data, property)">
+              <!-- data.age < 16 || data.finance < property[4] < 18 -->
+              Buy
+            </button>
+          </div>
 
-              <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 18" small (click)="data.shareService.buyProperty(data, property)">
-                <!-- data.age < 16 || data.finance < property[4] < 18 -->
-                Buy
-              </button>
-            </div>
+        </ion-card-content>
+      </ion-card>
 
-          </ion-card-content>
-        </ion-card>
-
-
-      </ion-list>
-    </div>
-  </ion-scroll>
-</ion-content>
+    </ion-list>
+  </div>
+</ion-scroll>

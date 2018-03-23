@@ -3,6 +3,8 @@ import { ViewController, NavController } from 'ionic-angular';
 import { ModalController, NavParams } from 'ionic-angular';
 import { ShareService } from '../../services/share/share';
 import { TabsPage } from '../tabs/tabs';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { Events } from 'ionic-angular';
 
 @Component({
   templateUrl: 'popover.html'
@@ -12,14 +14,20 @@ export class PopoverContentPage {
   data: object;
   //TabsPage: TabsPage;
 
-  constructor(public viewCtrl: ViewController, public navCtrl: NavController, shareService: ShareService, public modalCtrl: ModalController) {
+  constructor(public viewCtrl: ViewController, public navCtrl: NavController, shareService: ShareService, public modalCtrl: ModalController, public splashscreen: SplashScreen, public events: Events) {
     this.data = shareService.getData();
     this.data["shareService"] = shareService;
   }
 
   close() {
+    /* this.viewCtrl.dismiss();
+    this.navCtrl.push(TabsPage, {}, { animate: false }); */
+    /* this.splashscreen.show();
+    window.location.reload(); */
+
+    this.data["shareService"].createMe(this.data, "");
     this.viewCtrl.dismiss();
-    this.navCtrl.push(TabsPage, {}, { animate: false });
+    this.events.publish("goToHome");
   }
 
   customLife(data) {
@@ -52,7 +60,7 @@ export class customLifeModal {
 
   startCustomLife(data, name, surname, gender, nationality) {
     data.customLife = 1;
-    data.customLifeInfo = {name: name, surname: surname, gender: gender, nationality: nationality};
+    data.customLifeInfo = { name: name, surname: surname, gender: gender, nationality: nationality };
     this.navCtrl.push(TabsPage, {}, { animate: false });
   }
 

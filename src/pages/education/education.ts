@@ -10,14 +10,15 @@ import { ShareService } from '../../services/share/share';
 })
 export class EducationPage {
   data: object;
+  popover = this.popoverCtrl.create(PopoverContentPage);
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService) {
     this.data = shareService.getData();
   }
 
   openPopover(myEvent) {
-    let popover = this.popoverCtrl.create(PopoverContentPage);
-    popover.present({
+    this.popover.present({
       ev: myEvent
+      //, animate: false
     });
   }
 

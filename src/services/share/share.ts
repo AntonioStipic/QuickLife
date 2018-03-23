@@ -202,13 +202,20 @@ export class ShareService {
 
     buyProperty(data, property) {
         data.propertyValueIndex = 0;
-        if (property[0] == "House") data.propertyValueIndex = 4;
-        else if (property[0] == "Apartment" || property[0] == "Condo") data.propertyValueIndex = 3;
+        let propertyMaintenance = 0;
+        if (property[0] == "House") {
+            data.propertyValueIndex = 4;
+            propertyMaintenance = 200;
+        } else if (property[0] == "Apartment" || property[0] == "Condo") {
+            data.propertyValueIndex = 3;
+            propertyMaintenance = 120;
+        }
 
         if (data.finance >= property[data.propertyValueIndex]) {
             //console.log(property);
             data.finance -= property[data.propertyValueIndex];
             data.ownedProperties.push(property[data.propertyValueIndex + 1]);
+            property.maintenance = (property[data.propertyValueIndex] / 1000) + propertyMaintenance;
             data.posjedi.push(property);
 
             data.propertyModal.dismiss();
@@ -223,6 +230,8 @@ export class ShareService {
             if (property[0] == "Apartment") preposition = "an";
             else preposition = "a";
 
+            data.outcome += parseFloat(property.maintenance);
+            
             data.years[data.age].events.push(`I bought ${preposition} ${property[0].toLowerCase()}${textToAdd}.`);
             let alert = this.alertCtrl.create({
                 title: "Congratulations!",
@@ -861,7 +870,10 @@ export class ShareService {
     }
 
     createMe(data, names) {
-        this.names = names;
+
+        if (names != "") {
+            this.names = names;
+        }
         if (data.customLife == 1) {
             data.name = data.customLifeInfo.name;
             data.surname = data.customLifeInfo.surname;
@@ -898,8 +910,8 @@ export class ShareService {
         data.happiness = this.randomAtoB(50, 100);
 
         // Balance player has at the beggining of game
-        data.finance = 100;
-        //data.finance = 10000000;
+        //data.finance = 100;
+        data.finance = 10000000;
 
         // Player is none sexuality until 12th yo
         data.sexuality = "None";
@@ -973,6 +985,12 @@ export class ShareService {
 
         // This counts how many years has player worked at current job
         data.jobService = 0;
+        
+        // At this age player will be asked if it wanted to go to retirement
+        data.retirementAge = this.randomAtoB(62, 69);
+        
+        // If in retirement, boolean
+        data.inRetirement = 0;
 
         // List of finished courses at college
         data.mySkills = [];

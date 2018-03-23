@@ -151,10 +151,17 @@
     <ion-list *ngSwitchCase="'Children'">
 
       <ion-card>
+        <!-- <ion-list> -->
+        <!-- <ion-item *ngIf="data.children.length == 0"> -->
+        <ion-card-header *ngIf="data.children.length == 0">
+          <b>You don't have children.</b>
+        </ion-card-header>
+        <ion-card-content *ngIf="data.children.length == 0">
+
+        </ion-card-content>
+        <!-- <ion-label><b>You don't have children.</b></ion-label> -->
+        <!-- </ion-item> -->
         <ion-list>
-          <ion-item *ngIf="data.children.length == 0">
-            <ion-label><b>You don't have children.</b></ion-label>
-          </ion-item>
           <button ion-item *ngFor="let child of data.children">
             <ion-icon item-start></ion-icon>
             <div>

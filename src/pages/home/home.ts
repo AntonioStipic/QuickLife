@@ -17,6 +17,7 @@ export class HomePage {
   jobs: object;
   cars: object;
   countries: object;
+  popover = this.popoverCtrl.create(PopoverContentPage);
 
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public alertCtrl: AlertController, private http: Http) {
     this.data = shareService.getData();
@@ -73,9 +74,10 @@ export class HomePage {
   } */
 
   openPopover(myEvent) {
-    let popover = this.popoverCtrl.create(PopoverContentPage);
-    popover.present({
-      ev: myEvent,
+
+    this.popover.present({
+      ev: myEvent
+      //, animate: false
     });
   }
 
@@ -268,7 +270,7 @@ export class HomePage {
       data.shareService.handleStability(data, "+", data.shareService.randomAtoB(0, 4));
       if (data.lover.isPregnant == 1) {
         data.lover.isPregnant = 0;
-        
+
         data.shareService.gaveBirth(data, 1);
       }
       this.willPartnerBreakUp(data);
@@ -288,9 +290,36 @@ export class HomePage {
       this.childPlay(data);
     }
 
+    // Reduce finance by property maintenance cost for a whole year for each property
+    for (let i = 0; i < data.posjedi.length; i++) {
+      data.finance -= data.posjedi[i].maintenance * 12;
+    }
+
     this.willIDie(data);
     if (data.alive) {
       this.data["shareService"].updateJobs(this.data, this.jobs);
+
+      /* if (data.retirementAge == data.age) {
+        let alert = this.alertCtrl.create({
+          enableBackdropDismiss: true,
+          title: 'Hard work pays off!',
+          message: `You're old enough to retire.<br>`,
+          buttons: [
+            {
+              text: 'Yes',
+              handler: () => {
+                //console.log("I started High School");
+                data.shareService.takeDrivingTest(data);
+              }
+            },
+            {
+              text: 'No',
+              role: 'cancel'
+            }
+          ]
+        });
+        alert.present();
+      } */
 
       if (data.repaymentTerm > 0) {
         data.finance -= data.monthlyPayment * 12;

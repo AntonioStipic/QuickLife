@@ -13,7 +13,8 @@ export class MePage {
   data: object;
   meTabs: string;
   assetsTabs: string;
-
+  popover = this.popoverCtrl.create(PopoverContentPage);
+  
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public events: Events) {
     this.data = shareService.getData();
     this.data["shareService"] = shareService;
@@ -29,9 +30,9 @@ export class MePage {
   
 
   openPopover(myEvent) {
-    let popover = this.popoverCtrl.create(PopoverContentPage);
-    popover.present({
+    this.popover.present({
       ev: myEvent
+      //, animate: false
     });
   }
 

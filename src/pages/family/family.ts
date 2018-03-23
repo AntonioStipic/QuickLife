@@ -11,6 +11,7 @@ import { ShareService } from '../../services/share/share';
 export class FamilyPage {
   data: object;
   familyTabs: string;
+  popover = this.popoverCtrl.create(PopoverContentPage);
 
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService) {
     this.data = shareService.getData();
@@ -29,9 +30,9 @@ export class FamilyPage {
   }
 
   openPopover(myEvent) {
-    let popover = this.popoverCtrl.create(PopoverContentPage);
-    popover.present({
+    this.popover.present({
       ev: myEvent
+      //, animate: false
     });
   }
 
