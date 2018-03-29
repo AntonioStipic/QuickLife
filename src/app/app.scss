@@ -152,9 +152,9 @@ ion-modal {
     }
   }
   a.tab-button[aria-selected=true]:nth-of-type(5) {
-    color: color($colors, dark-v1);
+    color: color($colors, money);
     .tab-button-icon {
-      color: color($colors, dark-v1);
+      color: color($colors, money);
     }
   }
 }

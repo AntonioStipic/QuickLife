@@ -1540,7 +1540,7 @@ export class ShareService {
 
             data.children.push(child);
 
-            console.log(data.children)
+            //console.log(data.children)
 
             if (child.whoGaveBirth == 0) {
                 data.years[data.age].events.push(`I gave birth to ${name}.`);
@@ -2079,7 +2079,7 @@ export class ShareService {
         data.exPartners.push(data.lover);
         data.lover = { stability: 50, time: 0 };
 
-        console.log(data.exPartners);
+        //console.log(data.exPartners);
     }
 
     moveTo(data, property) {
@@ -2532,7 +2532,7 @@ export class childModal {
     constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
         this.data = shareService.getData();
         this.child = params.get("child");
-        console.log(this.child);
+        //console.log(this.child);
         //console.log();
     }
 
