@@ -210,12 +210,11 @@ export class ShareService {
             data.propertyValueIndex = 3;
             propertyMaintenance = 120;
         }
-
+        property.maintenance = (property[data.propertyValueIndex] / 1000) + propertyMaintenance;
         if (data.finance >= property[data.propertyValueIndex]) {
             //console.log(property);
             data.finance -= property[data.propertyValueIndex];
             data.ownedProperties.push(property[data.propertyValueIndex + 1]);
-            property.maintenance = (property[data.propertyValueIndex] / 1000) + propertyMaintenance;
             data.posjedi.push(property);
 
             data.propertyModal.dismiss();
@@ -229,7 +228,6 @@ export class ShareService {
             let preposition = "";
             if (property[0] == "Apartment") preposition = "an";
             else preposition = "a";
-
             data.outcome += parseFloat(property.maintenance);
             
             data.years[data.age].events.push(`I bought ${preposition} ${property[0].toLowerCase()}${textToAdd}.`);
@@ -911,7 +909,8 @@ export class ShareService {
 
         // Balance player has at the beggining of game
         //data.finance = 100;
-        data.finance = 10000000;
+        //data.finance = 10000000;
+        data.finance = 150000;
 
         // Player is none sexuality until 12th yo
         data.sexuality = "None";
@@ -1387,6 +1386,9 @@ export class ShareService {
         let preposition = "";
         if (property[0] == "Apartment") preposition = "an";
         else preposition = "a";
+
+        data.outcome += parseFloat(property.maintenance);
+
         data.years[data.age].events.push(`I bought ${preposition} ${property[0].toLowerCase()}${textToAdd}.`);
         let alert = this.alertCtrl.create({
             title: "Congratulations!",

@@ -292,7 +292,7 @@ export class HomePage {
 
     // Reduce finance by property maintenance cost for a whole year for each property
     for (let i = 0; i < data.posjedi.length; i++) {
-      data.finance -= data.posjedi[i].maintenance * 12;
+      data.finance -= parseFloat(data.posjedi[i].maintenance) * 12;
     }
 
     this.willIDie(data);
@@ -322,10 +322,10 @@ export class HomePage {
       } */
 
       if (data.repaymentTerm > 0) {
-        data.finance -= data.monthlyPayment * 12;
+        data.finance -= parseFloat(data.monthlyPayment) * 12;
         data.repaymentTerm -= 1;
         if (data.repaymentTerm == 0) {
-          data.outcome -= data.monthlyPayment;
+          data.outcome -= parseFloat(data.monthlyPayment);
           data.years[data.age].events.push("I've paid off my mortgage.");
         }
       }
