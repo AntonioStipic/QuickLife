@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { PopoverController } from 'ionic-angular';
 import { PopoverContentPage } from '../popover/popover';
 import { ShareService } from '../../services/share/share';
-import { AlertController } from 'ionic-angular';
+import { AlertController, Content } from 'ionic-angular';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map'
 
@@ -18,6 +18,8 @@ export class HomePage {
   cars: object;
   countries: object;
   popover = this.popoverCtrl.create(PopoverContentPage);
+
+  @ViewChild(Content) content: Content;
 
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public alertCtrl: AlertController, private http: Http) {
     this.data = shareService.getData();
@@ -71,6 +73,36 @@ export class HomePage {
   }
   /* ionViewDidLoad() {
     
+  } */
+
+  /* ngOnInit() {
+    this.scrollToBottom();
+  } */
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  /* ngAfterViewInit() {
+    this.scrollToBottom();
+  } */
+
+  scrollToBottom(): void {
+    /* try {
+      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+      console.log(this.myScrollContainer.nativeElement.scrollHeight)
+    } catch (err) { } */
+    this.content.scrollToBottom();
+  }
+
+  
+
+  /* scrollToBottom() {
+    //@ViewChild("scrollMe" + i) scrollMe: any;
+    //let content = this.content;
+    //console.log('scrollMe' + i);
+    //console.log(scrollMe);
+
   } */
 
   openPopover(myEvent) {
