@@ -299,17 +299,27 @@ export class HomePage {
     if (data.alive) {
       this.data["shareService"].updateJobs(this.data, this.jobs);
 
-      /* if (data.retirementAge == data.age) {
+      if (data.retirementAge == data.age && data.isWorking == 1) {
+        let upOrDown = data.shareService.randomAtoB(0, 1);
+        if (upOrDown == 0) upOrDown = -1;
+        else upOrDown = 1;
+
+
+        let pension = (data.myJob[2] / 12 * 1000 * 0.7) + upOrDown * (data.myJob[2] / 12 * 1000 * 0.1);
+
         let alert = this.alertCtrl.create({
           enableBackdropDismiss: true,
           title: 'Hard work pays off!',
-          message: `You're old enough to retire.<br>`,
+          message: `You're old enough to retire. You will receive $${data.shareService.formatMoney(pension)} per month.<br>Do you want to retire?`,
           buttons: [
             {
               text: 'Yes',
               handler: () => {
                 //console.log("I started High School");
-                data.shareService.takeDrivingTest(data);
+                //data.shareService.takeDrivingTest(data);
+                //console.log(pension);
+                //console.log("Retired");
+                data.shareService.retire(data, pension);
               }
             },
             {
@@ -319,7 +329,7 @@ export class HomePage {
           ]
         });
         alert.present();
-      } */
+      }
 
       if (data.repaymentTerm > 0) {
         data.finance -= parseFloat(data.monthlyPayment) * 12;
@@ -351,6 +361,10 @@ export class HomePage {
         data.finance += (data.myJob[2] * 1000) * (1 - data.tax);
         data.workExperience += 1;
         data.jobService += 1;
+      }
+
+      if (data.inRetirement == 1) {
+        data.finance += parseFloat(data.pension) * 12;
       }
 
       if (data.goingToHighSchool == 1) {

@@ -229,7 +229,7 @@ export class ShareService {
             if (property[0] == "Apartment") preposition = "an";
             else preposition = "a";
             data.outcome += parseFloat(property.maintenance);
-            
+
             data.years[data.age].events.push(`I bought ${preposition} ${property[0].toLowerCase()}${textToAdd}.`);
             let alert = this.alertCtrl.create({
                 title: "Congratulations!",
@@ -908,9 +908,9 @@ export class ShareService {
         data.happiness = this.randomAtoB(50, 100);
 
         // Balance player has at the beggining of game
-        //data.finance = 100;
+        data.finance = 100;
         //data.finance = 10000000;
-        data.finance = 150000;
+        //data.finance = 150000;
 
         // Player is none sexuality until 12th yo
         data.sexuality = "None";
@@ -984,12 +984,15 @@ export class ShareService {
 
         // This counts how many years has player worked at current job
         data.jobService = 0;
-        
+
         // At this age player will be asked if it wanted to go to retirement
         data.retirementAge = this.randomAtoB(62, 69);
-        
+
         // If in retirement, boolean
         data.inRetirement = 0;
+
+        // Pension income
+        data.pension = 0;
 
         // List of finished courses at college
         data.mySkills = [];
@@ -1223,6 +1226,29 @@ export class ShareService {
             });
             alertic.present();
         }
+    }
+
+    retire(data, pension) {
+
+        if (pension == 0) {
+            let upOrDown = data.shareService.randomAtoB(0, 1);
+            if (upOrDown == 0) upOrDown = -1;
+            else upOrDown = 1;
+
+
+            pension = (data.myJob[2] / 12 * 1000 * 0.7) + upOrDown * (data.myJob[2] / 12 * 1000 * 0.1);
+        }
+        data.income -= (parseFloat(data.myJob[2]) / 12 * 1000) * (1 - data.tax);
+        let preposition = "";
+        if (data.jobService == 1) preposition = "year";
+        else preposition = "years";
+        data.years[data.age].events.push(`I retired from my job as a ${data.myJob[1]["title"]} after working ${data.jobService} ${preposition}.`);
+        data.income += pension;
+        data.myJob = ["", { "title": "", "salary": "", "experience": 0, "education": 0, "skills": [] }, ""];
+        data.isWorking = 0;
+        data.jobService = 0;
+        data.pension = pension;
+        data.inRetirement = 1;
     }
 
     takeSelfie(data) {
@@ -1516,7 +1542,7 @@ export class ShareService {
         if (gender == "male") childGender = "boy";
         else childGender = "girl";
 
-        let child = {gender: gender, childGender: childGender, whoGaveBirth: who};
+        let child = { gender: gender, childGender: childGender, whoGaveBirth: who };
         this.childModal(data, child);
     }
 
@@ -1526,7 +1552,7 @@ export class ShareService {
             console.log("Prazno je");
         } else {
             data.childBornModal.dismiss();
-            
+
             let appearance = this.random1to100();
             let intelligence = this.random1to100();
             let fitness = this.randomAtoB(1, 100);
@@ -1993,7 +2019,7 @@ export class ShareService {
             let subtitle = "Uh-oh!";
             let rejectingText = "";
             if (data.age > 25 && data.age < 50 && data.posjedi.length == 0) {
-                if (this.randomAtoB(0, 2) == 0) {
+                if (this.randomAtoB(0, 3) == 0) {
                     randomHobby = this.randomAtoB(0, data.likingHobbies.length - 1);
                     if (data.likingHobbies[randomHobby] == "shoes") subtitle = "What are thooose?!";
 

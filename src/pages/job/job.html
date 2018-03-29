@@ -40,7 +40,7 @@
             <br>
 
             <button ion-button color="danger" small (click)="data.shareService.quitJob(data)">Quit</button>
-            <button *ngIf="data.age >= data.retirementAge" ion-button color="secondary" small>Retire</button>
+            <button *ngIf="data.age >= data.retirementAge && data.inRetirement == 0" ion-button color="secondary" small (click)="data.shareService.retire(data, 0)">Retire</button>
           </ion-card-content>
           
         </div>
