@@ -109,6 +109,16 @@ export class ShareService {
         data.socialModal.present();
     }
 
+    musicModal(data) {
+        data.musicModal = this.modalCtrl.create(musicModal, { data: data }, {
+            showBackdrop: false,
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
+        });
+        data.musicModal.present();
+    }
+
     childModal(data, child) {
         data.childBornModal = this.modalCtrl.create(childModal, { data: data, child: child }, {
             showBackdrop: false,
@@ -1121,6 +1131,9 @@ export class ShareService {
         data.brokeLegLastYear = 0;
         data.brokeArmLastYear = 0;
 
+        // List of bands in which the player is
+        data.bands = [{name: "123", members: 3, id: "1234567"}]; //, {name: "Test", members: 2, id: "1234566"}
+
         data.father = this.createParent(data, "male");
         data.mother = this.createParent(data, "female");
 
@@ -1572,7 +1585,7 @@ export class ShareService {
             data.children.push(child);
 
             //console.log(data.children)
-            data.update += 1;
+            this.update(data);
             if (child.whoGaveBirth == 0) {
                 data.years[data.age].events.push(`I gave birth to ${name}.`);
             } else {
@@ -1638,7 +1651,7 @@ export class ShareService {
 
     // If already went is 0, push event to log
     goToClub(data, alreadyWent) {
-        data.update += 1;
+        this.update(data);
         //console.log("You went to club.");
         let meetingChance = 35;
         let smokingChance = 15;
@@ -1706,6 +1719,7 @@ export class ShareService {
                                 }, {
                                     text: 'One night stand',
                                     handler: () => {
+                                        this.update(data);
                                         let textToAdd = "";
                                         if (data.havePartner == 1) {
                                             //this.goForDate(data, tmpPerson);
@@ -1734,7 +1748,7 @@ export class ShareService {
                                             }
 
                                         }
-                                        data.update += 1;
+                                        
                                         data.years[data.age].events.push(`I had a one night stand.${textToAdd}`);
                                     }
                                 }, {
@@ -1909,6 +1923,7 @@ export class ShareService {
                                 }, {
                                     text: 'One night stand',
                                     handler: () => {
+                                        this.update(data);
                                         let textToAdd = "";
                                         if (data.havePartner == 1) {
                                             //this.goForDate(data, tmpPerson);
@@ -1984,6 +1999,10 @@ export class ShareService {
         }
 
         this.carsForSaleModal(data, cars);
+    }
+
+    update(data) {
+        data.update += 1;
     }
 
     propertyListings(data) {
@@ -2165,7 +2184,7 @@ export class ShareService {
     }
 
     propose(data) {
-        data.update += 1;
+        this.update(data);
         let chance = 0;
         if (data.age < 15) {
             chance = 2;
@@ -2544,6 +2563,28 @@ export class socialNetworkModal {
     data: object;
     constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
         this.data = shareService.getData();
+        //console.log();
+    }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+@Component({
+    templateUrl: '../../pages/me/music.html'
+})
+export class musicModal {
+    data: object;
+    selectedBand;
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
+        this.data = shareService.getData();
+
+        this.selectedBand = this.data["bands"][this.data["shareService"].randomAtoB(0, this.data["bands"].length - 1)]["id"];
         //console.log();
     }
 

@@ -5,7 +5,7 @@ import { PopoverContentPage } from '../popover/popover';
 import { ShareService } from '../../services/share/share';
 import { AlertController, Content } from 'ionic-angular';
 import { Http } from '@angular/http';
-import { KeyValueDiffers, KeyValueChangeRecord } from '@angular/core';
+import { KeyValueDiffers } from '@angular/core';
 import 'rxjs/add/operator/map'
 
 @Component({

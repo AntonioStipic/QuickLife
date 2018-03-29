@@ -168,6 +168,14 @@ ion-modal {
   margin-top: 15px; //margin: 0%;
 }
 
+.halfWidthModal {
+  width: 48%;
+}
+
+.halfWidthModalLeft {
+  //margin-left: 1%;
+}
+
 .card .list .item,
 .bottomLine {
   border-bottom: 1px solid #e0e0e0 !important;
@@ -229,6 +237,9 @@ ion-icon {
   &[class*="quicklife-broken-heart"] {
     mask-image: url(../assets/imgs/broken_heart.svg);
   }
+  &[class*="quicklife-drummer"] {
+    mask-image: url(../assets/imgs/drummer.svg);
+  }
 }
 
 .modal_content ion-card {
@@ -261,6 +272,14 @@ ion-icon {
 
 .absolutePosition {
   position: absolute;
+  left: 15vw;
+}
+
+.relativePosition {
+  position: relative;
+  //margin-left: -1.5vw;
+  //margin-right: -2vw;
+  padding: 0;
 }
 
 .gurniDolje {
@@ -306,6 +325,10 @@ ion-icon {
 }
 
 .childGenderAnnouncement {
+  text-align: center;
+}
+
+.textCenter {
   text-align: center;
 }
 

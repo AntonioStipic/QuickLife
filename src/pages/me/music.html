@@ -1,0 +1,58 @@
+<div class="modalOverlay" (click)="dismiss()"></div>
+
+<div class="modalContent">
+  <ion-card>
+    <ion-card-header>
+      <b class="gurniDolje">Music</b>
+      <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1" small>
+        <ion-icon name="md-close"></ion-icon>
+      </button>
+    </ion-card-header>
+  </ion-card>
+  <ion-list>
+
+    <ion-card>
+      <ion-card-content>
+        <ion-list>
+          <ion-item>
+            <ion-label class="ion-select-text">Artist:</ion-label>
+            <ion-select [(ngModel)]="selectedBand" multiple="false" cancelText="Dismiss" okText="Ok">
+              <ion-option *ngFor="let band of data.bands" value="{{band.id}}">{{band.name}}</ion-option>
+            </ion-select>
+          </ion-item>
+
+          <div class="textCenter">
+            <button ion-button color="energized-v1" class="halfWidthModal halfWidthModalLeft">
+              Create artist
+              <ion-icon id="clockIcon" name="md-musical-note"></ion-icon>
+            </button>
+
+            <button ion-button color="danger" class="halfWidthModal">
+              Disband
+              <ion-icon id="clockIcon" name="md-musical-note"></ion-icon>
+            </button>
+
+            <button ion-button color="energized-v1" class="halfWidthModal halfWidthModalLeft">
+              Create artist
+              <ion-icon id="clockIcon" name="md-musical-note"></ion-icon>
+            </button>
+
+            <button ion-button color="danger" class="halfWidthModal">
+              Disband
+              <ion-icon id="clockIcon" name="md-musical-note"></ion-icon>
+            </button>
+          </div>
+
+
+
+
+          <!-- <button ion-button color="royal-v1" (click)="data.shareService.goToHoliday(data, vacation)" class="buttonright" [disabled]="travelTo === undefined || hotelStars === undefined || travelClass === undefined">
+            Book Holiday
+          </button> -->
+
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+  </ion-list>
+</div>
