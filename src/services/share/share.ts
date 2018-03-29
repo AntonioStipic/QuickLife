@@ -647,6 +647,7 @@ export class ShareService {
     dropoutCollege(data) {
         data.goingToCollege = 0;
         data.goingToCollegeYears = 0;
+        data.listOfColleges.splice(-1,1);
         data.years[data.age].events.push("I stopped studying " + data.currentCollegeMajor + ".");
         data.currentCollegeMajor = "";
     }
@@ -802,6 +803,7 @@ export class ShareService {
         alert.addButton({
             text: 'OK',
             handler: selectedMajor => {
+                //console.log(selectedMajor);
                 data.currentCollegeMajor = selectedMajor;
                 this.goToCollege(data);
                 if (data.dontAskForDrivingTestOn18 == 1) {
@@ -1570,7 +1572,7 @@ export class ShareService {
             data.children.push(child);
 
             //console.log(data.children)
-
+            data.update += 1;
             if (child.whoGaveBirth == 0) {
                 data.years[data.age].events.push(`I gave birth to ${name}.`);
             } else {
@@ -2163,6 +2165,7 @@ export class ShareService {
     }
 
     propose(data) {
+        data.update += 1;
         let chance = 0;
         if (data.age < 15) {
             chance = 2;

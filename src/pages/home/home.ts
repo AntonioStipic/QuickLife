@@ -82,7 +82,7 @@ export class HomePage {
       setTimeout(function () {
         content.scrollToBottom()
       }, 50);
-      change.forEachChangedItem(
+      /* change.forEachChangedItem(
         (record: KeyValueChangeRecord<any, any>) => {
           //console.log(record.key + ': ' + record.previousValue + '=>' + record.currentValue)
         });
@@ -94,7 +94,7 @@ export class HomePage {
 
       change.forEachAddedItem((record: KeyValueChangeRecord<any, any>) => {
         //console.log(record.key + ': ' + record.previousValue + '=>' + record.currentValue)
-      });
+      }); */
     }
   }
 

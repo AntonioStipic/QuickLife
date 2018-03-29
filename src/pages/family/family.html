@@ -99,7 +99,7 @@
                     </button>
                   </ion-col>
                   <ion-col width-45>
-                    <button ion-button full color="secondary" (click)="data.shareService.makeBaby(data)" [disabled]="data.isPregnant == 1 || data.lover.isPregnant == 1">
+                    <button ion-button full color="secondary" (click)="data.shareService.makeBaby(data)" [disabled]="data.isPregnant == 1 || data.lover.isPregnant == 1 || data.genderFull == data.lover.gender">
                       Make baby
                       <ion-icon id="clockIcon" name="quicklife-baby"></ion-icon>
                     </button>
