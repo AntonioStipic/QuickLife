@@ -241,7 +241,7 @@ export class HomePage {
   }
 
   regulateHappiness(data) {
-    let result = -1 * (data.shareService.randomAtoB(1, 100) / 100);
+    let result = -1 * (data.shareService.randomAtoB(1, 100) / 75);
     if (data.income - data.outcome <= 0 && data.age > 20) result -= 0.5;
     if (data.inDebt == 1) result -= 1;
     if (data.instruments.length > 0) result += 0.4;
@@ -501,7 +501,7 @@ export class HomePage {
       }
 
       if (data.sports.length > 0) {
-        var toAddSports = data.fitness.length * 0.3;
+        var toAddSports = data.sports.length * 0.3;
         if (data.fitness <= (100 - toAddSports)) {
           data.fitness += toAddSports;
         } else {
