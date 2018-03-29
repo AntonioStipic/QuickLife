@@ -10,23 +10,26 @@
 </ion-header>
 
 <ion-content>
-  <div id="lifeLog" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+  <div id="lifeLog">
     <div *ngFor="let year of data.years">
       <ion-card #lastEvent>
         <!-- data.years -->
         <ion-card-header>
           <b>{{year.year}} years old</b>
         </ion-card-header>
-        {{lastEvent.scrollIntoView()}}
-        <ion-card-content *ngFor="let event of year.events">
+        <!-- {{lastEvent.scrollIntoView()}} -->
+        <ion-card-content *ngFor="let event of year.events; let i = index">
           <!-- {{event}} -->
-          <div [innerHtml]="event">
+          <div [innerHtml]="event" #scrollMe>
 
+          </div>
+          <div *ngIf="i == year.events.length - 1">
+            {{scrollMe.scrollIntoView()}}
           </div>
           <div *ngIf="data.changeTabTrue == 1">
             {{changeTabFalse(data)}}
           </div>
-          {{lastEvent.scrollIntoView()}}
+          <!-- {{lastEvent.scrollIntoView()}} -->
         </ion-card-content>
       </ion-card>
     </div>
