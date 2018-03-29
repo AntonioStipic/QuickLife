@@ -5,6 +5,7 @@ import { PopoverContentPage } from '../popover/popover';
 import { ShareService } from '../../services/share/share';
 import { AlertController, Content } from 'ionic-angular';
 import { Http } from '@angular/http';
+import { KeyValueDiffers, KeyValueChangeRecord } from '@angular/core';
 import 'rxjs/add/operator/map'
 
 @Component({
@@ -18,11 +19,14 @@ export class HomePage {
   cars: object;
   countries: object;
   popover = this.popoverCtrl.create(PopoverContentPage);
+  private _differ: any;
 
   @ViewChild(Content) content: Content;
 
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public alertCtrl: AlertController, private http: Http) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public alertCtrl: AlertController, private http: Http, public KeyValueDiffers: KeyValueDiffers) {
     this.data = shareService.getData();
+    console.log(KeyValueDiffers);
+    this._differ = KeyValueDiffers.find({}).create();
     this.data["shareService"] = shareService;
     //this.http.get('assets/resources/names.json').map(response => response.json()).subscribe(result => this.names = result);
     //this.http.get('assets/resources/names.json').subscribe(result => this.names =result.json());
@@ -71,17 +75,37 @@ export class HomePage {
         console.log(error);
       });
   }
-  /* ionViewDidLoad() {
-    
-  } */
+  ngDoCheck() {
+    const change = this._differ.diff(this.data);
+    if (change) {
+      let content = this.content;
+      setTimeout(function () {
+        content.scrollToBottom()
+      }, 50);
+      change.forEachChangedItem(
+        (record: KeyValueChangeRecord<any, any>) => {
+          //console.log(record.key + ': ' + record.previousValue + '=>' + record.currentValue)
+        });
+
+      change.forEachRemovedItem(
+        (record: KeyValueChangeRecord<any, any>) => {
+          //console.log(record.key + ': ' + record.previousValue + '=>' + record.currentValue)
+        });
+
+      change.forEachAddedItem((record: KeyValueChangeRecord<any, any>) => {
+        //console.log(record.key + ': ' + record.previousValue + '=>' + record.currentValue)
+      });
+    }
+  }
+
 
   /* ngOnInit() {
     this.scrollToBottom();
   } */
 
-  ngAfterViewChecked() {
-    this.scrollToBottom();
-  }
+  /* ngAfterViewChecked() {
+    this.content.scrollToBottom();
+  } */
 
   /* ngAfterViewInit() {
     this.scrollToBottom();
@@ -95,7 +119,7 @@ export class HomePage {
     this.content.scrollToBottom();
   }
 
-  
+
 
   /* scrollToBottom() {
     //@ViewChild("scrollMe" + i) scrollMe: any;
@@ -167,6 +191,7 @@ export class HomePage {
         buttons: [{
           text: 'Take',
           handler: () => {
+            data.update += 1;
             data.years[data.age].events.push(`I took ${drug}.`);
           }
         }, {

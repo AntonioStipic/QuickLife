@@ -994,6 +994,9 @@ export class ShareService {
         // Pension income
         data.pension = 0;
 
+        // Change this to scrollToBottom
+        data.update = 0;
+
         // List of finished courses at college
         data.mySkills = [];
 
@@ -1633,6 +1636,7 @@ export class ShareService {
 
     // If already went is 0, push event to log
     goToClub(data, alreadyWent) {
+        data.update += 1;
         //console.log("You went to club.");
         let meetingChance = 35;
         let smokingChance = 15;
@@ -1728,6 +1732,7 @@ export class ShareService {
                                             }
 
                                         }
+                                        data.update += 1;
                                         data.years[data.age].events.push(`I had a one night stand.${textToAdd}`);
                                     }
                                 }, {
