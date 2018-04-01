@@ -129,6 +129,37 @@ export class ShareService {
         data.childBornModal.present();
     }
 
+    bandNameModal(data) {
+        data.bandNameModal = this.modalCtrl.create(bandNameModal, { data: data }, {
+            showBackdrop: false,
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
+        });
+        data.bandNameModal.present();
+    }
+
+    createBand(data, name, members) {
+        if (name == undefined || name == "" || name == " ") {
+            console.log("Prazno je");
+        } else {
+            // Each time you create new band the list will contain all bands previous selected as selectedBand
+            // all because the value of the option can't be object because it is written as [Object Object]
+            // So everything is same.
+            //data.bands = [{name: "123", members: 3, fans: 0, id: "1234567"}]; //, {name: "Test", members: 2, id: "1234566"}
+            let newBand = {};
+            newBand["name"] = name;
+            //newBand["members"]
+            newBand["members"] = members;
+            newBand["fans"] = 15 + parseInt((this.randomAtoB(10, 40) * data.musicality / 100).toFixed(0));
+            newBand["id"] = this.randomId(8);
+
+            data.bands.push(newBand);
+            data.bandNameModal.dismiss();
+            data.changeSelectedBand(data, newBand);
+        }
+    }
+
     setData(data) {
         this.data = data;
     }
@@ -657,7 +688,7 @@ export class ShareService {
     dropoutCollege(data) {
         data.goingToCollege = 0;
         data.goingToCollegeYears = 0;
-        data.listOfColleges.splice(-1,1);
+        data.listOfColleges.splice(-1, 1);
         data.years[data.age].events.push("I stopped studying " + data.currentCollegeMajor + ".");
         data.currentCollegeMajor = "";
     }
@@ -1132,7 +1163,8 @@ export class ShareService {
         data.brokeArmLastYear = 0;
 
         // List of bands in which the player is
-        data.bands = [{name: "123", members: 3, id: "1234567"}]; //, {name: "Test", members: 2, id: "1234566"}
+        //data.bands = [{ name: "123", members: 3, fans: 0, id: "1234567" }]; //, {name: "Test", members: 2, id: "1234566"}
+        data.bands = [];
 
         data.father = this.createParent(data, "male");
         data.mother = this.createParent(data, "female");
@@ -1748,7 +1780,7 @@ export class ShareService {
                                             }
 
                                         }
-                                        
+
                                         data.years[data.age].events.push(`I had a one night stand.${textToAdd}`);
                                     }
                                 }, {
@@ -2581,11 +2613,46 @@ export class socialNetworkModal {
 export class musicModal {
     data: object;
     selectedBand;
+    selectedBandObject;
     constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
         this.data = shareService.getData();
+        //console.log(this.data["bands"].length);
+        //console.log(this.selectedBand);
+        if (this.data["bands"].length > 0) {
+            this.selectedBand = this.data["bands"][0]["id"];
+            this.selectedBandObject = this.data["bands"][0];
+        } else {
+            //console.log(this.selectedBand);
+        }
 
-        this.selectedBand = this.data["bands"][this.data["shareService"].randomAtoB(0, this.data["bands"].length - 1)]["id"];
+        this.data["changeSelectedBand"] = this.changeSelectedBand;
         //console.log();
+    }
+
+    selectedBandChanged(data) {
+        //this.selectedBandObject = 
+        console.log(1);
+        for (let i = 0; i < data.bands.length; i++) {
+            console.log(2);
+            if (data.bands[i]["id"] == this.selectedBand) {
+                this.selectedBandObject = data.bands[i];
+                console.log(3);
+            }
+        }
+    }
+
+    changeSelectedBand(data, band) {
+        //console.log(this.selectedBand);
+        //console.log(band["id"]);
+        this.selectedBand = band["id"];
+        console.log(data.bands[data.bands.length - 1]["id"]);
+        console.log(band);
+        //this.selectedBandChanged(data);
+        //console.log(this.selectedBand);
+    }
+
+    bandNameModal(data) {
+        data.shareService.bandNameModal(data);
     }
 
     backButtonAction() {
@@ -2614,6 +2681,34 @@ export class childModal {
     randomName(data) {
         this.childName = data.shareService.randomName(data, this.child["gender"]);
     }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+@Component({
+    templateUrl: '../../pages/me/bandName.html'
+})
+export class bandNameModal {
+    data: object;
+    bandName;
+    bandMembers;
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
+        this.data = shareService.getData();
+
+        this.bandMembers = 1;
+        //console.log(this.child);
+        //console.log();
+    }
+
+    /* randomName(data) {
+        this.childName = data.shareService.randomName(data, this.child["gender"]);
+    } */
 
     backButtonAction() {
         this.viewCtrl.dismiss();

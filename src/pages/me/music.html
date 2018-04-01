@@ -1,6 +1,6 @@
 <div class="modalOverlay" (click)="dismiss()"></div>
 
-<div class="modalContent">
+<div class="modalContent verticalCenter">
   <ion-card>
     <ion-card-header>
       <b class="gurniDolje">Music</b>
@@ -14,15 +14,37 @@
     <ion-card>
       <ion-card-content>
         <ion-list>
-          <ion-item>
-            <ion-label class="ion-select-text">Artist:</ion-label>
-            <ion-select [(ngModel)]="selectedBand" multiple="false" cancelText="Dismiss" okText="Ok">
-              <ion-option *ngFor="let band of data.bands" value="{{band.id}}">{{band.name}}</ion-option>
+          <ion-item [hidden]="data.bands.length != 0">
+            <ion-label class="ion-select-text">
+              You are not part of any group!
+            </ion-label>
+          </ion-item>
+          <ion-item [hidden]="data.bands.length == 0">
+            <ion-label class="ion-select-text">
+              <b>Artist:</b>
+            </ion-label>
+            <ion-select [(ngModel)]="selectedBand" multiple="false" cancelText="Dismiss" okText="Ok" (ngModelChange)="selectedBandChanged(data)">
+              <ion-option *ngFor="let band of data.bands" [value]="band.id">{{band.name}}</ion-option>
             </ion-select>
           </ion-item>
 
+          <div *ngIf="selectedBand">
+            <ion-item>
+              <ion-label class="ion-select-text listItem">
+                Members:
+              </ion-label>
+              <ion-input [value]="selectedBandObject.members" text-right disabled class="listItem2"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label class="ion-select-text listItem">
+                Fans:
+              </ion-label>
+              <ion-input [value]="selectedBandObject.fans" text-right disabled class="listItem2"></ion-input>
+            </ion-item>
+          </div>
+
           <div class="textCenter">
-            <button ion-button color="energized-v1" class="halfWidthModal halfWidthModalLeft">
+            <button ion-button color="energized-v1" class="halfWidthModal halfWidthModalLeft" (click)="bandNameModal(data)">
               Create artist
               <ion-icon id="clockIcon" name="md-musical-note"></ion-icon>
             </button>
@@ -32,7 +54,7 @@
               <ion-icon id="clockIcon" name="md-musical-note"></ion-icon>
             </button>
 
-            <button ion-button color="energized-v1" class="halfWidthModal halfWidthModalLeft">
+            <!-- <button ion-button color="energized-v1" class="halfWidthModal halfWidthModalLeft">
               Create artist
               <ion-icon id="clockIcon" name="md-musical-note"></ion-icon>
             </button>
@@ -40,7 +62,7 @@
             <button ion-button color="danger" class="halfWidthModal">
               Disband
               <ion-icon id="clockIcon" name="md-musical-note"></ion-icon>
-            </button>
+            </button> -->
           </div>
 
 

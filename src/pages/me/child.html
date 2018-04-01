@@ -17,7 +17,7 @@
           <ion-card-content>
             <ion-list>
               <ion-item class="inputOutline">
-                <ion-input id="childNameInput" type="text" placeholder="Enter name..." round [(ngModel)]="childName"></ion-input>
+                <ion-input id="childNameInput" type="text" placeholder="Enter name..." round [(ngModel)]="childName" [attr.maxlength]="50"></ion-input>
               </ion-item>
               <button style="text-transform: none;" ion-button color="primary" class="buttonright" (click)="data.shareService.choosenChildName(data, child, childName)">
                 Select name

@@ -1,0 +1,51 @@
+<ion-content class="main-view">
+  <ion-scroll scrollX="false" scrollY="true" style="width: 100%; height: 100%;">
+    <div class="overlay" (click)="dismiss()"></div>
+    <div class="modal_content maliMarginGore modalMarginTop">
+      <ion-card>
+        <ion-card-header class="childGenderAnnouncement">
+          <!-- <b class="gurniDolje">It's a {{child.childGender}}!</b> -->
+          <h1 ion-text class="gurniDolje" class="childGenderAnnouncement">New artist</h1>
+          <!-- <button ion-button (click)="dismiss()" class="buttonright hideByZ" color="primary" small>
+            <ion-icon name="md-close"></ion-icon>
+          </button> -->
+        </ion-card-header>
+      </ion-card>
+      <ion-list>
+
+        <ion-card>
+          <ion-card-content>
+            <ion-list>
+              <ion-item class="inputOutline">
+                <ion-label class="ion-select-text"><b>Name:</b></ion-label>
+                <ion-input id="childNameInput" type="text" placeholder="Enter artist name..." round [(ngModel)]="bandName" [attr.maxlength]="50"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label class="ion-select-text"><b>Members:</b></ion-label>
+                <ion-select [(ngModel)]="bandMembers" multiple="false" cancelText="Dismiss" okText="Ok">
+                  <ion-option value="1">1</ion-option>
+                  <ion-option value="2">2</ion-option>
+                  <ion-option value="3">3</ion-option>
+                  <ion-option value="4">4</ion-option>
+                  <ion-option value="5">5</ion-option>
+                  <ion-option value="6">6</ion-option>
+                  <ion-option value="7">7</ion-option>
+                  <ion-option value="8">8</ion-option>
+                  <ion-option value="9">9</ion-option>
+                  <ion-option value="10">10</ion-option>
+                </ion-select>
+              </ion-item>
+              <button ion-button color="royal-v1" class="buttonright" (click)="data.shareService.createBand(data, bandName, bandMembers)">
+                Create
+              </button>
+              <button style="text-transform: none;" ion-button color="royal-v1" class="buttonright" (click)="randomName(data)">
+                Random name
+              </button>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+
+      </ion-list>
+    </div>
+  </ion-scroll>
+</ion-content>
