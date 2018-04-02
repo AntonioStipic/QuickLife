@@ -153,41 +153,6 @@ export class ShareService {
         data.bandNameModal.present();
     }
 
-    createBand(data, name, members, genre) {
-        if (name == undefined || name == "" || name == " " || members == undefined || genre == undefined) {
-            console.log("Prazno je");
-        } else {
-            // Each time you create new band the list will contain all bands previous selected as selectedBand
-            // all because the value of the option can't be object because it is written as [Object Object]
-            // So everything is same.
-            //data.bands = [{name: "123", members: 3, fans: 0, id: "1234567"}]; //, {name: "Test", members: 2, id: "1234566"}
-            let newBand = {};
-            newBand["name"] = name;
-            //newBand["members"]
-            newBand["members"] = members;
-            newBand["fans"] = 15 + parseInt((this.randomAtoB(10, 40) * data.musicality / 80).toFixed(0));
-            newBand["genre"] = genre;
-            //newBand["id"] = this.randomId(8);
-
-            if (data.bands.length == 0) newBand["id"] = "firstBand";
-            else newBand["id"] = this.randomId(8);
-
-            data.bands.push(newBand);
-
-            for (let i = 0; i < data.bands.length; i++) {
-                if (data.bands[i]["id"] == newBand["id"]) {
-                    data.selectedBandObject = data.bands[i];
-                }
-            }
-
-            data.changeSelectedBand(data, newBand);
-
-            //data.changeSelectedBand(data, newBand)
-
-            data.bandNameModal.dismiss();
-        }
-    }
-
     setData(data) {
         this.data = data;
     }
@@ -2649,23 +2614,23 @@ export class socialNetworkModal {
 })
 export class musicModal {
     data: object;
-    selectedBand;
-    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
+    //selectedBand;
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController, public events: Events) {
         this.data = shareService.getData();
         //console.log(this.data["bands"].length);
         //console.log(this.selectedBand);
 
         this.data["selectedBandObject"];
-        this.selectedBand = "firstBand";
+        this.data["selectedBand"] = "band" + this.data["bands"].length;
         if (this.data["bands"].length > 0) {
-            this.selectedBand = this.data["bands"][0]["id"];
+            this.data["selectedBand"] = this.data["bands"][0]["id"];
             this.data["selectedBandObject"] = this.data["bands"][0];
         } else {
             //console.log(this.selectedBand);
         }
         //console.log(this.data["lastChoosenBand"])
         if (this.data["lastChoosenBand"] != undefined) {
-            this.selectedBand = this.data["lastChoosenBand"]["id"];
+            this.data["selectedBand"] = this.data["lastChoosenBand"]["id"];
             this.data["selectedBandObject"] = this.data["lastChoosenBand"];
         } else {
             //console.log(2);
@@ -2677,23 +2642,37 @@ export class musicModal {
 
     selectedBandChanged(data) {
         for (let i = 0; i < data.bands.length; i++) {
-            if (data.bands[i]["id"] == this.selectedBand) {
+            if (data.bands[i]["id"] == this.data["selectedBand"]) {
                 data["selectedBandObject"] = data.bands[i];
                 data.lastChoosenBand = data.bands[i];
             }
         }
     }
 
-    changeSelectedBand(data, band) {
+    disband(data) {
+        data.musicModal.dismiss();
+        this.data["selectedBandObject"].active = 0;
+        data.years[data.age].events.push(`I disbanded ${this.data["selectedBandObject"].name}.`);
+        this.events.publish("goToHome");
+    }
+
+    reunite(data) {
+        this.data["selectedBandObject"].active = 1;
+        data.years[data.age].events.push(`I reunited ${this.data["selectedBandObject"].name}.`);
+    }
+
+    changeSelectedBand(data, band, length) {
+        console.log(band);
+        console.log(1);
         //console.log(this.selectedBand);
         //console.log(band["id"]);
-        this.selectedBand = band["id"];
-        console.log(data.bands[data.bands.length - 1]["id"]);
-        console.log(band);
+        this.data["selectedBand"] = band["id"];
+        //console.log(data.bands[data.bands.length - 1]["id"]);
+        //console.log(band);
 
         data["selectedBandObject"] = band;
         data.lastChoosenBand = band;
-        //this.selectedBandChanged(data);
+        this.selectedBandChanged(data);
         //console.log(this.selectedBand);
     }
 
@@ -2749,9 +2728,51 @@ export class bandNameModal {
         this.data = shareService.getData();
 
         this.bandMembers = 1;
-        
+
         //console.log(this.child);
         //console.log();
+    }
+
+    createBand(data, name, members, genre) {
+        if (name == undefined || name == "" || name == " " || members == undefined || genre == undefined) {
+            console.log("Prazno je");
+        } else {
+            // Each time you create new band the list will contain all bands previous selected as selectedBand
+            // all because the value of the option can't be object because it is written as [Object Object]
+            // So everything is same.
+            //data.bands = [{name: "123", members: 3, fans: 0, id: "1234567"}]; //, {name: "Test", members: 2, id: "1234566"}
+            let newBand = {};
+            newBand["name"] = name;
+            //newBand["members"]
+            newBand["members"] = members;
+            newBand["fans"] = 15 + parseInt((data.shareService.randomAtoB(10, 40) * data.musicality / 80).toFixed(0));
+            newBand["genre"] = genre;
+            newBand["albums"] = 0;
+            newBand["active"] = 1;
+            //newBand["id"] = this.randomId(8);
+
+            //if (data.bands.length == 0) newBand["id"] = "band";
+            //else newBand["id"] = this.randomId(8);
+            //else
+            newBand["id"] = "band" + data.bands.length;
+
+            data.bands.push(newBand);
+
+            for (let i = 0; i < data.bands.length; i++) {
+                if (data.bands[i]["id"] == newBand["id"]) {
+                    data.selectedBand = newBand["id"];
+                    data.selectedBandObject = data.bands[i];
+                }
+            }
+            let genreInput = genre;
+            if (genre != "R&B") genreInput = genre.toLowerCase();
+            data.years[data.age].events.push(`I formed ${name}. It is ${genreInput} oriented.`);
+            //data.changeSelectedBand(data, newBand, length);
+
+            //data.changeSelectedBand(data, newBand)
+
+            data.bandNameModal.dismiss();
+        }
     }
 
     randomBandName(data) {

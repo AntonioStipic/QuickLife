@@ -23,7 +23,7 @@
             <ion-label class="ion-select-text">
               <b>Artist:</b>
             </ion-label>
-            <ion-select [(ngModel)]="selectedBand" multiple="false" cancelText="Dismiss" okText="Ok" (ionChange)="selectedBandChanged(data)">
+            <ion-select [(ngModel)]="data.selectedBand" multiple="false" cancelText="Dismiss" okText="Ok" (ionChange)="selectedBandChanged(data)">
               <ion-option *ngFor="let band of data.bands" [value]="band.id">{{band.name}}</ion-option>
             </ion-select>
           </ion-item>
@@ -47,22 +47,39 @@
               </ion-label>
               <ion-input [value]="data.selectedBandObject.genre" text-right disabled class="listItem2"></ion-input>
             </ion-item>
+            <ion-item>
+              <ion-label class="ion-select-text listItem">
+                Albums:
+              </ion-label>
+              <ion-input [value]="data.selectedBandObject.albums" text-right disabled class="listItem2"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label class="ion-select-text listItem">
+                Active:
+              </ion-label>
+              <ion-input [value]="(data.selectedBandObject.active == 1)?'Yes':'No'" text-right disabled class="listItem2"></ion-input>
+            </ion-item>
           </div>
 
           <div class="textCenter">
 
-            <button ion-button color="money" class="halfWidthModal halfWidthModalLeft" (click)="bandNameModal(data)">
+            <button ion-button color="calm-v1" class="halfWidthModal" *ngIf="data.bands.length != 0 && data.selectedBandObject.active == 1">
               Create album
               <ion-icon id="clockIcon" name="md-disc"></ion-icon>
             </button>
 
-            <button ion-button color="energized-v1" class="halfWidthModal" (click)="bandNameModal(data)"> <!--  halfWidthModalLeft -->
+            <button ion-button color="energized-v1" class="halfWidthModal" (click)="bandNameModal(data)">
               Create artist
               <ion-icon id="clockIcon" name="md-musical-note"></ion-icon>
             </button>
 
-            <button ion-button color="danger" class="halfWidthModal">
+            <button ion-button color="danger" class="halfWidthModal" *ngIf="data.bands.length != 0 && data.selectedBandObject.active == 1" (click)="disband(data)">
               Disband
+              <ion-icon id="clockIcon" name="md-musical-note"></ion-icon>
+            </button>
+
+            <button ion-button color="money" class="halfWidthModal" *ngIf="data.bands.length != 0 && data.selectedBandObject.active == 0" (click)="reunite(data)">
+              Reunite
               <ion-icon id="clockIcon" name="md-musical-note"></ion-icon>
             </button>
 
