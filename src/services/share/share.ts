@@ -2828,7 +2828,7 @@ export class createAlbumModal {
                     }
 
                     copies = parseInt(copies);
-                    newFans = parseInt(newFans);
+                    //newFans = parseInt(newFans);
 
                     if (copies < 10) copies = data.shareService.randomAtoB(10, 20);
                     data.years[data.age].events.push(`${band.name} released a new album called ${name}.<br>It sold ${copies} copies.`);
