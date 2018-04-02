@@ -2,6 +2,7 @@
   "name": "quickLife",
   "app_id": "",
   "type": "ionic-angular",
+  "ng2-validation": "npm:ng2-validation/bundles/ng2-validation.umd.js",
   "integrations": {
     "cordova": {}
   }

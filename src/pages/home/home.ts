@@ -285,6 +285,7 @@ export class HomePage {
     data.years.push({ "year": data.age, "events": [] });
     data.gotJobNum = -1;
     data.selfiesPerYear = 0;
+    data.numOfAlbums = 0;
 
     if (data.finance < 0) {
       data.inDebt = 1;

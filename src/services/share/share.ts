@@ -13,6 +13,7 @@ export class ShareService {
     names: object;
     cars: object;
     bands;
+    albums;
 
     constructor(public app: App, public alertCtrl: AlertController, public modalCtrl: ModalController, public events: Events, private http: Http) {
         this.data = {};
@@ -22,6 +23,18 @@ export class ShareService {
                 this.bands = res.json();
                 //this.bands = Array.of(this.bands);
                 this.bands = this.bands.bands;
+                //console.log(this.bands[this.randomAtoB(0, this.bands.length - 1)]);
+                //console.log(this.names);
+                //this.data = this.data["shareService"].createMe(this.data, this.names);
+            }, error => {
+                console.log(error);
+            });
+
+        this.http.get("assets/resources/albums.json")
+            .subscribe(res => {
+                this.albums = res.json();
+                //this.albums = Array.of(this.albums);
+                this.albums = this.albums.albums;
                 //console.log(this.bands[this.randomAtoB(0, this.bands.length - 1)]);
                 //console.log(this.names);
                 //this.data = this.data["shareService"].createMe(this.data, this.names);
@@ -151,6 +164,16 @@ export class ShareService {
             leaveAnimation: 'modal-scale-up-leave' */
         });
         data.bandNameModal.present();
+    }
+
+    createAlbumModal(data) {
+        data.createAlbumModal = this.modalCtrl.create(createAlbumModal, { data: data }, {
+            showBackdrop: false,
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
+        });
+        data.createAlbumModal.present();
     }
 
     setData(data) {
@@ -1106,6 +1129,9 @@ export class ShareService {
         // Number of selfies player has taken
         data.numOfSelfies = 0;
 
+        // Number of albums recorder per year
+        data.numOfAlbums = 0;
+
         // Number of posts player has created
         data.numOfPosts = 0;
 
@@ -1154,6 +1180,13 @@ export class ShareService {
         // Booleans to check whether player broke something in last year
         data.brokeLegLastYear = 0;
         data.brokeArmLastYear = 0;
+
+        // Reseting bands
+        data.selectedBandObject = undefined;
+        data.selectedBand = undefined;
+
+        // Boolean to indicate if player is famous
+        data.isFamous = 0;
 
         // List of bands in which the player is
         //data.bands = [{ name: "123", members: 3, fans: 0, id: "1234567" }]; //, {name: "Test", members: 2, id: "1234566"}
@@ -2194,6 +2227,10 @@ export class ShareService {
         return (this.bands[this.randomAtoB(0, this.bands.length - 1)]);
     }
 
+    randomAlbumName(data) {
+        return (this.albums[this.randomAtoB(0, this.albums.length - 1)]);
+    }
+
     // This function is adjusted for generating appearance and intelligence
     // (Lowered chances of getting numbers under 20)
     random1to100() {
@@ -2649,6 +2686,10 @@ export class musicModal {
         }
     }
 
+    createAlbumModal(data) {
+        data.shareService.createAlbumModal(data);
+    }
+
     disband(data) {
         data.musicModal.dismiss();
         this.data["selectedBandObject"].active = 0;
@@ -2717,7 +2758,132 @@ export class childModal {
 }
 
 @Component({
-    templateUrl: '../../pages/me/bandName.html'
+    templateUrl: '../../pages/me/createAlbum.html'
+})
+export class createAlbumModal {
+    data: object;
+    albumName;
+    albumSongs;
+    bandGenre;
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController, public events: Events, public alertCtrl: AlertController) {
+        this.data = shareService.getData();
+
+        //this.albumSongs = new FormControl('', CustomValidators.max(20));
+        //console.log(this.child);
+        //console.log();
+
+        this.albumSongs = 1;
+    }
+
+    createAlbum(data, name, numOfSongs) {
+        if (data.numOfAlbums < 2) {
+            if (name != undefined) {
+                name = name.replace(/\s\s+/g, ' ');
+                if (numOfSongs > 0 && numOfSongs < 21 && name != "" && name != " ") {
+                    let band = data.selectedBandObject;
+
+                    let chanceOfGiantSuccess = data.shareService.randomAtoB(1, 100);
+                    if (chanceOfGiantSuccess > 1) chanceOfGiantSuccess = data.shareService.randomAtoB(1000, 3000) / 1000;
+                    let upOrDown = data.shareService.randomAtoB(0, 1);
+
+                    if (upOrDown == 0) upOrDown = -1;
+                    else upOrDown = 1;
+
+                    let copies = (band.fans + (upOrDown * band.fans * chanceOfGiantSuccess)).toFixed(0);
+                    if (copies < 0) copies = (band.fans * data.shareService.randomAtoB(500, 1500) / 1000).toFixed(0);
+
+                    let newFans = 0;
+                    if (copies / band.fans > 2.5) newFans = parseInt((band.fans * data.shareService.randomAtoB(1300, 2500) / 1000).toFixed(0));
+                    else if (copies / band.fans > 2) newFans = parseInt((band.fans * data.shareService.randomAtoB(1200, 2000) / 1000).toFixed(0));
+                    else if (copies / band.fans > 1.75) newFans = parseInt((band.fans * data.shareService.randomAtoB(1200, 1800) / 1000).toFixed(0));
+                    else if (copies / band.fans > 1.4) newFans = parseInt((band.fans * data.shareService.randomAtoB(1100, 1500) / 1000).toFixed(0));
+                    else if (copies / band.fans > 1) newFans = parseInt((band.fans * data.shareService.randomAtoB(1000, 1350) / 1000).toFixed(0));
+                    else if (copies / band.fans <= 1) newFans = parseInt((band.fans * data.shareService.randomAtoB(700, 1200) / 1000).toFixed(0));
+                    let chance = 0;
+                    if (data.musicality < 10) {
+                        newFans = parseInt((newFans * data.musicality / 200 / data.shareService.randomAtoB(2, 10)).toFixed(0));
+                        copies = parseInt((copies * data.musicality / 200 / data.shareService.randomAtoB(2, 10)).toFixed(0));
+                    } else if (data.musicality < 25) {
+                        newFans = parseInt((newFans * data.musicality / 200 / data.shareService.randomAtoB(2, 9)).toFixed(0));
+                        copies = parseInt((copies * data.musicality / 200 / data.shareService.randomAtoB(2, 9)).toFixed(0));
+                    } else if (data.musicality < 45) {
+                        newFans = parseInt((newFans * data.musicality / 200 / data.shareService.randomAtoB(2, 8)).toFixed(0));
+                        copies = parseInt((copies * data.musicality / 200 / data.shareService.randomAtoB(2, 8)).toFixed(0));
+                    } else if (data.musicality < 65) {
+                        newFans = parseInt((newFans * data.musicality / 200 / data.shareService.randomAtoB(2, 6)).toFixed(0));
+                        copies = parseInt((copies * data.musicality / 200 / data.shareService.randomAtoB(2, 6)).toFixed(0));
+                    } else if (data.musicality < 75) {
+                        newFans = parseInt((newFans * data.musicality / 200 / data.shareService.randomAtoB(2, 4)).toFixed(0));
+                        copies = parseInt((copies * data.musicality / 200 / data.shareService.randomAtoB(2, 4)).toFixed(0));
+                    } else if (data.musicality < 80) {
+                        newFans = parseInt((newFans * data.musicality / 200 / data.shareService.randomAtoB(2, 3)).toFixed(0));
+                        copies = parseInt((copies * data.musicality / 200 / data.shareService.randomAtoB(2, 3)).toFixed(0));
+                    } else {
+                        chance = data.shareService.randomAtoB(1, 4);
+
+                        if (chance > 1) {
+                            newFans = parseInt((newFans * data.musicality / 200 / (data.shareService.randomAtoB(1300, 2000) / 1000)).toFixed(0));
+                            copies = parseInt((copies * data.musicality / 200 / (data.shareService.randomAtoB(1300, 2000) / 1000)).toFixed(0));
+                        }
+                    }
+
+                    copies = parseInt(copies);
+                    newFans = parseInt(newFans);
+
+                    if (copies < 10) copies = data.shareService.randomAtoB(10, 20);
+                    data.years[data.age].events.push(`${band.name} released a new album called ${name}.<br>It sold ${copies} copies.`);
+
+                    band.fans += newFans;
+                    band.soldCopies += copies;
+                    data.finance += copies / (10 * data.shareService.randomAtoB(100, 200) / 100)
+                    data.numOfAlbums += 1;
+                    data.musicModal.dismiss();
+                    data.createAlbumModal.dismiss();
+                    this.events.publish("goToHome");
+                    band.albums += 1;
+                    console.log("Published an album");
+                }
+            }
+        } else {
+            let alert = this.alertCtrl.create({
+                subTitle: "What?!",
+                message: "There is no more free studio time.",
+                buttons: ["Okay"]
+            });
+            alert.present();
+            data.createAlbumModal.dismiss();
+        }
+    }
+
+    ngAfterViewInit() {
+        this.albumSongs = 1;
+    }
+
+    changedNumberOfSongs(value) {
+        console.log(value)
+        if (this.albumSongs > 20) this.albumSongs = 20;
+        else if (this.albumSongs < 1) this.albumSongs = 1;
+    }
+
+    randomAlbumName(data) {
+        this.albumName = data.shareService.randomAlbumName();
+    }
+
+    /* randomName(data) {
+        this.childName = data.shareService.randomName(data, this.child["gender"]);
+    } */
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+@Component({
+    templateUrl: '../../pages/me/createBand.html'
 })
 export class bandNameModal {
     data: object;
@@ -2734,6 +2900,7 @@ export class bandNameModal {
     }
 
     createBand(data, name, members, genre) {
+        name = name.replace(/\s\s+/g, ' ');
         if (name == undefined || name == "" || name == " " || members == undefined || genre == undefined) {
             console.log("Prazno je");
         } else {
@@ -2748,6 +2915,7 @@ export class bandNameModal {
             newBand["fans"] = 15 + parseInt((data.shareService.randomAtoB(10, 40) * data.musicality / 80).toFixed(0));
             newBand["genre"] = genre;
             newBand["albums"] = 0;
+            newBand["soldCopies"] = 0;
             newBand["active"] = 1;
             //newBand["id"] = this.randomId(8);
 

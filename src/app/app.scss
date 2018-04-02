@@ -182,7 +182,7 @@ ion-modal {
 }
 
 .halfWidthModal {
-  width: 38vw;
+  width: 36vw;
 }
 
 .halfWidthModalLeft {
@@ -332,6 +332,15 @@ ion-icon {
   border-bottom-color: transparent !important;
 }
 
+
+.noInputLineDown::after {
+  border-bottom-color: transparent !important;
+}
+
+.noInputLineDown {
+  border-bottom-color: transparent !important;
+}
+
 .modalMarginTop {
   margin-top: 30vh !important;
 }
@@ -367,10 +376,10 @@ ion-icon {
   left: 0;
   right: 0;
   height: auto;
-  margin: 4%;
+  margin: 4vw;
   background: white;
   border-radius: 5px; //margin-top: 25% !important;
-  width: 92%;
+  width: 92vw;
   /* margin-top: 25% !important;
   left: 0;
   right: 0;

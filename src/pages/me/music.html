@@ -55,6 +55,12 @@
             </ion-item>
             <ion-item>
               <ion-label class="ion-select-text listItem">
+                Sold albums:
+              </ion-label>
+              <ion-input [value]="data.selectedBandObject.soldCopies" text-right disabled class="listItem2"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label class="ion-select-text listItem">
                 Active:
               </ion-label>
               <ion-input [value]="(data.selectedBandObject.active == 1)?'Yes':'No'" text-right disabled class="listItem2"></ion-input>
@@ -63,7 +69,7 @@
 
           <div class="textCenter">
 
-            <button ion-button color="calm-v1" class="halfWidthModal" *ngIf="data.bands.length != 0 && data.selectedBandObject.active == 1">
+            <button ion-button color="calm-v1" class="halfWidthModal" *ngIf="data.bands.length != 0 && data.selectedBandObject.active == 1" (click)="createAlbumModal(data)">
               Create album
               <ion-icon id="clockIcon" name="md-disc"></ion-icon>
             </button>
