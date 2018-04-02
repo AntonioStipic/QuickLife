@@ -1,7 +1,7 @@
 <ion-content class="main-view">
   <ion-scroll scrollX="false" scrollY="true" style="width: 100%; height: 100%;">
     <div class="overlay" (click)="dismiss()"></div>
-    <div class="modal_content maliMarginGore modalMarginTop">
+    <div class="modal_content verticalCenter">
       <ion-card>
         <ion-card-header class="childGenderAnnouncement">
           <!-- <b class="gurniDolje">It's a {{child.childGender}}!</b> -->
@@ -16,12 +16,16 @@
         <ion-card>
           <ion-card-content>
             <ion-list>
-              <ion-item class="inputOutline">
-                <ion-label class="ion-select-text"><b>Name:</b></ion-label>
-                <ion-input id="childNameInput" type="text" placeholder="Enter artist name..." round [(ngModel)]="bandName" [attr.maxlength]="50"></ion-input>
+              <ion-item>
+                <ion-label class="ion-select-text">
+                  <b>Name:</b>
+                </ion-label>
+                <ion-input type="text" placeholder="Enter artist name..." [(ngModel)]="bandName" [attr.maxlength]="50"></ion-input>
               </ion-item>
               <ion-item>
-                <ion-label class="ion-select-text"><b>Members:</b></ion-label>
+                <ion-label class="ion-select-text">
+                  <b>Members:</b>
+                </ion-label>
                 <ion-select [(ngModel)]="bandMembers" multiple="false" cancelText="Dismiss" okText="Ok">
                   <ion-option value="1">1</ion-option>
                   <ion-option value="2">2</ion-option>
@@ -35,10 +39,18 @@
                   <ion-option value="10">10</ion-option>
                 </ion-select>
               </ion-item>
-              <button ion-button color="royal-v1" class="buttonright" (click)="data.shareService.createBand(data, bandName, bandMembers)">
+              <ion-item>
+                <ion-label class="ion-select-text">
+                  <b>Genre:</b>
+                </ion-label>
+                <ion-select [(ngModel)]="bandGenre" multiple="false" cancelText="Dismiss" okText="Ok">
+                  <ion-option *ngFor="let genre of data.shareService.shuffle(data.genres)" [value]="genre">{{genre}}</ion-option>
+                </ion-select>
+              </ion-item>
+              <button ion-button color="royal-v1" class="buttonright" (click)="data.shareService.createBand(data, bandName, bandMembers, bandGenre)">
                 Create
               </button>
-              <button style="text-transform: none;" ion-button color="royal-v1" class="buttonright" (click)="randomName(data)">
+              <button style="text-transform: none;" ion-button color="royal-v1" class="buttonright" (click)="randomBandName(data)">
                 Random name
               </button>
             </ion-list>

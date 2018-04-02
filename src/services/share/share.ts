@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Component } from '@angular/core';
+import { Http } from '@angular/http';
 import { AlertController, App } from 'ionic-angular';
 import { ModalController, NavParams, ViewController } from 'ionic-angular';
 import { Events } from 'ionic-angular';
@@ -11,9 +12,22 @@ export class ShareService {
     data: object;
     names: object;
     cars: object;
+    bands;
 
-    constructor(public app: App, public alertCtrl: AlertController, public modalCtrl: ModalController, public events: Events) {
+    constructor(public app: App, public alertCtrl: AlertController, public modalCtrl: ModalController, public events: Events, private http: Http) {
         this.data = {};
+
+        this.http.get("assets/resources/bands.json")
+            .subscribe(res => {
+                this.bands = res.json();
+                //this.bands = Array.of(this.bands);
+                this.bands = this.bands.bands;
+                //console.log(this.bands[this.randomAtoB(0, this.bands.length - 1)]);
+                //console.log(this.names);
+                //this.data = this.data["shareService"].createMe(this.data, this.names);
+            }, error => {
+                console.log(error);
+            });
     }
 
     createVehicle(data) {
@@ -139,8 +153,8 @@ export class ShareService {
         data.bandNameModal.present();
     }
 
-    createBand(data, name, members) {
-        if (name == undefined || name == "" || name == " ") {
+    createBand(data, name, members, genre) {
+        if (name == undefined || name == "" || name == " " || members == undefined || genre == undefined) {
             console.log("Prazno je");
         } else {
             // Each time you create new band the list will contain all bands previous selected as selectedBand
@@ -151,12 +165,26 @@ export class ShareService {
             newBand["name"] = name;
             //newBand["members"]
             newBand["members"] = members;
-            newBand["fans"] = 15 + parseInt((this.randomAtoB(10, 40) * data.musicality / 100).toFixed(0));
-            newBand["id"] = this.randomId(8);
+            newBand["fans"] = 15 + parseInt((this.randomAtoB(10, 40) * data.musicality / 80).toFixed(0));
+            newBand["genre"] = genre;
+            //newBand["id"] = this.randomId(8);
+
+            if (data.bands.length == 0) newBand["id"] = "firstBand";
+            else newBand["id"] = this.randomId(8);
 
             data.bands.push(newBand);
-            data.bandNameModal.dismiss();
+
+            for (let i = 0; i < data.bands.length; i++) {
+                if (data.bands[i]["id"] == newBand["id"]) {
+                    data.selectedBandObject = data.bands[i];
+                }
+            }
+
             data.changeSelectedBand(data, newBand);
+
+            //data.changeSelectedBand(data, newBand)
+
+            data.bandNameModal.dismiss();
         }
     }
 
@@ -1171,6 +1199,11 @@ export class ShareService {
 
         // Current tab choosen in view "Me" under "Assets"
         data.meAssets = "House";
+
+        // Last band that has been opened (contains band object)
+        data.lastChoosenBand;
+
+        data.genres = this.shuffle(["Rock", "Classical", "Jazz", "Heavy Metal", "Dance", "Hip-hop", "R&B", "Funk", "Country", "Thrash Metal", "Punk Rock", "Grunge", "Reggae", "Blues", "Religious", "Pop", "Folk", "Synthwave", "Electronic", "A cappella", "Crunk", "Death Metal", "Industrial"]);
 
         // Empty log
         data.years = [{ "year": 0, "events": ["You have been born as " + data.name + " " + data.surname + ".", " You are " + data.nationality + ", " + data.genderFull + ".", "Your parents are:<br>" + data.father.name + " " + data.surname + " (" + data.father.age + " years old),<br>" + data.mother.name + " " + data.surname + " (" + data.mother.age + " years old)."] }];
@@ -2192,6 +2225,10 @@ export class ShareService {
         return newSurname;
     }
 
+    randomBandName(data) {
+        return (this.bands[this.randomAtoB(0, this.bands.length - 1)]);
+    }
+
     // This function is adjusted for generating appearance and intelligence
     // (Lowered chances of getting numbers under 20)
     random1to100() {
@@ -2613,16 +2650,25 @@ export class socialNetworkModal {
 export class musicModal {
     data: object;
     selectedBand;
-    selectedBandObject;
     constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
         this.data = shareService.getData();
         //console.log(this.data["bands"].length);
         //console.log(this.selectedBand);
+
+        this.data["selectedBandObject"];
+        this.selectedBand = "firstBand";
         if (this.data["bands"].length > 0) {
             this.selectedBand = this.data["bands"][0]["id"];
-            this.selectedBandObject = this.data["bands"][0];
+            this.data["selectedBandObject"] = this.data["bands"][0];
         } else {
             //console.log(this.selectedBand);
+        }
+        //console.log(this.data["lastChoosenBand"])
+        if (this.data["lastChoosenBand"] != undefined) {
+            this.selectedBand = this.data["lastChoosenBand"]["id"];
+            this.data["selectedBandObject"] = this.data["lastChoosenBand"];
+        } else {
+            //console.log(2);
         }
 
         this.data["changeSelectedBand"] = this.changeSelectedBand;
@@ -2630,13 +2676,10 @@ export class musicModal {
     }
 
     selectedBandChanged(data) {
-        //this.selectedBandObject = 
-        console.log(1);
         for (let i = 0; i < data.bands.length; i++) {
-            console.log(2);
             if (data.bands[i]["id"] == this.selectedBand) {
-                this.selectedBandObject = data.bands[i];
-                console.log(3);
+                data["selectedBandObject"] = data.bands[i];
+                data.lastChoosenBand = data.bands[i];
             }
         }
     }
@@ -2647,6 +2690,9 @@ export class musicModal {
         this.selectedBand = band["id"];
         console.log(data.bands[data.bands.length - 1]["id"]);
         console.log(band);
+
+        data["selectedBandObject"] = band;
+        data.lastChoosenBand = band;
         //this.selectedBandChanged(data);
         //console.log(this.selectedBand);
     }
@@ -2698,12 +2744,18 @@ export class bandNameModal {
     data: object;
     bandName;
     bandMembers;
+    bandGenre;
     constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
         this.data = shareService.getData();
 
         this.bandMembers = 1;
+        
         //console.log(this.child);
         //console.log();
+    }
+
+    randomBandName(data) {
+        this.bandName = data.shareService.randomBandName();
     }
 
     /* randomName(data) {
