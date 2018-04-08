@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ViewController, NavController } from 'ionic-angular';
-import { ModalController, NavParams } from 'ionic-angular';
+import { ModalController, NavParams, Tabs } from 'ionic-angular';
 import { ShareService } from '../../services/share/share';
 import { TabsPage } from '../tabs/tabs';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -24,10 +24,25 @@ export class PopoverContentPage {
     this.navCtrl.push(TabsPage, {}, { animate: false }); */
     /* this.splashscreen.show();
     window.location.reload(); */
-
-    this.data["shareService"].createMe(this.data, "");
+    this.data["shareService"].createMe(this.data, "", "");
     this.viewCtrl.dismiss();
     this.events.publish("goToHome");
+  }
+
+  randomId(length) {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (var i = 0; i < length; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+    return text;
+  }
+
+  changeTab(index) {
+    var t: Tabs = this.data["navCtrl"];
+    t.select(index);
+    //
+    //setTimeout(function () {
+    //data.changeTabTrue = 0;
+    //}, 100);
   }
 
   customLife(data) {

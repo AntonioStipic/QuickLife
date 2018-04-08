@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { PopoverController } from 'ionic-angular';
+import { PopoverController, Tabs } from 'ionic-angular';
 import { PopoverContentPage } from '../popover/popover';
 import { ShareService } from '../../services/share/share';
 import { AlertController, Content } from 'ionic-angular';
@@ -24,20 +24,21 @@ export class HomePage {
   @ViewChild(Content) content: Content;
 
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public alertCtrl: AlertController, private http: Http, public KeyValueDiffers: KeyValueDiffers) {
+    //this.data["years"] = [];
     this.data = shareService.getData();
     console.log(KeyValueDiffers);
     this._differ = KeyValueDiffers.find({}).create();
     this.data["shareService"] = shareService;
     //this.http.get('assets/resources/names.json').map(response => response.json()).subscribe(result => this.names = result);
     //this.http.get('assets/resources/names.json').subscribe(result => this.names =result.json());
-
+    this.data["navCtrl"] = this.navCtrl.parent;
     this.http.get("assets/resources/names.json")
       .subscribe(res => {
         this.names = res.json();
         this.names = Array.of(this.names);
         this.names = this.names[0];
         //console.log(this.names);
-        this.data = this.data["shareService"].createMe(this.data, this.names);
+        this.data = this.data["shareService"].createMe(this.data, this.names, this.randomId(8));
       }, error => {
         console.log(error);
       });
@@ -96,6 +97,22 @@ export class HomePage {
         //console.log(record.key + ': ' + record.previousValue + '=>' + record.currentValue)
       }); */
     }
+  }
+
+  changeTab(index) {
+    var t: Tabs = this.data["navCtrl"];
+    t.select(index);
+    //
+    //setTimeout(function () {
+    //data.changeTabTrue = 0;
+    //}, 100);
+  }
+
+  randomId(length) {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (var i = 0; i < length; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+    return text;
   }
 
 
@@ -286,6 +303,12 @@ export class HomePage {
     data.gotJobNum = -1;
     data.selfiesPerYear = 0;
     data.numOfAlbums = 0;
+
+    if (data.changeThisLifeIdNextYear == 1) {
+      data.shareService.changeThisLifeId(data);
+    }
+
+    data.finance += data.allowance * 12;
 
     if (data.finance < 0) {
       data.inDebt = 1;
@@ -572,7 +595,14 @@ export class HomePage {
           }
         }
 
+      } else if (data.age == 10) {
+        data.allowance = parseFloat((data.shareService.randomAtoB(7000, 14000) / 100).toFixed(2));
+        data.income += data.allowance;
+        data.years[data.age].events.push(`My parents started giving me allowance. I'm getting $${data.allowance} per month.`);
       } else if (data.age == 18) {
+        data.years[data.age].events.push(`My parents stopped giving me allowance.`);
+        data.income -= data.allowance;
+        data.allowance = 0;
         if (data.dontAskForDrivingTestOn18 == 0) this.checkDrivingTest(data);
       }
 

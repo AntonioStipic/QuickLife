@@ -14,6 +14,7 @@ export class ShareService {
     cars: object;
     bands;
     albums;
+    lifeId;
 
     constructor(public app: App, public alertCtrl: AlertController, public modalCtrl: ModalController, public events: Events, private http: Http) {
         this.data = {};
@@ -486,7 +487,8 @@ export class ShareService {
     }
 
     learningChanged(data) {
-        //console.log("Demn, it changed");
+        if (this.verifyLifeId(data)) return;
+
         if (data.isLearning == 1) {
             data.years[data.age].events.push("I started learning.");
         } else {
@@ -494,7 +496,19 @@ export class ShareService {
         }
     }
 
+    changeThisLifeId(data) {
+        this.lifeId = data.lifeId;
+    }
+
+    verifyLifeId(data) {
+        if (data.lifeId != this.lifeId) {
+            data.changeThisLifeIdNextYear = 1;
+            return true;
+        } else return false;
+    }
+
     readingChanged(data) {
+        if (this.verifyLifeId(data)) return;
         if (data.isReadingBooks == 1) {
             data.years[data.age].events.push("I started reading books.");
         } else {
@@ -507,6 +521,7 @@ export class ShareService {
     }
 
     gymChanged(data) {
+        if (this.verifyLifeId(data)) return;
         if (data.goingToGym == 1) {
             data.years[data.age].events.push("I started going to gym.");
             data.outcome += (50);
@@ -544,6 +559,7 @@ export class ShareService {
     }
 
     instrumentsChanged(data) {
+        if (this.verifyLifeId(data)) return;
         //console.log(data.instruments, data.oldInstruments);;
         //var newInstruments = this.arr_diff(data.instruments, data.oldInstruments);
         var newInstruments1 = data.instruments.filter(item => data.oldInstruments.indexOf(item) < 0);
@@ -603,6 +619,7 @@ export class ShareService {
     }
 
     sportsChanged(data) {
+        if (this.verifyLifeId(data)) return;
         //console.log(data.instruments, data.oldInstruments);;
         //var newInstruments = this.arr_diff(data.instruments, data.oldInstruments);
         var newSports1 = data.sports.filter(item => data.oldSports.indexOf(item) < 0);
@@ -926,10 +943,18 @@ export class ShareService {
         this.cars = cars;
     }
 
-    createMe(data, names) {
+    createMe(data, names, lifeId) {
+
+        if (lifeId != "") {
+            this.lifeId = lifeId;
+            data.lifeId = lifeId;
+        } else {
+            data.lifeId = this.randomId(8);
+        }
 
         if (names != "") {
             this.names = names;
+            data.manualNewLife = 1;
         }
         if (data.customLife == 1) {
             data.name = data.customLifeInfo.name;
@@ -952,6 +977,10 @@ export class ShareService {
         data.customLife = 0;
 
         data.age = 0;
+
+        /* data.lifeId = this.randomId(8);
+        this.lifeId = data.lifeId; */
+
 
         // Boolean of life and death
         data.alive = 1;
@@ -1019,6 +1048,9 @@ export class ShareService {
 
         // Number of jobs to be listed
         data.numOfJobs = 30;
+
+        // Amount of money player gets per month from parents
+        data.allowance = 0;
 
         // For every year of work this counts up
         data.workExperience = 0;
@@ -1187,6 +1219,9 @@ export class ShareService {
 
         // Boolean to indicate if player is famous
         data.isFamous = 0;
+
+        // If this is true, next year will this.lifeId become same as data.lifeId
+        data.changeThisLifeIdNextYear = 0;
 
         // List of bands in which the player is
         //data.bands = [{ name: "123", members: 3, fans: 0, id: "1234567" }]; //, {name: "Test", members: 2, id: "1234566"}
@@ -2378,6 +2413,7 @@ export class ShareService {
 
     // This function is called when player is in debt
     inDebt(data) {
+        this.update(data);
         data.years[data.age].events.push("I'm in debt.");
         if (data.goingToGym == 1) {
             data.goingToGym = 0;
@@ -2703,8 +2739,9 @@ export class musicModal {
     }
 
     changeSelectedBand(data, band, length) {
-        console.log(band);
-        console.log(1);
+        //console.log(band);
+        //console.log(1);
+        
         //console.log(this.selectedBand);
         //console.log(band["id"]);
         this.data["selectedBand"] = band["id"];

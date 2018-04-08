@@ -27,6 +27,20 @@ export class MePage {
     });
   }
 
+
+  ionViewDidEnter() {
+    if (this.data["reloadLife"] == 1) {
+      console.log("reloadLife1");
+      console.log(this.data["name"]);
+      this.data["shareService"].createMe(this.data, "");
+      this.changeTab(0);
+    } else if (this.data["reloadLife"] == 2) {
+      console.log("reloadLife2");
+      console.log(this.data["name"]);
+      this.data["reloadLife"] = 0;
+      this.changeTab(0);
+    }
+  }
   
 
   openPopover(myEvent) {
