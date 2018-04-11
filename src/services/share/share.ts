@@ -98,13 +98,13 @@ export class ShareService {
     }
 
     carsForSaleModal(data, cars) {
-        let vehicleModal = this.modalCtrl.create(carsForSaleModal, { data: data, cars: cars }, {
+        data.vehicleModal = this.modalCtrl.create(carsForSaleModal, { data: data, cars: cars }, {
             showBackdrop: false,
             enableBackdropDismiss: true,
             /* enterAnimation: 'modal-scale-up-enter',
             leaveAnimation: 'modal-scale-up-leave' */
         });
-        vehicleModal.present();
+        data.vehicleModal.present();
     }
 
     weddingModal(data) {
@@ -358,6 +358,7 @@ export class ShareService {
         data.finance -= car[3];
         data.cars.push(car);
         data.years[data.age].events.push(`I bought a car.`);
+        data.vehicleModal.dismiss();
         let preposition = "";
         if (car[1][0].toLowerCase() == "a" ||
             car[1][0].toLowerCase() == "e" ||
