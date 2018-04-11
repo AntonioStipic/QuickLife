@@ -253,6 +253,12 @@ ion-icon {
   &[class*="quicklife-drummer"] {
     mask-image: url(../assets/imgs/drummer.svg);
   }
+  &[class*="quicklife-suicide"] {
+    mask-image: url(../assets/imgs/suicide.svg);
+  }
+  &[class*="quicklife-rope"] {
+    mask-image: url(../assets/imgs/rope.svg);
+  }
 }
 
 .modal_content ion-card {
@@ -361,7 +367,7 @@ ion-icon {
   position: fixed;
   top: 0;
   width: 100%;
-  height: 100%;
+  height: 1500%;
   z-index: 1 !important;
   opacity: .5;
   background-color: #333;
@@ -416,6 +422,10 @@ ion-icon {
   margin-top: 10% !important;
 }
 
+.marginRight3 {
+  margin-right: 3% !important;
+}
+
 .ionicModalContent {
   /* width: 96vw;
   margin-left: 2vw!important;
@@ -424,5 +434,5 @@ ion-icon {
 }
 
 .select-text {
-  display: none;
+  //display: none;
 }

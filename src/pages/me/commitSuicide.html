@@ -1,0 +1,42 @@
+<ion-scroll scrollX="false" scrollY="true" style="width: 100%; height: 100%; word-wrap: break-word;">
+  <div class="modalOverlay" (click)="dismiss()"></div>
+
+  <div class="modalContent verticalCenter">
+    <ion-card>
+      <ion-card-header>
+        <b class="gurniDolje">Commit suicide by:</b>
+        <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1" small>
+          <ion-icon name="md-close"></ion-icon>
+        </button>
+      </ion-card-header>
+    </ion-card>
+    <ion-list>
+
+      <ion-card>
+        <ion-list>
+          <ion-item>
+            <ion-label class="ion-select-text">Method:</ion-label>
+            <ion-select [(ngModel)]="suicideMethod" multiple="false" cancelText="Dismiss" okText="Ok">
+              <ion-option value="Hanging">Hanging</ion-option>
+              <ion-option value="Wrist cutting">Wrist cutting</ion-option>
+              <ion-option value="Alcohol overdose">Alcohol overdose</ion-option>
+              <ion-option value="Drug overdose">Drug overdose</ion-option>
+              <ion-option value="Jumping from height">Jumping from height</ion-option>
+              <ion-option value="Set yourself on fire">Set yourself on fire</ion-option>
+              <ion-option value="Auto crash">Auto crash</ion-option>
+              <ion-option value="Jumping under train">Jumping under train</ion-option>
+              <ion-option value="Shotgun to head">Shotgun to head</ion-option>
+            </ion-select>
+          </ion-item>
+          <button style="text-transform: none;" ion-button color="royal-v1" class="buttonright marginRight3" (click)="commitSuicide(data, suicideMethod)">
+            Commit
+          </button>
+          <button ion-button color="royal-v1" class="buttonright" (click)="dismiss()">
+            Back out
+          </button>
+        </ion-list>
+      </ion-card>
+
+    </ion-list>
+  </div>
+</ion-scroll>

@@ -87,6 +87,16 @@ export class ShareService {
         data.propertyModal.present();
     }
 
+    commitSuicideModal(data) {
+        data.commitSuicideModal = this.modalCtrl.create(commitSuicideModal, { data: data }, {
+            showBackdrop: false,
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
+        });
+        data.commitSuicideModal.present();
+    }
+
     carsForSaleModal(data, cars) {
         let vehicleModal = this.modalCtrl.create(carsForSaleModal, { data: data, cars: cars }, {
             showBackdrop: false,
@@ -2642,6 +2652,40 @@ export class propertyListingModal {
         this.viewCtrl.dismiss();
     }
 }
+
+@Component({
+    templateUrl: '../../pages/me/commitSuicide.html'
+})
+export class commitSuicideModal {
+    data: object;
+    suicideMethod;
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController, public events: Events) {
+        this.data = shareService.getData();
+
+        this.suicideMethod = "Hanging";
+        //console.log();
+    }
+
+    commitSuicide(data, suicideMethod) {
+        console.log(suicideMethod);
+        data.alive = 0;
+        data.shareService.disableAll(data);
+        if (suicideMethod == "Set yourself on fire") suicideMethod = "setting myself on fire";
+        suicideMethod = suicideMethod.toLowerCase();
+        data.years[data.age].events.push(`I died from ${suicideMethod}.`);
+        this.dismiss();
+        this.events.publish("goToHome");
+    }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
 @Component({
     templateUrl: '../../pages/me/vehicleListing.html'
 })

@@ -341,6 +341,11 @@
             <span class="absolutePosition"> Go on a date</span>
           </button>
 
+          <button ion-item (click)="data.shareService.commitSuicideModal(data)" class="button-ion-item topLine" [disabled]="data.age < 12">
+            <ion-icon name="quicklife-rope" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition"> Commit suicide</span>
+          </button>
+
           <ion-item-divider color="light"><b>Documents</b></ion-item-divider>
 
           <button ion-item class="button-ion-item" [disabled]="data.shareService.passedDrivingTestButton(data)" (click)="data.shareService.takeDrivingTest(data); changeTab(0, data)">
