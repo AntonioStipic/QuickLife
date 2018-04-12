@@ -204,7 +204,7 @@ export class HomePage {
 
       let alert = this.alertCtrl.create({
         title: 'Drugs',
-        subTitle: text,
+        message: text,
         buttons: [{
           text: 'Take',
           handler: () => {
@@ -308,6 +308,8 @@ export class HomePage {
       data.shareService.changeThisLifeId(data);
     }
 
+    if (data.outcome < 0) data.outcome = 0;
+
     data.finance += data.allowance * 12;
 
     if (data.finance < 0) {
@@ -330,6 +332,12 @@ export class HomePage {
     for (let i = 0; i < data.children.length; i++) {
       if (data.children[i].alive == 1) {
         data.children[i].age += 1;
+      }
+    }
+
+    for (let i = 0; i < data.friends.length; i++) {
+      if (data.friends[i].alive == 1) {
+        data.friends[i].age += 1;
       }
     }
 
@@ -551,7 +559,41 @@ export class HomePage {
       }
 
       if (data.age == 3) {
-        data.years[data.age].events.push("I started going to kindergarten.");
+        data.years[data.age].events.push(`I started going to kindergarten.`);
+        //console.log(data.shareService.createPerson(data));
+
+        if (data.sociability > 25) {
+          let numOfFriends = data.shareService.randomAtoB(0, 6);
+          let preposition = "";
+          if (numOfFriends < 4) {
+            numOfFriends = 1;
+            preposition = "friend";
+          } else if (numOfFriends < 6) {
+            numOfFriends = 2;
+            preposition = "friends";
+          } else {
+            numOfFriends = 3;
+            preposition = "friends";
+          }
+
+          let friends = [];
+          let text = "";
+          for (let i = 0; i < numOfFriends; i++) {
+            friends.push(data.shareService.createPerson(data));
+            data.friends.push(friends[i]);
+          }
+
+          if (numOfFriends == 1) {
+            text = friends[0]["name"];
+          } else if (numOfFriends == 2) {
+            text = friends[0]["name"] + " and " + friends[1]["name"];
+          } else {
+            text = friends[0]["name"] + ", " + friends[1]["name"] + " and " + friends[2]["name"];
+          }
+
+          data.years[data.age].events.push(`I've become best ${preposition} with ${text}.`);
+        }
+
       } else if (data.age == 6) {
         data.kindergarten = 1;
         data.goingToElementary = 1;

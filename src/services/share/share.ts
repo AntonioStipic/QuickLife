@@ -1000,6 +1000,7 @@ export class ShareService {
         data.nationality = "Croatian";
         data.appearance = this.random1to100();
         data.intelligence = this.random1to100();
+        data.sociability = this.random1to100();
         data.fitness = this.randomAtoB(1, 100);
         data.musicality = this.randomAtoB(1, 100);
 
@@ -1071,6 +1072,9 @@ export class ShareService {
 
         // List containing cars that player has
         data.cars = [];
+
+        // List of player's friends
+        data.friends = [];
 
         // Boolean for passed driving test
         data.passedDrivingTest = 0;
@@ -1638,6 +1642,8 @@ export class ShareService {
         var loverStability = 50;
         var loverTime = 0;
 
+        let loverId = this.randomId(8);
+
         var playerAge = data.age;
         var variety = 0;
         if (playerAge > 25) {
@@ -1655,7 +1661,44 @@ export class ShareService {
             loverAge = playerAge - variety;
         }
 
-        return { name: loverName, surname: loverSurname, appearance: loverAppearance, intelligence: loverIntelligence, gender: loverGender, age: loverAge, fitness: loverFitness, stability: loverStability, time: loverTime, isPregnant: 0 };
+        return { name: loverName, surname: loverSurname, appearance: loverAppearance, intelligence: loverIntelligence, gender: loverGender, age: loverAge, fitness: loverFitness, stability: loverStability, time: loverTime, isPregnant: 0, id: loverId };
+    }
+
+    createPerson(data) {
+        //console.log(data.sexuality);
+        let genderDecide = this.randomAtoB(0, 1);
+        let gender = "";
+        if (genderDecide == 0) gender = "female";
+        else gender = "male";
+        let name = this.randomName(data, gender);
+        let surname = this.randomSurname(data);
+        let appearance = this.random1to100();
+        let intelligence = this.random1to100();
+        let fitness = this.randomAtoB(1, 100);
+        let alive = 1;
+
+        let id = this.randomId(8);
+
+        var playerAge = data.age;
+        var variety = 0;
+        if (playerAge == 3) {
+            variety = 0
+        } else if (playerAge > 25) {
+            variety = this.randomAtoB(0, 10);
+        } else if (playerAge > 16) {
+            variety = this.randomAtoB(0, 4);
+        } else {
+            variety = this.randomAtoB(0, 2);
+        }
+        let upOrDown = this.randomAtoB(0, 2);
+        let age = 0;
+        if (upOrDown == 0) {
+            age = playerAge + variety;
+        } else {
+            age = playerAge - variety;
+        }
+
+        return { name: name, surname: surname, appearance: appearance, intelligence: intelligence, gender: gender, age: age, fitness: fitness, id: id, alive: alive };
     }
 
     createChild(data, who) {
@@ -1669,7 +1712,9 @@ export class ShareService {
         if (gender == "male") childGender = "boy";
         else childGender = "girl";
 
-        let child = { gender: gender, childGender: childGender, whoGaveBirth: who };
+        let childId = this.randomId(8);
+
+        let child = { gender: gender, childGender: childGender, whoGaveBirth: who, id: childId };
         this.childModal(data, child);
     }
 
@@ -1986,6 +2031,7 @@ export class ShareService {
             let meetingText = `You met ${tmpPerson["name"]} ${tmpPerson["surname"]} ${meetingPlace}. <br> ${tmpPerson["name"]} has appearance ${meetingAppearanceText}.`;
 
             let alert = this.alertCtrl.create({
+                cssClass: 'alert3Buttons',
                 subTitle: `Hi! I’m ${data.name}. And you?`,
                 message: meetingText,
                 buttons: [{
@@ -2074,6 +2120,11 @@ export class ShareService {
                         }
 
 
+                    }
+                }, {
+                    text: 'Chat',
+                    handler: () => {
+                        console.log("You chatted!");
                     }
                 }, {
                     text: 'Ignore',
@@ -2786,7 +2837,7 @@ export class musicModal {
     changeSelectedBand(data, band, length) {
         //console.log(band);
         //console.log(1);
-        
+
         //console.log(this.selectedBand);
         //console.log(band["id"]);
         this.data["selectedBand"] = band["id"];

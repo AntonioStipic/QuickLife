@@ -436,3 +436,20 @@ ion-icon {
 .select-text {
   //display: none;
 }
+
+.alert3Buttons button.alert-button-group {
+  width: 33.33%;
+}
+
+.alert3Buttons .alert-button-group .button-inner {
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.alert3Buttons .alert-button-group-vertical {
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row ;
+}

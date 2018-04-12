@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar color="danger">
     <ion-title>
-      Family
+      Family & Friends
     </ion-title>
     <ion-buttons right>
       <button ion-button icon-only (click)="openPopover($event)">
@@ -20,6 +20,9 @@
       </ion-segment-button>
       <ion-segment-button value="Children">
         Children
+      </ion-segment-button>
+      <ion-segment-button value="Friends">
+        Friends
       </ion-segment-button>
     </ion-segment>
   </div>
@@ -166,6 +169,32 @@
             <ion-icon item-start></ion-icon>
             <div>
               {{child.name}} ({{child.age}} years old)
+            </div>
+          </button>
+        </ion-list>
+      </ion-card>
+
+    </ion-list>
+
+
+    <ion-list *ngSwitchCase="'Friends'">
+
+      <ion-card>
+        <!-- <ion-list> -->
+        <!-- <ion-item *ngIf="data.children.length == 0"> -->
+        <ion-card-header *ngIf="data.friends.length == 0">
+          <b>You don't have any friends.</b>
+        </ion-card-header>
+        <ion-card-content *ngIf="data.friends.length == 0">
+
+        </ion-card-content>
+        <!-- <ion-label><b>You don't have children.</b></ion-label> -->
+        <!-- </ion-item> -->
+        <ion-list>
+          <button ion-item *ngFor="let friend of data.friends">
+            <ion-icon item-start></ion-icon>
+            <div>
+              {{friend.name}} {{friend.surname}} ({{friend.age}} years old)
             </div>
           </button>
         </ion-list>
