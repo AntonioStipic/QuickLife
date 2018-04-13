@@ -2121,12 +2121,12 @@ export class ShareService {
 
 
                     }
-                }, {
+                }/* , {
                     text: 'Chat',
                     handler: () => {
                         console.log("You chatted!");
                     }
-                }, {
+                }*/, {
                     text: 'Ignore',
                     handler: () => {
 
