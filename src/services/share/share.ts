@@ -57,9 +57,11 @@ export class ShareService {
         let color = data.colors[this.randomAtoB(0, data.colors.length - 1)];
         let carPrice = this.randomAtoB(parseInt(range[0]) * 1000, parseInt(range[1]) * 1000);
         let car = this.randomProperty(rndCar["models"]);
+        let id = this.randomId(8);
         //console.log(brand + " - " + car["title"], carPrice);
 
-        return [brand, car["title"], color, carPrice];
+        //return [brand, car["title"], color, carPrice, id];
+        return {brand: brand, model: car["title"], color: color, price: carPrice, id: id, age: 0, value: carPrice * 0.85};
     }
 
     randomProperty(obj) {
@@ -165,6 +167,16 @@ export class ShareService {
             leaveAnimation: 'modal-scale-up-leave' */
         });
         data.childBornModal.present();
+    }
+
+    carInfoModal(data, car) {
+        data.carInfoModal = this.modalCtrl.create(carInfoModal, { data: data, car: car }, {
+            showBackdrop: false,
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
+        });
+        data.carInfoModal.present();
     }
 
     bandNameModal(data) {
@@ -355,23 +367,23 @@ export class ShareService {
     }
 
     buyVehicle(data, car) {
-        data.finance -= car[3];
+        data.finance -= car["price"];
         data.cars.push(car);
         data.years[data.age].events.push(`I bought a car.`);
         data.vehicleModal.dismiss();
         let preposition = "";
-        if (car[1][0].toLowerCase() == "a" ||
-            car[1][0].toLowerCase() == "e" ||
-            car[1][0].toLowerCase() == "i" ||
-            car[1][0].toLowerCase() == "o" ||
-            car[1][0].toLowerCase() == "u") {
+        if (car["model"][0].toLowerCase() == "a" ||
+            car["model"][0].toLowerCase() == "e" ||
+            car["model"][0].toLowerCase() == "i" ||
+            car["model"][0].toLowerCase() == "o" ||
+            car["model"][0].toLowerCase() == "u") {
             preposition = "an";
         } else {
             preposition = "a";
         }
         let alert = this.alertCtrl.create({
             title: "Good deal!",
-            subTitle: `You bought ${preposition} ${car[0]} for $${this.formatMoney(car[3])}!`,
+            subTitle: `You bought ${preposition} ${car["brand"]} for $${this.formatMoney(car["price"])}!`,
             buttons: [
                 {
                     text: 'Okay',
@@ -382,6 +394,21 @@ export class ShareService {
                 }]
         });
         alert.present();
+    }
+
+    sellVehicle(data, car) {
+        let id = car["id"];
+        
+        for (let i in data.cars) {
+            if (data.cars[i]["id"] == id) {
+                data.cars.splice(i, 1);
+                data.carInfoModal.dismiss();
+                data.finance += car["value"];
+                data.years[data.age].events.push(`I sold my car for $${this.formatMoney(car["value"])}.`);
+                this.events.publish("goToHome");
+                continue;
+            }
+        }
     }
 
     goForADrive(data) {
@@ -2879,6 +2906,30 @@ export class childModal {
 
     randomName(data) {
         this.childName = data.shareService.randomName(data, this.child["gender"]);
+    }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+@Component({
+    templateUrl: '../../pages/me/carInfo.html'
+})
+export class carInfoModal {
+    data: object;
+    car: object;
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
+        this.data = shareService.getData();
+        this.car = params.get("car");
+
+        console.log(this.car)
+        //console.log(this.child);
+        //console.log();
     }
 
     backButtonAction() {

@@ -20,15 +20,15 @@
 
       <ion-card *ngFor="let car of cars">
         <ion-card-header>
-          <b>{{car[0]}}</b>
+          <b>{{car["brand"]}}</b>
         </ion-card-header>
 
         <ion-card-content>
-          Model: {{car[1]}}
-          <br> Colour: {{car[2]}}
-          <br> Price: ${{data.shareService.formatMoney(car[3])}}
+          Model: {{car["model"]}}
+          <br> Colour: {{car["color"]}}
+          <br> Price: ${{data.shareService.formatMoney(car["price"])}}
 
-          <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 18 || data.finance < car[3]"
+          <button ion-button class="buttonright smallPadding" color="secondary" [disabled]="data.age < 18 || data.finance < car['price']"
             small (click)="data.shareService.buyVehicle(data, car)">
             Buy
           </button>

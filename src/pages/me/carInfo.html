@@ -1,0 +1,33 @@
+<div class="modalOverlay" (click)="dismiss()"></div>
+
+<div class="modalContent verticalCenter">
+  <ion-card>
+    <ion-card-header>
+      <b class="gurniDolje">Car info</b>
+      <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1" small>
+        <ion-icon name="md-close"></ion-icon>
+      </button>
+    </ion-card-header>
+  </ion-card>
+  <ion-list>
+
+    <ion-card>
+      <ion-card-content>
+        <ion-list>
+          <ion-item>
+            <div>
+              <b>{{car["brand"]}}</b>
+              <br>Model: {{car["model"]}}
+              <br>Colour: {{car["color"]}}
+              <br>Value: ${{data.shareService.formatMoney(car["value"])}}
+            </div>
+          </ion-item>
+          <button ion-button full color="danger" (click)="data.shareService.sellVehicle(data, car)">
+            Sell for ${{data.shareService.formatMoney(car.value)}}$<!-- &nbsp;<ion-icon name="logo-usd"></ion-icon> -->
+          </button>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+  </ion-list>
+</div>

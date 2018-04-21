@@ -229,14 +229,14 @@
             <b *ngIf="data.cars.length == 0">None</b>
           </ion-card-header>
           <ion-list>
-            <button ion-item *ngFor="let car of data.cars">
+            <button ion-item *ngFor="let car of data.cars" (click)="data.shareService.carInfoModal(data, car)">
               <ion-icon name="quicklife-car2" item-start></ion-icon>
 
               <div>
-                <b>{{car[0]}}</b>
-                <br>Model: {{car[1]}}
-                <br>Colour: {{car[2]}}
-                <br>Value: ${{data.shareService.formatMoney(car[3])}}
+                <b>{{car["brand"]}}</b>
+                <br>Model: {{car["model"]}}
+                <br>Colour: {{car["color"]}}
+                <br>Value: ${{data.shareService.formatMoney(car["value"])}}
               </div>
 
             </button>

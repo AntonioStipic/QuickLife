@@ -6,7 +6,9 @@ import { ShareService } from '../../services/share/share';
 import { AlertController, Content } from 'ionic-angular';
 import { Http } from '@angular/http';
 import { KeyValueDiffers } from '@angular/core';
-import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/map';
+
+//import { GooglePlayGamesServices } from '@ionic-native/google-play-games-services';
 
 @Component({
   selector: 'page-home',
@@ -203,6 +205,7 @@ export class HomePage {
       let text = `A stranger approaches you ${place}. ${gender} offers you ${drug}.`;
 
       let alert = this.alertCtrl.create({
+        enableBackdropDismiss: false,
         title: 'Drugs',
         message: text,
         buttons: [{
@@ -339,6 +342,26 @@ export class HomePage {
       if (data.friends[i].alive == 1) {
         data.friends[i].age += 1;
       }
+    }
+
+    for (let i = 0; i < data.cars.length; i++) {
+      data.cars[i]["age"] += 1;
+
+      if (data.cars[i]["age"] > 50) data.cars[i]["value"] = data.cars[i]["price"] * 0.15;
+      else if (data.cars[i]["age"] > 40) data.cars[i]["value"] = data.cars[i]["price"] * 0.2;
+      else if (data.cars[i]["age"] > 30) data.cars[i]["value"] = data.cars[i]["price"] * 0.3;
+      else if (data.cars[i]["age"] > 25) data.cars[i]["value"] = data.cars[i]["price"] * 0.35;
+      else if (data.cars[i]["age"] > 20) data.cars[i]["value"] = data.cars[i]["price"] * 0.38;
+      else if (data.cars[i]["age"] > 18) data.cars[i]["value"] = data.cars[i]["price"] * 0.42;
+      else if (data.cars[i]["age"] > 16) data.cars[i]["value"] = data.cars[i]["price"] * 0.5;
+      else if (data.cars[i]["age"] > 14) data.cars[i]["value"] = data.cars[i]["price"] * 0.55;
+      else if (data.cars[i]["age"] > 10) data.cars[i]["value"] = data.cars[i]["price"] * 0.6;
+      else if (data.cars[i]["age"] > 8) data.cars[i]["value"] = data.cars[i]["price"] * 0.65;
+      else if (data.cars[i]["age"] > 5) data.cars[i]["value"] = data.cars[i]["price"] * 0.68;
+      else if (data.cars[i]["age"] > 4) data.cars[i]["value"] = data.cars[i]["price"] * 0.7;
+      else if (data.cars[i]["age"] > 3) data.cars[i]["value"] = data.cars[i]["price"] * 0.75;
+      else if (data.cars[i]["age"] > 1) data.cars[i]["value"] = data.cars[i]["price"] * 0.8;
+      
     }
 
     if (data.startSmokingAgain == 1) {
