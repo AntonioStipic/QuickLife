@@ -1919,7 +1919,7 @@ export class ShareService {
     goToClub(data, alreadyWent) {
         this.update(data);
         //console.log("You went to club.");
-        let meetingChance = 100; //35
+        let meetingChance = 35; //35
         let smokingChance = 15;
         let meetingExChance = 5; //90
 
