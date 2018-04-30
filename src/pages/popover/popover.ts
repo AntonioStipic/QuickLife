@@ -45,11 +45,22 @@ export class PopoverContentPage {
     //}, 100);
   }
 
+  achievements(data) {
+    this.viewCtrl.dismiss();
+    let achievementModal = this.modalCtrl.create(achievementsModal, { data: data }, {
+      showBackdrop: false,
+      enableBackdropDismiss: true,
+      enterAnimation: 'modal-scale-up-enter',
+      leaveAnimation: 'modal-scale-up-leave'
+    });
+    achievementModal.present();
+  }
+
   customLife(data) {
     this.viewCtrl.dismiss();
     data.customLifeModal = this.modalCtrl.create(customLifeModal, { data: data }, {
       showBackdrop: false,
-      enableBackdropDismiss: false,
+      enableBackdropDismiss: true,
       enterAnimation: 'modal-scale-up-enter',
       leaveAnimation: 'modal-scale-up-leave'
     });
@@ -77,6 +88,40 @@ export class customLifeModal {
     data.customLife = 1;
     data.customLifeInfo = { name: name, surname: surname, gender: gender, nationality: nationality };
     this.navCtrl.push(TabsPage, {}, { animate: false });
+  }
+
+  backButtonAction() {
+    this.viewCtrl.dismiss();
+  }
+
+  dismiss() {
+    this.viewCtrl.dismiss();
+  }
+}
+
+@Component({
+  templateUrl: '../me/achievements.html'
+})
+export class achievementsModal {
+  data: object;
+  hidden;
+  constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController, public navCtrl: NavController) {
+    this.data = shareService.getData();
+
+    this.hidden = [];
+
+    for (let i = 0; i < this.data["achievements"].length; i++) {
+      if (this.data["achievements"][i]["finished"] == false) {
+        this.hidden.push(true);
+      } else {
+        this.hidden.push(false);
+      }
+    }
+    //this.hidden = new Array(this.data["achievements"].length).fill(true); // fill false
+  }
+  
+  toggleAchievement(index) {
+    this.hidden[index] = !this.hidden[index];
   }
 
   backButtonAction() {

@@ -1,11 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { PopoverController, Tabs } from 'ionic-angular';
+import { NavController, PopoverController, Tabs, AlertController, Content } from 'ionic-angular';
+import { Component, ViewChild, KeyValueDiffers } from '@angular/core';
 import { PopoverContentPage } from '../popover/popover';
 import { ShareService } from '../../services/share/share';
-import { AlertController, Content } from 'ionic-angular';
 import { Http } from '@angular/http';
-import { KeyValueDiffers } from '@angular/core';
 import 'rxjs/add/operator/map';
 
 //import { GooglePlayGamesServices } from '@ionic-native/google-play-games-services';
@@ -34,6 +31,17 @@ export class HomePage {
     //this.http.get('assets/resources/names.json').map(response => response.json()).subscribe(result => this.names = result);
     //this.http.get('assets/resources/names.json').subscribe(result => this.names =result.json());
     this.data["navCtrl"] = this.navCtrl.parent;
+
+    this.http.get("assets/resources/countries.json")
+      .subscribe(res => {
+        this.countries = res.json();
+        this.data["countries"] = this.countries;
+        //console.log(this.jobs[0])
+        //console.log(this.jobs);
+      }, error => {
+        console.log(error);
+      });
+
     this.http.get("assets/resources/names.json")
       .subscribe(res => {
         this.names = res.json();
@@ -64,16 +72,6 @@ export class HomePage {
         //console.log(this.jobs[0])
         //console.log(this.jobs);
         this.data["shareService"].updateJobs(this.data, this.jobs);
-      }, error => {
-        console.log(error);
-      });
-
-    this.http.get("assets/resources/countries.json")
-      .subscribe(res => {
-        this.countries = res.json();
-        this.data["countries"] = this.countries;
-        //console.log(this.jobs[0])
-        //console.log(this.jobs);
       }, error => {
         console.log(error);
       });
@@ -213,6 +211,7 @@ export class HomePage {
           handler: () => {
             data.update += 1;
             data.years[data.age].events.push(`I took ${drug}.`);
+            data.shareService.checkAchievement("Druggie");
           }
         }, {
           text: 'Leave',
@@ -309,6 +308,10 @@ export class HomePage {
 
     if (data.changeThisLifeIdNextYear == 1) {
       data.shareService.changeThisLifeId(data);
+    }
+
+    if (data.age == 100) {
+      data.shareService.checkAchievement("Centenarian");
     }
 
     if (data.outcome < 0) data.outcome = 0;
@@ -495,6 +498,8 @@ export class HomePage {
         data.mySkills.push(data.currentCollegeMajor);
         data.years[data.age].events.push("I graduated from college in " + data.currentCollegeMajor + ".");
         data.currentCollegeMajor = "";
+
+        data.shareService.checkAchievement("Academic");
       }
 
       if (data.goingToHighSchoolYears == 4) {
@@ -522,6 +527,7 @@ export class HomePage {
         } else if (percentH >= 0.9) {
           data.highSchoolGrade = "A+";
           data.passed.highschool = 1;
+          data.shareService.checkAchievement("Little Einstein");
         }
         //console.log("High School", percentH);
 
@@ -643,9 +649,11 @@ export class HomePage {
           } else if (percent < 1) {
             data.elementaryGrade = "A";
             data.passed.elementary = 1;
+            data.shareService.checkAchievement("Aced it!");
           } else if (percent >= 1) {
             data.elementaryGrade = "A+";
             data.passed.elementary = 1;
+            data.shareService.checkAchievement("Our little genius");
           }
           //console.log("Elementary", percent);
           if (data.passed.elementary == 1) {

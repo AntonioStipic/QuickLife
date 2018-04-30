@@ -17,7 +17,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { Keyboard } from '@ionic-native/keyboard';
 
-import { PopoverContentPage, customLifeModal } from '../pages/popover/popover';
+import { PopoverContentPage, customLifeModal, achievementsModal } from '../pages/popover/popover';
 import { ShareService } from '../services/share/share';
 import { ProgressBarModule } from "angular-progress-bar"
 
@@ -25,6 +25,8 @@ import { ModalScaleUpEnterTransition } from "../transitions/scale-up-enter.trans
 import { ModalScaleUpLeaveTransition } from "../transitions/scale-up-leave.transition";
 
 import { HttpModule } from '@angular/http';
+
+import { IonicStorageModule } from '@ionic/storage';
 
 
 @NgModule({
@@ -50,7 +52,8 @@ import { HttpModule } from '@angular/http';
     bandNameModal,
     createAlbumModal,
     commitSuicideModal,
-    carInfoModal
+    carInfoModal,
+    achievementsModal
   ],
   imports: [
     BrowserModule,
@@ -63,7 +66,8 @@ import { HttpModule } from '@angular/http';
           autoFocusAssist: false
         }
       }
-    })
+    }),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -88,7 +92,8 @@ import { HttpModule } from '@angular/http';
     bandNameModal,
     createAlbumModal,
     commitSuicideModal,
-    carInfoModal
+    carInfoModal,
+    achievementsModal
   ],
   providers: [
     StatusBar,

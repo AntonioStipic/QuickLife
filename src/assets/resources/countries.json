@@ -1,3 +1,4 @@
 {
-    "countries": ["Croatia", "United Kingdom", "Italy", "France", "Germany", "Sweden"]
+    "countries": ["Croatia", "United Kingdom", "Italy", "France", "Germany", "Sweden", "Poland", "United Stated of America", "Turkey", "China", "South Korea"],
+    "nationalities": ["Croatian", "French"]
 }

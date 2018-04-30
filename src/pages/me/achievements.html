@@ -1,0 +1,36 @@
+<ion-scroll scrollX="false" scrollY="true" style="width: 100%; height: 100%; word-wrap: break-word;">
+  <div class="modalOverlay" (click)="dismiss()"></div>
+
+  <div class="modalContent marginTop10">
+    <ion-card>
+      <ion-card-header>
+        <b class="gurniDolje">Achievements:</b>
+        <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1" small>
+          <ion-icon name="md-close"></ion-icon>
+        </button>
+      </ion-card-header>
+    </ion-card>
+    <ion-list>
+
+      <ion-card>
+        <ion-card-content class="noPadding">
+          <ion-card *ngFor="let achievement of data.achievements; let index = index" (click)="toggleAchievement(index)" class="width100">
+            <ion-card-header class="noBottomMargin">
+              <b class="h25">
+                <ion-icon [name]="achievement.finished == true?'md-checkbox-outline':'md-square-outline'" item-end class="paddingTopSmall"></ion-icon>&nbsp;&nbsp; {{achievement.title}}
+
+                <ion-icon [name]="hidden[index] == false?'md-arrow-dropdown':'md-arrow-dropup'" item-end class="buttonright paddingTopSmall"></ion-icon>
+              </b>
+            </ion-card-header>
+            <ion-card-content [hidden]="hidden[index] == false" class="width100">
+              - {{achievement.description}}
+            </ion-card-content>
+
+            <hr [hidden]="!hidden[index] == false">
+          </ion-card>
+        </ion-card-content>
+      </ion-card>
+
+    </ion-list>
+  </div>
+</ion-scroll>

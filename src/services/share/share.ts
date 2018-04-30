@@ -4,6 +4,8 @@ import { Http } from '@angular/http';
 import { AlertController, App } from 'ionic-angular';
 import { ModalController, NavParams, ViewController } from 'ionic-angular';
 import { Events } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
+import { ToastController } from 'ionic-angular';
 
 
 @Injectable()
@@ -16,9 +18,9 @@ export class ShareService {
     albums;
     lifeId;
 
-    constructor(public app: App, public alertCtrl: AlertController, public modalCtrl: ModalController, public events: Events, private http: Http) {
+    constructor(public app: App, public alertCtrl: AlertController, public modalCtrl: ModalController, public events: Events, private http: Http, private storage: Storage, private toastCtrl: ToastController) {
         this.data = {};
-
+        console.log(storage);
         this.http.get("assets/resources/bands.json")
             .subscribe(res => {
                 this.bands = res.json();
@@ -42,6 +44,44 @@ export class ShareService {
             }, error => {
                 console.log(error);
             });
+
+
+        storage.get("achievements").then((val) => {
+            console.log('Achievements', val);
+
+            let resetAchievement = 1;
+            if (val == null || resetAchievement == 1) {
+                storage.set("achievements", [
+                    { id: "Internet celebrity", title: "Internet celebrity", description: "Gain more than 1,000,000 followers on social network", finished: false },
+                    { id: "Aced it!", title: "Aced it!", description: "Finish elementary school with grade A", finished: false },
+                    { id: "Our little genius", title: "Our little genius", description: "Finish elementary school with grade A+", finished: false },
+                    { id: "Little Einstein", title: "Little Einstein", description: "Finish high school with grade A+", finished: false },
+                    { id: "Academic", title: "Academic", description: "Finish college", finished: false },
+                    { id: "Centenarian", title: "Centenarian", description: "Live to a hundred years", finished: false },
+                    { id: "Druggie", title: "Druggie", description: "Take a drug", finished: false },
+                    { id: "Niki Lauda", title: "Niki Lauda", description: "Pass driving test from first time", finished: false },
+                    { id: "Spongebob style", title: "Spongebob style", description: "Fail driving test at least 5 times", finished: false },
+                    { id: "Garage band", title: "Garage band", description: "Form a band", finished: false },
+                    { id: "Socialization", title: "Socialization", description: "Join a social network", finished: false },
+                    { id: "Superhuman", title: "Superhuman", description: "Have 100% in every stat", finished: false }
+                    
+                ]);
+                storage.get("achievements").then((val2) => {
+                    this.data["achievements"] = val2;
+                });
+            } else {
+                this.data["achievements"] = val;
+            }
+        });
+    }
+
+    checkAchievement(id) {
+        if (this.data["achievements"][this.findAchievement(id)].finished == false) {
+            this.data["achievements"][this.findAchievement(id)].finished = true;
+            //storage.set("achievements", 
+            this.finishedAchievement(id);
+            console.log("Finished achievement:", id);
+          }
     }
 
     createVehicle(data) {
@@ -61,7 +101,7 @@ export class ShareService {
         //console.log(brand + " - " + car["title"], carPrice);
 
         //return [brand, car["title"], color, carPrice, id];
-        return {brand: brand, model: car["title"], color: color, price: carPrice, id: id, age: 0, value: carPrice * 0.85};
+        return { brand: brand, model: car["title"], color: color, price: carPrice, id: id, age: 0, value: carPrice * 0.85 };
     }
 
     randomProperty(obj) {
@@ -77,6 +117,17 @@ export class ShareService {
             leaveAnimation: 'modal-scale-up-leave' */
         });
         profileModal.present();
+    }
+
+    findAchievement(id) {
+        let result = 0;
+        for (let i = 0; i < this.data["achievements"].length; i++) {
+            if (this.data["achievements"][i]["id"] == id) {
+                result = i;
+                continue;
+            }
+        }
+        return result;
     }
 
     propertyListingModal(data, posjedi) {
@@ -128,6 +179,19 @@ export class ShareService {
         });
         data.holidayModal.present();
     }
+
+    finishedAchievement(id) {
+        let toast = this.toastCtrl.create({
+          message: `<div class="toastText">"${id}" unlocked! <img class="toastImg" src="assets/imgs/circle-loader.svg"></div>`,
+          duration: 5000,
+          position: 'top',
+          cssClass: "toast"
+        });
+      
+        toast.present();
+
+        this.storage.set("achievements", this.data["achievements"]);
+      }
 
     mortgageModal(data, property, interestRate) {
         data.mortgageModal = this.modalCtrl.create(mortgageModal, { data: data, property: property, interestRate: interestRate }, {
@@ -398,7 +462,7 @@ export class ShareService {
 
     sellVehicle(data, car) {
         let id = car["id"];
-        
+
         for (let i in data.cars) {
             if (data.cars[i]["id"] == id) {
                 data.cars.splice(i, 1);
@@ -998,14 +1062,17 @@ export class ShareService {
             data.name = data.customLifeInfo.name;
             data.surname = data.customLifeInfo.surname;
             data.genderFull = data.customLifeInfo.gender;
+            data.nationality = data.customLifeInfo.nationality;
 
             if (data.genderFull == "male") data.gender = "M";
             else data.gender = "F";
         } else {
+            data.nationality = this.data["countries"]["nationalities"][this.randomAtoB(0, this.data["countries"]["nationalities"].length - 1)];
+            console.log(data.nationality)
             data.gender = this.randomGender(data);
-            data.name = this.randomName(data, data.genderFull);
+            data.name = this.randomName(data, data.genderFull, data.nationality);
 
-            data.surname = this.randomSurname(data);
+            data.surname = this.randomSurname(data, data.nationality);
         }
         /* if (data.gender == "M") {
           
@@ -1024,9 +1091,10 @@ export class ShareService {
         data.alive = 1;
         //data.name = "Antonio";
         //data.surname = "Stipić";
-        data.nationality = "Croatian";
+        //data.nationality = "Croatian";
         data.appearance = this.random1to100();
         data.intelligence = this.random1to100();
+        //data.intelligence = 100;
         data.sociability = this.random1to100();
         data.fitness = this.randomAtoB(1, 100);
         data.musicality = this.randomAtoB(1, 100);
@@ -1297,7 +1365,7 @@ export class ShareService {
     }
 
     createParent(data, gender) {
-        var name = this.randomName(data, gender);
+        var name = this.randomName(data, gender, data.nationality);
         var age = this.randomAtoB(16, 45);
         var alive = 1;
 
@@ -1338,10 +1406,16 @@ export class ShareService {
 
                 let textToAdd = "";
 
+                
                 if (data.drivingTestCount == 1) textToAdd = "1st";
                 else if (data.drivingTestCount == 2) textToAdd = "2nd";
                 else if (data.drivingTestCount == 3) textToAdd = "3rd";
                 else textToAdd = data.drivingTestCount + "th";
+
+                if (data.drivingTestCount == 1) {
+                    this.checkAchievement("Niki Lauda");
+                }
+
                 data.years[data.age].events.push(`I passed my driving exam after ${textToAdd} attempt.`);
                 data.drivingTestCount = 0;
                 let alert = this.alertCtrl.create({
@@ -1359,6 +1433,11 @@ export class ShareService {
             } else {
                 data.drivingTestCount += 1;
                 data.years[data.age].events.push(`I failed my driving exam.`);
+
+                if (data.drivingTestCount == 5) {
+                    this.checkAchievement("Spongebob style");
+                }
+
                 let alert = this.alertCtrl.create({
                     subTitle: 'Better luck next time!',
                     message: "You failed your driving exam.",
@@ -1439,6 +1518,11 @@ export class ShareService {
 
             data.years[data.age].events.push(`I took a selfie.<br>It got ${likesFinal} likes.${textToAdd}`);
             //data.changeTabTrue = 1;
+
+            if (data.numOfSocialFans > 1000000) {
+                this.checkAchievement("Internet celebrity");
+            }
+
             this.events.publish("goToHome");
             data.socialModal.dismiss();
             data.selfiesPerYear += 1;
@@ -1661,8 +1745,8 @@ export class ShareService {
                 loverGender = "female";
             }
         }
-        var loverName = this.randomName(data, loverGender);
-        var loverSurname = this.randomSurname(data);
+        var loverName = this.randomName(data, loverGender, data.nationality);
+        var loverSurname = this.randomSurname(data, data.nationality);
         var loverAppearance = this.random1to100();
         var loverIntelligence = this.random1to100();
         var loverFitness = this.randomAtoB(1, 100);
@@ -1697,8 +1781,8 @@ export class ShareService {
         let gender = "";
         if (genderDecide == 0) gender = "female";
         else gender = "male";
-        let name = this.randomName(data, gender);
-        let surname = this.randomSurname(data);
+        let name = this.randomName(data, gender, data.nationality);
+        let surname = this.randomSurname(data, data.nationality);
         let appearance = this.random1to100();
         let intelligence = this.random1to100();
         let fitness = this.randomAtoB(1, 100);
@@ -1822,6 +1906,7 @@ export class ShareService {
         data.hasSocialNetwork = 1;
         data.numOfSocialFans = ((data.appearance * data.fitness + (data.happiness / 2)) / 50).toFixed(0);
         data.years[data.age].events.push(`I joined the social network.`);
+        data.shareService.checkAchievement("Socialization");
     }
 
     leaveSocialNetwork(data) {
@@ -1834,7 +1919,7 @@ export class ShareService {
     goToClub(data, alreadyWent) {
         this.update(data);
         //console.log("You went to club.");
-        let meetingChance = 35;
+        let meetingChance = 100; //35
         let smokingChance = 15;
         let meetingExChance = 5; //90
 
@@ -2148,12 +2233,12 @@ export class ShareService {
 
 
                     }
-                }/* , {
+                }, {
                     text: 'Chat',
                     handler: () => {
                         console.log("You chatted!");
                     }
-                }*/, {
+                }, {
                     text: 'Ignore',
                     handler: () => {
 
@@ -2333,16 +2418,16 @@ export class ShareService {
         }
     }
 
-    randomName(data, gender) {
-        var nameNum = this.randomAtoB(0, this.names[gender].length - 1);
-        var newName = this.names[gender][nameNum];
+    randomName(data, gender, nationality) {
+        var nameNum = this.randomAtoB(0, this.names[nationality][gender].length - 1);
+        var newName = this.names[nationality][gender][nameNum];
 
         return newName;
     }
 
-    randomSurname(data) {
-        var surnameNum = this.randomAtoB(0, this.names["surname"].length - 1);
-        var newSurname = this.names["surname"][surnameNum];
+    randomSurname(data, nationality) {
+        var surnameNum = this.randomAtoB(0, this.names[nationality]["surname"].length - 1);
+        var newSurname = this.names[nationality]["surname"][surnameNum];
 
         return newSurname;
     }
@@ -2905,7 +2990,7 @@ export class childModal {
     }
 
     randomName(data) {
-        this.childName = data.shareService.randomName(data, this.child["gender"]);
+        this.childName = data.shareService.randomName(data, this.child["gender"], data.nationality);
     }
 
     backButtonAction() {
@@ -3124,6 +3209,8 @@ export class bandNameModal {
             //data.changeSelectedBand(data, newBand)
 
             data.bandNameModal.dismiss();
+
+            data.shareService.checkAchievement("Garage band");
         }
     }
 
