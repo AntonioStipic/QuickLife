@@ -9,6 +9,7 @@ import { JobPage } from '../pages/job/job';
 import { FamilyPage } from '../pages/family/family';
 import { EducationPage } from '../pages/education/education';
 import { HomePage } from '../pages/home/home';
+import { ObituaryPage } from '../pages/obituary/obituary';
 import { TabsPage } from '../pages/tabs/tabs';
 import { findLoveModal, propertyListingModal, carsForSaleModal, socialNetworkModal, holidayModal, mortgageModal, weddingModal, childModal, musicModal, bandNameModal, createAlbumModal, commitSuicideModal, carInfoModal } from '../services/share/share';
 
@@ -17,7 +18,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { Keyboard } from '@ionic-native/keyboard';
 
-import { PopoverContentPage, customLifeModal, achievementsModal } from '../pages/popover/popover';
+import { PopoverContentPage, customLifeModal, achievementsModal, aboutModal } from '../pages/popover/popover';
 import { ShareService } from '../services/share/share';
 import { ProgressBarModule } from "angular-progress-bar"
 
@@ -27,6 +28,10 @@ import { ModalScaleUpLeaveTransition } from "../transitions/scale-up-leave.trans
 import { HttpModule } from '@angular/http';
 
 import { IonicStorageModule } from '@ionic/storage';
+
+import { Splash } from '../pages/splash/splash';
+
+import { VideoPlayer } from '@ionic-native/video-player';
 
 
 @NgModule({
@@ -38,6 +43,7 @@ import { IonicStorageModule } from '@ionic/storage';
     MePage,
     JobPage,
     FamilyPage,
+    ObituaryPage,
     PopoverContentPage,
     findLoveModal,
     propertyListingModal,
@@ -53,7 +59,9 @@ import { IonicStorageModule } from '@ionic/storage';
     createAlbumModal,
     commitSuicideModal,
     carInfoModal,
-    achievementsModal
+    achievementsModal,
+    aboutModal,
+    Splash
   ],
   imports: [
     BrowserModule,
@@ -78,6 +86,7 @@ import { IonicStorageModule } from '@ionic/storage';
     MePage,
     JobPage,
     FamilyPage,
+    ObituaryPage,
     PopoverContentPage,
     findLoveModal,
     propertyListingModal,
@@ -93,13 +102,16 @@ import { IonicStorageModule } from '@ionic/storage';
     createAlbumModal,
     commitSuicideModal,
     carInfoModal,
-    achievementsModal
+    achievementsModal,
+    aboutModal,
+    Splash
   ],
   providers: [
     StatusBar,
     SplashScreen,
     ShareService,
     Keyboard,
+    VideoPlayer,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })

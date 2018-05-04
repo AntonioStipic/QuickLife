@@ -5,8 +5,6 @@ import { ShareService } from '../../services/share/share';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
-//import { GooglePlayGamesServices } from '@ionic-native/google-play-games-services';
-
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -38,17 +36,18 @@ export class HomePage {
         this.data["countries"] = this.countries;
         //console.log(this.jobs[0])
         //console.log(this.jobs);
-      }, error => {
-        console.log(error);
-      });
 
-    this.http.get("assets/resources/names.json")
-      .subscribe(res => {
-        this.names = res.json();
-        this.names = Array.of(this.names);
-        this.names = this.names[0];
-        //console.log(this.names);
-        this.data = this.data["shareService"].createMe(this.data, this.names, this.randomId(8));
+        this.http.get("assets/resources/names.json")
+          .subscribe(res => {
+            this.names = res.json();
+            this.names = Array.of(this.names);
+            this.names = this.names[0];
+            //console.log(this.names);
+            this.data = this.data["shareService"].createMe(this.data, this.names, this.randomId(8));
+          }, error => {
+            console.log(error);
+          });
+
       }, error => {
         console.log(error);
       });
@@ -314,6 +313,10 @@ export class HomePage {
       data.shareService.checkAchievement("Centenarian");
     }
 
+    if (data.happiness == 100 && data.appearance == 100 && data.intelligence == 100 && data.fitness == 100 && data.sociability == 100 && data.musicality == 100) {
+      data.shareService.checkAchievement("Superhuman")
+    }
+
     if (data.outcome < 0) data.outcome = 0;
 
     data.finance += data.allowance * 12;
@@ -364,7 +367,7 @@ export class HomePage {
       else if (data.cars[i]["age"] > 4) data.cars[i]["value"] = data.cars[i]["price"] * 0.7;
       else if (data.cars[i]["age"] > 3) data.cars[i]["value"] = data.cars[i]["price"] * 0.75;
       else if (data.cars[i]["age"] > 1) data.cars[i]["value"] = data.cars[i]["price"] * 0.8;
-      
+
     }
 
     if (data.startSmokingAgain == 1) {
@@ -683,6 +686,7 @@ export class HomePage {
       let causes = ["a heart attack", "a lung cancer", "a tuberculosis", "a stroke", "a chronic obstructive pulmonary disease"];
       let cause = causes[data.shareService.randomAtoB(0, causes.length - 1)];
       data.shareService.disableAll(data);
+      data.deathCause = cause;
       data.years[data.age].events.push(`I died from ${cause}.`);
     }
 

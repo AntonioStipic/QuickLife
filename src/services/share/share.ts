@@ -59,6 +59,7 @@ export class ShareService {
                     { id: "Academic", title: "Academic", description: "Finish college", finished: false },
                     { id: "Centenarian", title: "Centenarian", description: "Live to a hundred years", finished: false },
                     { id: "Druggie", title: "Druggie", description: "Take a drug", finished: false },
+                    { id: "Elvis has left the building", title: "Elvis has left the building", description: "Sell more than 1,000,000 albums", finished: false },
                     { id: "Niki Lauda", title: "Niki Lauda", description: "Pass driving test from first time", finished: false },
                     { id: "Spongebob style", title: "Spongebob style", description: "Fail driving test at least 5 times", finished: false },
                     { id: "Garage band", title: "Garage band", description: "Form a band", finished: false },
@@ -1074,6 +1075,9 @@ export class ShareService {
 
             data.surname = this.randomSurname(data, data.nationality);
         }
+
+        if (data.genderFull == "male") data.hisOrHers = "His";
+        else data.hisOrHers = "Her";
         /* if (data.gender == "M") {
           
           //console.log(this.names["male"]);
@@ -1185,6 +1189,8 @@ export class ShareService {
 
         // This counts how many years has player worked at current job
         data.jobService = 0;
+
+        data.deathCause = "";
 
         // At this age player will be asked if it wanted to go to retirement
         data.retirementAge = this.randomAtoB(62, 69);
@@ -2836,6 +2842,7 @@ export class commitSuicideModal {
         data.shareService.disableAll(data);
         if (suicideMethod == "Set yourself on fire") suicideMethod = "setting myself on fire";
         suicideMethod = suicideMethod.toLowerCase();
+        data.deathCause = suicideMethod;
         data.years[data.age].events.push(`I died from ${suicideMethod}.`);
         this.dismiss();
         this.events.publish("goToHome");
@@ -3104,6 +3111,11 @@ export class createAlbumModal {
 
                     band.fans += newFans;
                     band.soldCopies += copies;
+
+                    if (band.soldCopies >= 1000000) {
+                        data.shareService.checkAchievement("Elvis has left the building");
+                    }
+
                     data.finance += copies / (10 * data.shareService.randomAtoB(100, 200) / 100)
                     data.numOfAlbums += 1;
                     data.musicModal.dismiss();

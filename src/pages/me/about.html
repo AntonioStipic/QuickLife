@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-navbar color="light-dark">
+    <ion-title>
+      About
+    </ion-title>
+    <ion-buttons left>
+      <!-- <button ion-button icon-only (click)="openPopover($event)">
+        <ion-icon name="md-more"></ion-icon>
+      </button> -->
+
+      <button ion-button icon-only (click)="viewCtrl.dismiss()" class="my-style-for-modal">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+  <!-- <ion-toolbar> -->
+
+  <!-- </ion-toolbar> -->
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      Made by: Antonio Stipić
+    </ion-card-header>
+
+    <ion-card-content>
+        © 2018 QuickLife All rights reserved
+      <!-- {{data.hisOrHers}} funeral was attended by {{data.hisOrHers.toLowerCase()}} spouse and children.-->
+    </ion-card-content>
+  </ion-card>
+</ion-content>

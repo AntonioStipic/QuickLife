@@ -12,6 +12,14 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+video {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
 @mixin vertical-align {
   position: relative;
   top: 50%;
@@ -175,6 +183,12 @@ ion-modal {
       color: color($colors, money);
     }
   }
+  a.tab-button[aria-selected=true]:nth-of-type(6) {
+    color: color($colors, dark);
+    .tab-button-icon {
+      color: color($colors, dark);
+    }
+  }
 }
 
 .firstHalfWidth {
@@ -263,6 +277,9 @@ ion-icon {
   }
   &[class*="quicklife-rope"] {
     mask-image: url(../assets/imgs/rope.svg);
+  }
+  &[class*="quicklife-grave"] {
+    mask-image: url(../assets/imgs/grave.svg);
   }
 }
 
@@ -488,4 +505,9 @@ ion-icon {
 
 .fullWidth {
   width: 100vw !important;
+}
+
+
+body {
+  
 }

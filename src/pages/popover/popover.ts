@@ -13,7 +13,6 @@ import { Events } from 'ionic-angular';
 export class PopoverContentPage {
   data: object;
   //TabsPage: TabsPage;
-
   constructor(public viewCtrl: ViewController, public navCtrl: NavController, shareService: ShareService, public modalCtrl: ModalController, public splashscreen: SplashScreen, public events: Events) {
     this.data = shareService.getData();
     this.data["shareService"] = shareService;
@@ -68,6 +67,17 @@ export class PopoverContentPage {
 
     //this.navCtrl.push(TabsPage, {}, { animate: false });
   }
+
+  about(data) {
+    this.viewCtrl.dismiss();
+    data.aboutModal = this.modalCtrl.create(aboutModal, { data: data }, {
+      showBackdrop: true,
+      enableBackdropDismiss: true/* ,
+      enterAnimation: 'slide-in-right',
+      leaveAnimation: 'modal-scale-up-leave' */
+    });
+    data.aboutModal.present();
+  }
 }
 @Component({
   templateUrl: '../me/customLife.html'
@@ -119,9 +129,28 @@ export class achievementsModal {
     }
     //this.hidden = new Array(this.data["achievements"].length).fill(true); // fill false
   }
-  
+
   toggleAchievement(index) {
     this.hidden[index] = !this.hidden[index];
+  }
+
+  backButtonAction() {
+    this.viewCtrl.dismiss();
+  }
+
+  dismiss() {
+    this.viewCtrl.dismiss();
+  }
+}
+@Component({
+  templateUrl: '../../pages/me/about.html'
+})
+export class aboutModal {
+  data: object;
+  constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
+    this.data = shareService.getData();
+    //console.log(this.child);
+    //console.log();
   }
 
   backButtonAction() {

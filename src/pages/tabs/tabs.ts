@@ -6,6 +6,8 @@ import { EducationPage } from '../education/education';
 import { HomePage } from '../home/home';
 import { JobPage } from '../job/job';
 import { FamilyPage } from '../family/family';
+import { ObituaryPage } from '../obituary/obituary';
+import { ShareService } from '../../services/share/share';
 
 @Component({
   templateUrl: 'tabs.html'
@@ -17,8 +19,13 @@ export class TabsPage {
   tab3Root = EducationPage;
   tab4Root = JobPage;
   tab5Root = FamilyPage;
+  tab6Root = ObituaryPage;
+  data: object;
 
-  constructor() {
+  constructor(shareService: ShareService) {
+    this.data = shareService.getData();
+    this.data["shareService"] = shareService;
 
+    
   }
 }

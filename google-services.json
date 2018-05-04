@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "465502565839",
+    "firebase_url": "https://quicklife-1c7ce.firebaseio.com",
+    "project_id": "quicklife-1c7ce",
+    "storage_bucket": "quicklife-1c7ce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:465502565839:android:5413613e6a7440fe",
+        "android_client_info": {
+          "package_name": "com.cloude.quicklife"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "465502565839-a9gmm26k9o9us4lebjepnhrm0phqj3vi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-BIOXhEB5S9CBTNYuSAAHmBVO8LxnCiI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
