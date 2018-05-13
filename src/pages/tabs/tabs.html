@@ -1,8 +1,9 @@
 <ion-tabs>
   <ion-tab [root]="tab1Root" tabTitle="Home" tabIcon="home" id="homeButtonTab"></ion-tab>
-  <ion-tab [root]="tab2Root" tabTitle="Me" tabIcon="md-person" [show]="data.alive == 1"></ion-tab>
-  <ion-tab [root]="tab5Root" tabTitle="Family" tabIcon="md-heart" [show]="data.alive == 1"></ion-tab>
-  <ion-tab [root]="tab3Root" tabTitle="Education" tabIcon="md-school" [show]="data.alive == 1"></ion-tab>
-  <ion-tab [root]="tab4Root" tabTitle="Job" tabIcon="md-paper" [show]="data.alive == 1"></ion-tab>
+  <ion-tab [root]="tab2Root" tabTitle="Me" tabIcon="md-person" [show]="data.alive == 1 && data.inPrison == 0"></ion-tab>
+  <ion-tab [root]="tab5Root" tabTitle="Family" tabIcon="md-heart" [show]="data.alive == 1 && data.inPrison == 0"></ion-tab>
+  <ion-tab [root]="tab3Root" tabTitle="Education" tabIcon="md-school" [show]="data.alive == 1 && data.inPrison == 0"></ion-tab>
+  <ion-tab [root]="tab4Root" tabTitle="Job" tabIcon="md-paper" [show]="data.alive == 1 && data.inPrison == 0"></ion-tab>
   <ion-tab [root]="tab6Root" tabTitle="Obituary" tabIcon="quicklife-grave" [show]="data.alive == 0"></ion-tab>
+  <ion-tab [root]="tab7Root" tabTitle="Prison" tabIcon="quicklife-bars" [show]="data.alive == 1 && data.inPrison == 1"></ion-tab>
 </ion-tabs>

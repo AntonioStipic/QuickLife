@@ -189,6 +189,12 @@ ion-modal {
       color: color($colors, dark);
     }
   }
+  a.tab-button[aria-selected=true]:nth-of-type(7) {
+    color: color($colors, darker-light-dark);
+    .tab-button-icon {
+      color: color($colors, darker-light-dark);
+    }
+  }
 }
 
 .firstHalfWidth {
@@ -280,6 +286,9 @@ ion-icon {
   }
   &[class*="quicklife-grave"] {
     mask-image: url(../assets/imgs/grave.svg);
+  }
+  &[class*="quicklife-bars"] {
+    mask-image: url(../assets/imgs/bars.svg);
   }
 }
 

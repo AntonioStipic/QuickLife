@@ -11,6 +11,7 @@ import { EducationPage } from '../pages/education/education';
 import { HomePage } from '../pages/home/home';
 import { ObituaryPage } from '../pages/obituary/obituary';
 import { TabsPage } from '../pages/tabs/tabs';
+import { PrisonPage } from '../pages/prison/prison';
 import { findLoveModal, propertyListingModal, carsForSaleModal, socialNetworkModal, holidayModal, mortgageModal, weddingModal, childModal, musicModal, bandNameModal, createAlbumModal, commitSuicideModal, carInfoModal } from '../services/share/share';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -28,10 +29,6 @@ import { ModalScaleUpLeaveTransition } from "../transitions/scale-up-leave.trans
 import { HttpModule } from '@angular/http';
 
 import { IonicStorageModule } from '@ionic/storage';
-
-import { Splash } from '../pages/splash/splash';
-
-import { VideoPlayer } from '@ionic-native/video-player';
 
 
 @NgModule({
@@ -61,7 +58,7 @@ import { VideoPlayer } from '@ionic-native/video-player';
     carInfoModal,
     achievementsModal,
     aboutModal,
-    Splash
+    PrisonPage
   ],
   imports: [
     BrowserModule,
@@ -104,14 +101,13 @@ import { VideoPlayer } from '@ionic-native/video-player';
     carInfoModal,
     achievementsModal,
     aboutModal,
-    Splash
+    PrisonPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     ShareService,
     Keyboard,
-    VideoPlayer,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })

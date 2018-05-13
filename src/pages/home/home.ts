@@ -186,7 +186,7 @@ export class HomePage {
     let chance = 0;
 
     if (data.age >= 18) {
-      chance = 6;
+      chance = 100; // 6
     }
 
     if (data.shareService.randomAtoB(1, 100) <= chance) {
@@ -209,8 +209,73 @@ export class HomePage {
           text: 'Take',
           handler: () => {
             data.update += 1;
-            data.years[data.age].events.push(`I took ${drug}.`);
-            data.shareService.checkAchievement("Druggie");
+
+            let police = 100; // 10
+
+            if (data.shareService.randomAtoB(0, 100) <= police) {
+              let penalty = data.shareService.randomAtoB(1, 5);
+              let preposition = "";
+
+              if (penalty == 1) preposition = "year";
+              else preposition = "years";
+
+              let textToAdd = "";
+              
+              if (data.goingToCollege == 1) {
+                //I have been expelled from University
+                data.goingToCollege = 0;
+                data.goingToCollegeYears = 0;
+                data.listOfColleges.splice(-1, 1);
+                textToAdd = `<br>I have been expelled from college.`;
+                data.currentCollegeMajor = "";
+              }
+              
+              if (data.isWorking == 1) {
+                data.income -= (data.myJob[2] / 12 * 1000) * (1 - data.tax);
+                data.jobService = 0;
+                //data.years[data.age].events.push("I quit my job as " + data.myJob[1]["title"] + ".");
+                data.myJob = ["", { "title": "", "salary": "", "experience": 0, "education": 0, "skills": [] }, ""];
+                data.isWorking = 0;
+                textToAdd += `<br>I was fired from my job.`;
+              }
+
+              data.years[data.age].events.push(`Person offering you drugs was undercover police officer. ${gender} imprisoned you for ${penalty} ${preposition}.${textToAdd}`);
+              data.inPrison = 1;
+              data.prisonYears += penalty;
+            } else {
+              let crazyDrugs = 10; // 10
+
+              if (data.shareService.randomAtoB(0, 100) <= crazyDrugs) {
+                let stories = ["You thought your bed was trying to eat you. You ended up taking the sheets off and laying on the floor curled in a ball. You woke up with the worst back pain you've ever had.",
+                  "You bumped into a wall and spent the next 30 minutes apologising to it in case it decided to fall on top of you in retaliation.",
+                  "You went to a grocery store across town in a bathrobe to buy groceries.",
+                  "You donated your shoes to some ducks because you thought they needed them. You threw them into a river and walked home barefoot.",
+                  "You went to a club and had sex with a transsexual girl in the back alley.",
+                  "You had a threesome with your close friends.",
+                  "You threw yourself on grass and looked at the stars for 3 hours straight."]
+
+                let story = stories[data.shareService.randomAtoB(0, stories.length - 1)];
+                //console.log(story)
+
+                let titles = [`"I don't do drugs. I am drugs"`, `"I'm not drunk, just a little stoned"`, `"Drugs are a bet with your mind"`, `"I used to have a drug problem, now I make enough money"`, `"Wasted? So is your life"`];
+
+                let title = titles[data.shareService.randomAtoB(0, titles.length - 1)];
+
+                let alert = this.alertCtrl.create({
+                  subTitle: title,
+                  message: story,
+                  buttons: [{
+                    text: 'Ok',
+                    handler: () => {
+                      //console.log("Clicked OK")
+                    }
+                  }]
+                });
+                alert.present();
+              }
+              data.years[data.age].events.push(`I took ${drug}.`);
+              data.shareService.checkAchievement("Druggie");
+            }
           }
         }, {
           text: 'Leave',
@@ -382,7 +447,6 @@ export class HomePage {
 
     this.willParentsDie(data);
     this.regulateHappiness(data);
-    this.offerDrugs(data);
 
     if (data.havePartner == 1) {
       data.shareService.handleStability(data, "+", data.shareService.randomAtoB(0, 4));
@@ -414,8 +478,11 @@ export class HomePage {
     }
 
     this.willIDie(data);
-    if (data.alive) {
+    if (data.alive && data.inPrison == 0) {
       this.data["shareService"].updateJobs(this.data, this.jobs);
+
+      this.offerDrugs(data);
+
 
       if (data.retirementAge == data.age && data.isWorking == 1) {
         let upOrDown = data.shareService.randomAtoB(0, 1);
@@ -682,6 +749,13 @@ export class HomePage {
         if (data.dontAskForDrivingTestOn18 == 0) this.checkDrivingTest(data);
       }
 
+    } else if (data.alive && data.inPrison == 1) {
+      data.prisonYears -= 1;
+
+      if (data.prisonYears == 0) {
+        data.years[data.age].events.push(`I have finished my sentence and I've been released.`);
+        data.inPrison = 0;
+      }
     } else {
       let causes = ["a heart attack", "a lung cancer", "a tuberculosis", "a stroke", "a chronic obstructive pulmonary disease"];
       let cause = causes[data.shareService.randomAtoB(0, causes.length - 1)];

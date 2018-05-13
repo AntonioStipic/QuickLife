@@ -49,7 +49,7 @@ export class ShareService {
         storage.get("achievements").then((val) => {
             console.log('Achievements', val);
 
-            let resetAchievement = 1;
+            let resetAchievement = 0;
             if (val == null || resetAchievement == 1) {
                 storage.set("achievements", [
                     { id: "Internet celebrity", title: "Internet celebrity", description: "Gain more than 1,000,000 followers on social network", finished: false },
@@ -1200,6 +1200,12 @@ export class ShareService {
 
         // Pension income
         data.pension = 0;
+
+        // Boolean to check is player in prison or not
+        data.inPrison = 0;
+
+        // Years left to serve in prison
+        data.prisonYears = 0;
 
         // Change this to scrollToBottom
         data.update = 0;
@@ -2837,13 +2843,19 @@ export class commitSuicideModal {
     }
 
     commitSuicide(data, suicideMethod) {
-        console.log(suicideMethod);
-        data.alive = 0;
-        data.shareService.disableAll(data);
+
         if (suicideMethod == "Set yourself on fire") suicideMethod = "setting myself on fire";
         suicideMethod = suicideMethod.toLowerCase();
-        data.deathCause = suicideMethod;
-        data.years[data.age].events.push(`I died from ${suicideMethod}.`);
+
+        let chance = 35;
+        if (data.shareService.randomAtoB(0, 100) <= chance) {
+            data.alive = 0;
+            data.shareService.disableAll(data);
+            data.deathCause = suicideMethod;
+            data.years[data.age].events.push(`I died from ${suicideMethod}.`);
+        } else {
+            data.years[data.age].events.push(`I failed to kill myself by ${suicideMethod}.`);
+        }
         this.dismiss();
         this.events.publish("goToHome");
     }

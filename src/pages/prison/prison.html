@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-navbar color="darker-light-dark">
+    <ion-title>
+      Prison
+    </ion-title>
+
+    <ion-buttons right>
+      <button ion-button icon-only (click)="openPopover($event)">
+        <ion-icon name="md-more"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      Sentence
+    </ion-card-header>
+
+    <ion-card-content>
+      Years left: {{data.prisonYears}}
+    </ion-card-content>
+  </ion-card>
+</ion-content>
