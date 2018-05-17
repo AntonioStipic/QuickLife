@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.cloude.quicklife" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.cloude.quicklife" version="0.0.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>QuickLife</name>
     <description>Textual life simulator.</description>
-    <author email="antonio.stipic2@gmail.com" href="http://ionicframework.com/">@Antonio Stipić</author>
+    <author email="antonio.stipic2@gmail.com" href="http://cloude-3.herokuapp.com/">@Antonio Stipić</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
@@ -71,8 +71,6 @@
     <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
     <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
-    <allow-navigation href="http://192.168.1.111:8101" />
-    <allow-navigation href="http://192.168.1.111:8100" />
     <plugin name="cordova-sqlite-storage" spec="^2.3.1" />
     <plugin name="cordova-plugin-appcenter-analytics" spec="^0.1.4" />
     <plugin name="cordova-plugin-appcenter-crashes" spec="^0.1.4" />

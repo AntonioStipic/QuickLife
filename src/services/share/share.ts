@@ -65,7 +65,7 @@ export class ShareService {
                     { id: "Garage band", title: "Garage band", description: "Form a band", finished: false },
                     { id: "Socialization", title: "Socialization", description: "Join a social network", finished: false },
                     { id: "Superhuman", title: "Superhuman", description: "Have 100% in every stat", finished: false }
-                    
+
                 ]);
                 storage.get("achievements").then((val2) => {
                     this.data["achievements"] = val2;
@@ -82,7 +82,7 @@ export class ShareService {
             //storage.set("achievements", 
             this.finishedAchievement(id);
             console.log("Finished achievement:", id);
-          }
+        }
     }
 
     createVehicle(data) {
@@ -183,16 +183,16 @@ export class ShareService {
 
     finishedAchievement(id) {
         let toast = this.toastCtrl.create({
-          message: `<div class="toastText">"${id}" unlocked! <img class="toastImg" src="assets/imgs/circle-loader.svg"></div>`,
-          duration: 5000,
-          position: 'top',
-          cssClass: "toast"
+            message: `<div class="toastText">"${id}" unlocked! <img class="toastImg" src="assets/imgs/circle-loader.svg"></div>`,
+            duration: 5000,
+            position: 'top',
+            cssClass: "toast"
         });
-      
+
         toast.present();
 
         this.storage.set("achievements", this.data["achievements"]);
-      }
+    }
 
     mortgageModal(data, property, interestRate) {
         data.mortgageModal = this.modalCtrl.create(mortgageModal, { data: data, property: property, interestRate: interestRate }, {
@@ -590,7 +590,9 @@ export class ShareService {
     }
 
     learningChanged(data) {
-        if (this.verifyLifeId(data)) return;
+        if (this.verifyLifeId(data, "learningChanged")) {
+            return;
+        }
 
         if (data.isLearning == 1) {
             data.years[data.age].events.push("I started learning.");
@@ -603,15 +605,23 @@ export class ShareService {
         this.lifeId = data.lifeId;
     }
 
-    verifyLifeId(data) {
+    verifyLifeId(data, func) {
         if (data.lifeId != this.lifeId) {
             data.changeThisLifeIdNextYear = 1;
-            return true;
+            data.alreadyVerified[func] += 1;
+            if (data.alreadyVerified[func] > 1) {
+                return false;
+            } else {
+                return true;
+            }
         } else return false;
     }
 
     readingChanged(data) {
-        if (this.verifyLifeId(data)) return;
+        if (this.verifyLifeId(data, "readingChanged")) {
+            return;
+        }
+
         if (data.isReadingBooks == 1) {
             data.years[data.age].events.push("I started reading books.");
         } else {
@@ -624,7 +634,9 @@ export class ShareService {
     }
 
     gymChanged(data) {
-        if (this.verifyLifeId(data)) return;
+        if (this.verifyLifeId(data, "gymChanged")) {
+            return;
+        }
         if (data.goingToGym == 1) {
             data.years[data.age].events.push("I started going to gym.");
             data.outcome += (50);
@@ -635,6 +647,11 @@ export class ShareService {
     }
 
     smokingChanged(data) {
+
+        if (this.verifyLifeId(data, "smokingChanged")) {
+            return;
+        }
+
         if (data.smoking == 1) {
             if (data.dontAnnounceSmoking == 0) {
                 data.years[data.age].events.push("I started smoking.");
@@ -662,7 +679,7 @@ export class ShareService {
     }
 
     instrumentsChanged(data) {
-        if (this.verifyLifeId(data)) return;
+        if (this.verifyLifeId(data, "instrumentsChanged")) return;
         //console.log(data.instruments, data.oldInstruments);;
         //var newInstruments = this.arr_diff(data.instruments, data.oldInstruments);
         var newInstruments1 = data.instruments.filter(item => data.oldInstruments.indexOf(item) < 0);
@@ -722,7 +739,7 @@ export class ShareService {
     }
 
     sportsChanged(data) {
-        if (this.verifyLifeId(data)) return;
+        if (this.verifyLifeId(data, "sportsChanged")) return;
         //console.log(data.instruments, data.oldInstruments);;
         //var newInstruments = this.arr_diff(data.instruments, data.oldInstruments);
         var newSports1 = data.sports.filter(item => data.oldSports.indexOf(item) < 0);
@@ -866,85 +883,7 @@ export class ShareService {
     }
 
     enrollCollege(data) {
-        var majors = this.shuffle([{
-            type: 'radio',
-            label: 'Biomedical Engineering',
-            value: 'Biomedical Engineering'
-        }, {
-            type: 'radio',
-            label: 'Public Health',
-            value: 'Public Health'
-        }, {
-            type: 'radio',
-            label: 'Nursing',
-            value: 'Nursing'
-        }, {
-            type: 'radio',
-            label: 'Biology',
-            value: 'Biology'
-        }, {
-            type: 'radio',
-            label: 'Chemistry',
-            value: 'Chemistry'
-        }, {
-            type: 'radio',
-            label: 'Software Engineering',
-            value: 'Software Engineering'
-        }, {
-            type: 'radio',
-            label: 'Geology',
-            value: 'Geology'
-        }, {
-            type: 'radio',
-            label: 'Behavior, Cognition, and Neuroscience',
-            value: 'Behavior, Cognition, and Neuroscience'
-        }, {
-            type: 'radio',
-            label: 'Economics',
-            value: 'Economics'
-        }, {
-            type: 'radio',
-            label: 'Mathematics',
-            value: 'Mathematics'
-        }, {
-            type: 'radio',
-            label: 'Neuroscience',
-            value: 'Neuroscience'
-        }, {
-            type: 'radio',
-            label: 'Physics',
-            value: 'Physics'
-        }, {
-            type: 'radio',
-            label: 'Teaching',
-            value: 'Teaching'
-        }, {
-            type: 'radio',
-            label: 'Sociology',
-            value: 'Sociology'
-        }, {
-            type: 'radio',
-            label: 'Botanics',
-            value: 'Botanics'
-        }, {
-            type: 'radio',
-            label: 'History',
-            value: 'History'
-        }, {
-            type: 'radio',
-            label: 'Modern Languages',
-            value: 'Modern Languages'
-        }, {
-            type: 'radio',
-            label: 'Business Management',
-            value: 'Business Management'
-        }, {
-            type: 'radio',
-            label: 'Law Enforcement',
-            value: 'Law Enforcement'
-        }
-
-        ])
+        let majors = data.majors;
         for (var e = 0; e < data.listOfColleges.length; e++) {
             for (var i = 0; i < majors.length; i++)
                 if (majors[i].value === data.listOfColleges[e]) {
@@ -1169,6 +1108,86 @@ export class ShareService {
         // List of jobs that don't need to specify where are you working at
         data.jobsWithoutLabel = ["Doctor", "Nurse", "Police Officer", "Mathematics Professor", "Chemistry Professor", "Biology Professor", "Sociology Professor", "Physics Professor"];
 
+        // Available colleges
+        data.majors = this.shuffle([{
+            type: 'radio',
+            label: 'Biomedical Engineering',
+            value: 'Biomedical Engineering'
+        }, {
+            type: 'radio',
+            label: 'Public Health',
+            value: 'Public Health'
+        }, {
+            type: 'radio',
+            label: 'Nursing',
+            value: 'Nursing'
+        }, {
+            type: 'radio',
+            label: 'Biology',
+            value: 'Biology'
+        }, {
+            type: 'radio',
+            label: 'Chemistry',
+            value: 'Chemistry'
+        }, {
+            type: 'radio',
+            label: 'Software Engineering',
+            value: 'Software Engineering'
+        }, {
+            type: 'radio',
+            label: 'Geology',
+            value: 'Geology'
+        }, {
+            type: 'radio',
+            label: 'Behavior, Cognition, and Neuroscience',
+            value: 'Behavior, Cognition, and Neuroscience'
+        }, {
+            type: 'radio',
+            label: 'Economics',
+            value: 'Economics'
+        }, {
+            type: 'radio',
+            label: 'Mathematics',
+            value: 'Mathematics'
+        }, {
+            type: 'radio',
+            label: 'Neuroscience',
+            value: 'Neuroscience'
+        }, {
+            type: 'radio',
+            label: 'Physics',
+            value: 'Physics'
+        }, {
+            type: 'radio',
+            label: 'Teaching',
+            value: 'Teaching'
+        }, {
+            type: 'radio',
+            label: 'Sociology',
+            value: 'Sociology'
+        }, {
+            type: 'radio',
+            label: 'Botanics',
+            value: 'Botanics'
+        }, {
+            type: 'radio',
+            label: 'History',
+            value: 'History'
+        }, {
+            type: 'radio',
+            label: 'Modern Languages',
+            value: 'Modern Languages'
+        }, {
+            type: 'radio',
+            label: 'Business Management',
+            value: 'Business Management'
+        }, {
+            type: 'radio',
+            label: 'Law Enforcement',
+            value: 'Law Enforcement'
+        }
+        ]);
+
         // List containing cars that player has
         data.cars = [];
 
@@ -1206,6 +1225,12 @@ export class ShareService {
 
         // Years left to serve in prison
         data.prisonYears = 0;
+
+        // How many years player served in prison
+        data.yearsServed = 0;
+
+        // Number of crimes player commited that got him to prison
+        data.numOfCrimes = 0;
 
         // Change this to scrollToBottom
         data.update = 0;
@@ -1309,6 +1334,12 @@ export class ShareService {
 
         // List with all properties that player owns
         data.posjedi = [];
+
+        // Check if it has already been called verifyLife in this life
+        data.alreadyVerified = { learningChanged: 0, gymChanged: 0, readingChanged: 0, instrumentsChanged: 0, smokingChanged: 0, sportsChanged: 0 };
+
+        // Reset mortgage
+        data.monthlyPayment = 0;
 
         // If true, don't ask but wait for player to choose college and then ask him for driving test
         data.dontAskForDrivingTestOn18 = 0;
@@ -1418,7 +1449,7 @@ export class ShareService {
 
                 let textToAdd = "";
 
-                
+
                 if (data.drivingTestCount == 1) textToAdd = "1st";
                 else if (data.drivingTestCount == 2) textToAdd = "2nd";
                 else if (data.drivingTestCount == 3) textToAdd = "3rd";
@@ -1591,14 +1622,15 @@ export class ShareService {
         if (this.randomAtoB(1, 100) <= chance) {
             let text = "";
             if (data.gender == "F") {
-                text = "You've become pregnant!";
                 data.isPregnant = 1;
+                text = "You've become pregnant!";
                 data.years[data.age].events.push(`I've become pregnant.`);
             } else {
-                text = "Your partner became pregnant!";
                 data.lover.isPregnant = 1;
+                text = "Your partner became pregnant!";
                 data.years[data.age].events.push(`${data.lover.name} became pregnant.`);
             }
+            this.update(data);
             let alert = this.alertCtrl.create({
                 title: "Congratulations!",
                 message: text,
@@ -1842,33 +1874,69 @@ export class ShareService {
     }
 
     choosenChildName(data, child, name) {
-        name = name.replace(/\s\s+/g, ' ');
-        if (name == undefined || name == "" || name == " ") {
-            console.log("Prazno je");
-        } else {
-            data.childBornModal.dismiss();
-
-            let appearance = this.random1to100();
-            let intelligence = this.random1to100();
-            let fitness = this.randomAtoB(1, 100);
-
-            child.name = name;
-            child.appearance = appearance;
-            child.intelligence = intelligence;
-            child.fitness = fitness;
-            child.age = 0;
-            child.alive = 1;
-
-            data.children.push(child);
-
-            //console.log(data.children)
-            this.update(data);
-            if (child.whoGaveBirth == 0) {
-                data.years[data.age].events.push(`I gave birth to ${name}.`);
+        try {
+            name = name.replace(/\s\s+/g, ' ');
+            if (name == undefined || name == "" || name == " ") {
+                console.log("Prazno je");
             } else {
-                data.years[data.age].events.push(`${data.lover.name} gave birth to ${name}.`);
+                data.childBornModal.dismiss();
+
+                let appearance = this.random1to100();
+                let intelligence = this.random1to100();
+                let fitness = this.randomAtoB(1, 100);
+
+                child.name = name;
+                child.appearance = appearance;
+                child.intelligence = intelligence;
+                child.fitness = fitness;
+                child.age = 0;
+                child.alive = 1;
+                child.goingToElementary = 0;
+                child.goingToHighSchool = 0;
+                child.colleges = [];
+
+                data.children.push(child);
+
+                //console.log(data.children)
+                this.update(data);
+                if (child.whoGaveBirth == 0) {
+                    data.years[data.age].events.push(`I gave birth to ${name}.`);
+                    this.handleHappiness(data, "+", 30);
+                } else {
+                    data.years[data.age].events.push(`${data.lover.name} gave birth to ${name}.`);
+                }
             }
+        } catch(err) {
+            console.log("Empty name");
         }
+    }
+
+    decideGrade(data, child, school) {
+        let learned = 0;
+        if (school == "elementary") {
+            learned = child.learnedElementary;
+        } else if (school == "high") {
+            learned = child.learnedHighSchool;
+        }
+
+        let percent = ((learned / 2) + (child.intelligence / 10)) / 12;
+        //console.log(data.learnedElementary);
+        let grade = "";
+        if (percent < 0.1) {
+            grade = "F";
+        } else if (percent < 0.3) {
+            grade = "D";
+        } else if (percent < 0.5) {
+            grade = "C";
+        } else if (percent < 0.7) {
+            grade = "B";
+        } else if (percent < 1) {
+            grade = "A";
+        } else if (percent >= 1) {
+            grade = "A+";
+        }
+
+        return grade;
     }
 
     isFindLoveEnabled(data) {
@@ -2086,6 +2154,16 @@ export class ShareService {
                                 injuryId = this.randomAtoB(0, injuries.length - 1);
                                 text += `<br>I ${injuries[injuryId]}.`
                                 injuries.splice(injuryId, 1);
+                            }
+
+                            let prisonChance = 50;
+
+                            if (data.shareService.randomAtoB(0, 100) <= prisonChance) {
+                                let penalty = data.shareService.randomAtoB(1, 7);
+
+                                data.inPrison = 1;
+                                data.numOfCrimes += 1;
+                                data.prisonYears += penalty;
                             }
                         }
                         let alert = this.alertCtrl.create({

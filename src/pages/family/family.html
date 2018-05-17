@@ -168,7 +168,7 @@
           <button ion-item *ngFor="let child of data.children">
             <ion-icon item-start></ion-icon>
             <div>
-              {{child.name}} ({{child.age}} years old)
+              {{child.name}} <span [hidden]="child.alive == 0">({{child.age}} years old)</span>
             </div>
           </button>
         </ion-list>

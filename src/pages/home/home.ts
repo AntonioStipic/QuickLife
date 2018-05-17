@@ -17,6 +17,7 @@ export class HomePage {
   countries: object;
   popover = this.popoverCtrl.create(PopoverContentPage);
   private _differ: any;
+  causes = ["a heart attack", "a lung cancer", "a tuberculosis", "a stroke", "a chronic obstructive pulmonary disease", "a lower respiratory infection", "a tetanus"];
 
   @ViewChild(Content) content: Content;
 
@@ -171,7 +172,7 @@ export class HomePage {
     else if (data.age > 105) chance = 45;
     else if (data.age > 110) chance = 60;
     else if (data.age > 115) chance = 85;
-    else if (data.age > 122) chance = 101;
+    else if (data.age > 122) data.alive = 0;
 
     let rollDice = data.shareService.randomAtoB(1, 10000) / 100;
 
@@ -186,7 +187,7 @@ export class HomePage {
     let chance = 0;
 
     if (data.age >= 18) {
-      chance = 100; // 6
+      chance = 7; // 7
     }
 
     if (data.shareService.randomAtoB(1, 100) <= chance) {
@@ -210,7 +211,7 @@ export class HomePage {
           handler: () => {
             data.update += 1;
 
-            let police = 100; // 10
+            let police = 20; // 10
 
             if (data.shareService.randomAtoB(0, 100) <= police) {
               let penalty = data.shareService.randomAtoB(1, 5);
@@ -220,7 +221,7 @@ export class HomePage {
               else preposition = "years";
 
               let textToAdd = "";
-              
+
               if (data.goingToCollege == 1) {
                 //I have been expelled from University
                 data.goingToCollege = 0;
@@ -229,7 +230,7 @@ export class HomePage {
                 textToAdd = `<br>I have been expelled from college.`;
                 data.currentCollegeMajor = "";
               }
-              
+
               if (data.isWorking == 1) {
                 data.income -= (data.myJob[2] / 12 * 1000) * (1 - data.tax);
                 data.jobService = 0;
@@ -241,6 +242,7 @@ export class HomePage {
 
               data.years[data.age].events.push(`Person offering you drugs was undercover police officer. ${gender} imprisoned you for ${penalty} ${preposition}.${textToAdd}`);
               data.inPrison = 1;
+              data.numOfCrimes += 1;
               data.prisonYears += penalty;
             } else {
               let crazyDrugs = 10; // 10
@@ -297,7 +299,9 @@ export class HomePage {
       else if (data.father.age > 60) fatherChance = 10;
       else if (data.father.age > 70) fatherChance = 15;
       else if (data.father.age > 80) fatherChance = 20;
-      else if (data.father.age > 95) fatherChance = 30;
+      else if (data.father.age > 95) fatherChance = 40;
+      else if (data.father.age > 97) fatherChance = 60;
+      else if (data.father.age > 100) fatherChance = 80;
 
       let fatherRollDice = data.shareService.randomAtoB(1, 100);
 
@@ -312,7 +316,9 @@ export class HomePage {
       else if (data.mother.age > 60) motherChance = 10;
       else if (data.mother.age > 70) motherChance = 15;
       else if (data.mother.age > 80) motherChance = 20;
-      else if (data.mother.age > 95) motherChance = 30;
+      else if (data.mother.age > 95) motherChance = 40;
+      else if (data.mother.age > 97) motherChance = 60;
+      else if (data.mother.age > 100) motherChance = 80;
 
       let motherRollDice = data.shareService.randomAtoB(1, 100);
 
@@ -320,6 +326,29 @@ export class HomePage {
         data.mother.alive = 0;
         data.years[data.age].events.push("My mother died at the age of " + data.mother.age + ".");
       }
+    }
+  }
+
+  willChildDie(data, age) {
+    let chance = 1;
+
+    if (age > 40) chance = 3;
+    else if (age > 50) chance = 7;
+    else if (age > 60) chance = 10;
+    else if (age > 70) chance = 15;
+    else if (age > 80) chance = 20;
+    else if (age > 95) chance = 40;
+    else if (age > 97) chance = 60;
+    else if (age > 100) chance = 80;
+
+    let rollDice = data.shareService.randomAtoB(1, 100);
+
+    if (rollDice <= chance) {
+      let cause = this.causes[data.shareService.randomAtoB(0, this.causes.length - 1)];
+
+      return cause;
+    } else {
+      return false;
     }
   }
 
@@ -370,6 +399,10 @@ export class HomePage {
     data.selfiesPerYear = 0;
     data.numOfAlbums = 0;
 
+    /* if (data.age == 1) {
+      console.log(data.shareService.verifyLifeId(data));
+    } */
+
     if (data.changeThisLifeIdNextYear == 1) {
       data.shareService.changeThisLifeId(data);
     }
@@ -404,10 +437,122 @@ export class HomePage {
     }
 
     for (let i = 0; i < data.children.length; i++) {
-      if (data.children[i].alive == 1) {
-        data.children[i].age += 1;
+      let child = data.children[i];
+      if (child.alive == 1) {
+        child.age += 1;
+
+        let willDie = this.willChildDie(data, child.age);
+        if (willDie) {
+          child.alive = 0;
+          data.years[data.age].events.push(`My child ${child.name} died from ${willDie} at the age of ${child.age}.`);
+          data.shareService.handleHappiness(data, "-", 70);
+        } else {
+          if (child.goingToCollege == 1) {
+            child.goingToCollegeYears += 1;
+
+            if (child.goingToCollegeYears == 3) {
+              child.goingToCollege = 0;
+              
+              child.colleges.push(child.studying);
+              data.years[data.age].events.push(`${child.name} graduated from college in ${child.studying}.`);
+              child.studying = "";
+            }
+          }
+
+          if (child.age == 6) {
+            child.goingToElementary = 1;
+            data.years[data.age].events.push(`My child ${child.name} started going to school.`);
+
+            let chanceToLearn = data.shareService.randomAtoB(0, 2);
+            if (child.intelligence > 60) {
+              if (chanceToLearn > 0) {
+                child.learnedElementary = data.shareService.randomAtoB(4, 8);
+              } else {
+                child.learnedElementary = data.shareService.randomAtoB(1, 5);
+              }
+            } else {
+              child.learnedElementary = data.shareService.randomAtoB(1, 3);
+            }
+          } else if (child.age == 14) {
+            if (child.goingToElementary == 1) {
+              let grade = data.shareService.decideGrade(data, child, "elementary");
+              if (grade != "F") {
+                data.years[data.age].events.push(`${child.name} graduated from elementary school at grade ${grade}.`);
+                child.passedElementarySchool = 1;
+              } else {
+                data.years[data.age].events.push(`${child.name} failed elementary school.`);
+                child.passedElementarySchool = 0;
+              }
+
+              child.goingToElementary = 0;
+
+              if (child.passedElementarySchool == 1) {
+                child.goingToHighSchool = 1;
+                data.years[data.age].events.push(`${child.name} started high school.`);
+
+                let chanceToLearn = data.shareService.randomAtoB(0, 2);
+                if (child.intelligence > 60) {
+                  if (chanceToLearn > 0) {
+                    child.learnedHighSchool = data.shareService.randomAtoB(4, 8);
+                  } else {
+                    child.learnedHighSchool = data.shareService.randomAtoB(1, 5);
+                  }
+                } else {
+                  child.learnedHighSchool = data.shareService.randomAtoB(1, 3);
+                }
+              }
+
+            }
+          } else if (child.age == 18) {
+            if (child.goingToHighSchool == 1) {
+              let grade = data.shareService.decideGrade(data, child, "high");
+              child.goingToHighSchool = 0;
+
+              if (grade != "F") {
+                data.years[data.age].events.push(`${child.name} graduated from high school at grade ${grade}.`);
+                child.passedHighSchool = 1;
+              } else {
+                data.years[data.age].events.push(`${child.name} failed high school.`);
+                child.passedHighSchool = 0;
+              }
+
+              let chanceForCollege = 0;
+              if (grade == "A+") {
+                chanceForCollege = 90;
+              } else if (grade == "A") {
+                chanceForCollege = 75;
+              } else if (grade == "B") {
+                chanceForCollege = 60;
+              } else if (grade == "C") {
+                chanceForCollege = 40;
+              } else if (grade == "D") {
+                chanceForCollege = 30;
+              } else {
+                chanceForCollege = 0;
+              }
+
+              if (data.shareService.randomAtoB(0, 100) <= chanceForCollege) {
+                let randomCollege = data.shareService.randomAtoB(0, data.majors.length - 1);
+                let college = data.majors[randomCollege]["value"];
+                let wantsToBeADoctor = 0;
+                if (grade == "A+") {
+                  if (data.shareService.randomAtoB(0, 4) < 1) {
+                    wantsToBeADoctor = 1;
+                  }
+                }
+
+                data.years[data.age].events.push(`${child.name} started studying ${college}.`); //.toLowerCase()
+                child.goingToCollege = 1;
+                child.goingToCollegeYears = 0;
+                child.studying = college;
+              }
+            }
+          }
+        }
       }
     }
+
+    //decideGrade
 
     for (let i = 0; i < data.friends.length; i++) {
       if (data.friends[i].alive == 1) {
@@ -751,14 +896,13 @@ export class HomePage {
 
     } else if (data.alive && data.inPrison == 1) {
       data.prisonYears -= 1;
-
+      data.yearsServed += 1;
       if (data.prisonYears == 0) {
         data.years[data.age].events.push(`I have finished my sentence and I've been released.`);
         data.inPrison = 0;
       }
     } else {
-      let causes = ["a heart attack", "a lung cancer", "a tuberculosis", "a stroke", "a chronic obstructive pulmonary disease"];
-      let cause = causes[data.shareService.randomAtoB(0, causes.length - 1)];
+      let cause = this.causes[data.shareService.randomAtoB(0, this.causes.length - 1)];
       data.shareService.disableAll(data);
       data.deathCause = cause;
       data.years[data.age].events.push(`I died from ${cause}.`);
