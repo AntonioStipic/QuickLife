@@ -1,0 +1,65 @@
+<ion-scroll scrollX="false" scrollY="true" style="width: 100%; height: 100%; word-wrap: break-word;">
+  <div class="modalOverlay" (click)="dismiss()"></div>
+
+  <div class="modalContent marginTop10">
+    <ion-card>
+      <ion-card-header>
+        <b class="gurniDolje">Child info</b>
+        <button ion-button (click)="dismiss()" class="buttonright" color="danger" small>
+          <ion-icon name="md-close"></ion-icon>
+        </button>
+      </ion-card-header>
+    </ion-card>
+    <ion-list>
+
+      <ion-card>
+        <ion-card-content>
+          <ion-list>
+            <ion-item>
+              <div>
+                <ion-item>
+                  <label>Name: {{child.name}}</label>
+                </ion-item>
+                <ion-item>
+                  <label>Surname: {{child.surname}}</label>
+                </ion-item>
+                <ion-item>
+                  <label>Gender: {{data.shareService.capitalize(child.gender)}}</label>
+                </ion-item>
+                <ion-item>
+                  <label>Alive: {{alive}}</label>
+                </ion-item>
+                <ion-item [hidden]="child.alive == 0">
+                  <label>Age: {{child.age}}</label>
+                </ion-item>
+                <ion-item>
+                  <label>Living with parents: {{livingWithParents}}</label>
+                </ion-item>
+                <ion-item>
+                  <label>Elementary school:
+
+                    <ion-icon class="center topSmall" [name]="(child.passedElementarySchool == 1) ? 'md-checkmark' : 'md-close'">
+                    </ion-icon>
+
+                  </label>
+                </ion-item>
+                <ion-item>
+                  <label>High school:
+
+                    <ion-icon class="center topSmall" [name]="(child.passedHighSchool == 1) ? 'md-checkmark' : 'md-close'">
+                    </ion-icon>
+                  </label>
+                </ion-item>
+                <ion-item>
+                  <label>College:</label>
+                  <input value="{{child.colleges[0]}}" disabled>
+                </ion-item>
+              </div>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+
+    </ion-list>
+  </div>
+</ion-scroll>

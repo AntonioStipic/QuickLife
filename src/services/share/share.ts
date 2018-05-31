@@ -6,7 +6,8 @@ import { ModalController, NavParams, ViewController } from 'ionic-angular';
 import { Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { ToastController } from 'ionic-angular';
-
+import { GooglePlayGamesServices } from '@ionic-native/google-play-games-services';
+//import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 @Injectable()
 export class ShareService {
@@ -17,8 +18,8 @@ export class ShareService {
     bands;
     albums;
     lifeId;
-
-    constructor(public app: App, public alertCtrl: AlertController, public modalCtrl: ModalController, public events: Events, private http: Http, private storage: Storage, private toastCtrl: ToastController) {
+    //, private firebaseAnalytics: FirebaseAnalytics
+    constructor(public app: App, public alertCtrl: AlertController, public modalCtrl: ModalController, public events: Events, private http: Http, private storage: Storage, private toastCtrl: ToastController, private googlePlayGamesServices: GooglePlayGamesServices) {
         this.data = {};
         console.log(storage);
         this.http.get("assets/resources/bands.json")
@@ -234,6 +235,16 @@ export class ShareService {
         data.childBornModal.present();
     }
 
+    myChildModal(data, child) {
+        data.myChildModal = this.modalCtrl.create(myChildModal, { data: data, child: child }, {
+            showBackdrop: false,
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
+        });
+        data.myChildModal.present();
+    }
+
     carInfoModal(data, car) {
         data.carInfoModal = this.modalCtrl.create(carInfoModal, { data: data, car: car }, {
             showBackdrop: false,
@@ -361,7 +372,7 @@ export class ShareService {
             data.finance -= property[data.propertyValueIndex];
             data.ownedProperties.push(property[data.propertyValueIndex + 1]);
             data.posjedi.push(property);
-
+            this.calculateNetWorth(data);
             data.propertyModal.dismiss();
 
             let textToAdd = "";
@@ -434,6 +445,7 @@ export class ShareService {
     buyVehicle(data, car) {
         data.finance -= car["price"];
         data.cars.push(car);
+        this.calculateNetWorth(data);
         data.years[data.age].events.push(`I bought a car.`);
         data.vehicleModal.dismiss();
         let preposition = "";
@@ -469,6 +481,7 @@ export class ShareService {
                 data.cars.splice(i, 1);
                 data.carInfoModal.dismiss();
                 data.finance += car["value"];
+                data.shareService.calculateNetWorth(data);
                 data.years[data.age].events.push(`I sold my car for $${this.formatMoney(car["value"])}.`);
                 this.events.publish("goToHome");
                 continue;
@@ -501,6 +514,7 @@ export class ShareService {
                             messageText = "Officer wrote you a speeding ticket. You had to pay $200.";
                             releasedWith = "got speeding ticket";
                             data.finance -= 200;
+                            this.calculateNetWorth(data);
                             this.handleHappiness(data, "-", 8);
                         }
                         let pulloverAlert = this.alertCtrl.create({
@@ -539,6 +553,7 @@ export class ShareService {
                                     pulloverAlert.present();
 
                                     data.finance -= speedingTicket;
+                                    this.calculateNetWorth(data);
                                     if (loseLicense == 1) {
                                         data.passedDrivingTest = 0;
                                         data.years[data.age].events.push(`I got speeding ticket and lost my driving license.`);
@@ -563,6 +578,7 @@ export class ShareService {
                                         data.allowedToTakeDrivingTest = 0;
                                         let ticket = this.randomAtoB(8000, 12000);
                                         data.finance -= ticket;
+                                        this.calculateNetWorth(data);
                                         addTextEscape = `Another police car appeared in front of you.<br>You stepped on the brake so you don't crash in to them.<br><br>You got arrested and released, they took your driving license and you aren't allowed to retake driving test ever again.<br>You paid $${ticket} for your speeding ticket.`;
                                         data.years[data.age].events.push(`Police was chasing after me.<br>I got arrested and released.<br>I lost my driving license.`);
                                         titleToAdd = "So close...";
@@ -679,6 +695,7 @@ export class ShareService {
     }
 
     instrumentsChanged(data) {
+
         if (this.verifyLifeId(data, "instrumentsChanged")) return;
         //console.log(data.instruments, data.oldInstruments);;
         //var newInstruments = this.arr_diff(data.instruments, data.oldInstruments);
@@ -985,7 +1002,16 @@ export class ShareService {
         this.cars = cars;
     }
 
-    createMe(data, names, lifeId) {
+    createMe(data, names, lifeId, obituary) {
+        //this.firebaseAnalytics.logEvent("New Life", {})
+
+
+        /* window.plugins.FirebasePlugin.getToken(function(token) {
+            // save this server-side and use it to push notifications to this device
+            console.log(token);
+        }, function(error) {
+            console.error(error);
+        }); */
 
         if (lifeId != "") {
             this.lifeId = lifeId;
@@ -1104,6 +1130,9 @@ export class ShareService {
 
         // For every year of work this counts up
         data.workExperience = 0;
+
+        // Net worth of player
+        data.netWorth = 0;
 
         // List of jobs that don't need to specify where are you working at
         data.jobsWithoutLabel = ["Doctor", "Nurse", "Police Officer", "Mathematics Professor", "Chemistry Professor", "Biology Professor", "Sociology Professor", "Physics Professor"];
@@ -1240,6 +1269,9 @@ export class ShareService {
 
         // Empty job object
         data.myJob = ["", { "title": "", "salary": "", "experience": 0, "education": 0, "skills": [] }, ""];
+
+        // List with previous jobs player had worked
+        data.jobHistory = [];
 
         // Boolean to indicate if player is currently working
         data.isWorking = 0;
@@ -1393,6 +1425,9 @@ export class ShareService {
 
         // Empty log
         data.years = [{ "year": 0, "events": ["You have been born as " + data.name + " " + data.surname + ".", " You are " + data.nationality + ", " + data.genderFull + ".", "Your parents are:<br>" + data.father.name + " " + data.surname + " (" + data.father.age + " years old),<br>" + data.mother.name + " " + data.surname + " (" + data.mother.age + " years old)."] }];
+
+        data.shareService.calculateNetWorth(data);
+
         return data;
     }
 
@@ -1442,6 +1477,7 @@ export class ShareService {
     takeDrivingTest(data) {
         if (data.finance >= 80) {
             data.finance -= 80;
+            this.calculateNetWorth(data);
             let chance = this.randomAtoB(0, 120 - data.intelligence);
             if (chance < 30) {
                 data.passedDrivingTest = 1;
@@ -1524,6 +1560,7 @@ export class ShareService {
         else preposition = "years";
         data.years[data.age].events.push(`I retired from my job as a ${data.myJob[1]["title"]} after working ${data.jobService} ${preposition}.`);
         data.income += pension;
+        data.jobHistory.push({ title: data.myJob[1]["title"], years: data.jobService, firm: data.myJob[0] });
         data.myJob = ["", { "title": "", "salary": "", "experience": 0, "education": 0, "skills": [] }, ""];
         data.isWorking = 0;
         data.jobService = 0;
@@ -1584,6 +1621,7 @@ export class ShareService {
         //console.log(vacation);
         if (vacation.price <= data.finance) {
             data.finance -= vacation.price;
+            this.calculateNetWorth(data);
             let moods = ["fantastic", "average", "okay", "exciting", "adventurous"];
             let mood = moods[this.randomAtoB(0, moods.length - 1)];
             let prefix = "";
@@ -1619,41 +1657,74 @@ export class ShareService {
         else if (data.age < 70) chance = 10;
         else chance = 5;
 
-        if (this.randomAtoB(1, 100) <= chance) {
-            let text = "";
-            if (data.gender == "F") {
-                data.isPregnant = 1;
-                text = "You've become pregnant!";
-                data.years[data.age].events.push(`I've become pregnant.`);
-            } else {
-                data.lover.isPregnant = 1;
-                text = "Your partner became pregnant!";
-                data.years[data.age].events.push(`${data.lover.name} became pregnant.`);
-            }
-            this.update(data);
-            let alert = this.alertCtrl.create({
-                title: "Congratulations!",
-                message: text,
-                buttons: [{
-                    text: 'Okay',
-                    handler: () => {
-                        //console.log('Cancel clicked');
+        let readyChance = 0;
 
-                    }
-                }]
-            });
-            alert.present();
-        } else {
-            //console.log(data.gender);
-            let text = "";
-            if (data.gender == "F") {
-                text = "You failed to get pregnant.";
+        if (data.age < 18) readyChance = 10;
+        else if (data.age < 20) readyChance = 30;
+        else if (data.age < 28) readyChance = 70;
+        else readyChance = 100;
+
+        if (data.lover.stability < 30) readyChance * 0.7;
+        else if (data.lover.stability < 40) readyChance * 0.8;
+        else if (data.lover.stability < 50) readyChance * 0.9;
+        else if (data.lover.stability < 60) readyChance * 1.1;
+        else if (data.lover.stability < 70) readyChance * 1.2;
+        else if (data.lover.stability < 80) readyChance * 1.3;
+        else if (data.lover.stability < 90) readyChance * 1.4;
+        else if (data.lover.stability <= 100) readyChance * 1.6;
+
+        if (this.randomAtoB(1, 100) <= readyChance) {
+            if (this.randomAtoB(1, 100) <= chance) {
+                let text = "";
+                if (data.gender == "F") {
+                    data.isPregnant = 1;
+                    text = "You've become pregnant!";
+                    data.years[data.age].events.push(`I've become pregnant.`);
+                } else {
+                    data.lover.isPregnant = 1;
+                    text = "Your partner became pregnant!";
+                    data.years[data.age].events.push(`${data.lover.name} became pregnant.`);
+                }
+                this.update(data);
+                let alert = this.alertCtrl.create({
+                    title: "Congratulations!",
+                    message: text,
+                    buttons: [{
+                        text: 'Okay',
+                        handler: () => {
+                            //console.log('Cancel clicked');
+
+                        }
+                    }]
+                });
+                alert.present();
             } else {
-                text = "Your partner failed to get pregnant.";
+                //console.log(data.gender);
+                let text = "";
+                if (data.gender == "F") {
+                    text = "You failed to get pregnant.";
+                } else {
+                    text = "Your partner failed to get pregnant.";
+                }
+                let alert = this.alertCtrl.create({
+                    title: "Bad news...",
+                    message: text,
+                    buttons: [{
+                        text: 'Okay',
+                        handler: () => {
+                            //console.log('Cancel clicked');
+
+                        }
+                    }]
+                });
+                alert.present();
+
             }
+        } else {
+            let lover = data.lover;
             let alert = this.alertCtrl.create({
                 title: "Bad news...",
-                message: text,
+                message: `${lover.name} is not ready to have a baby.`,
                 buttons: [{
                     text: 'Okay',
                     handler: () => {
@@ -1663,8 +1734,8 @@ export class ShareService {
                 }]
             });
             alert.present();
-
         }
+
     }
 
     gaveBirth(data, who) {
@@ -1679,6 +1750,7 @@ export class ShareService {
         data.monthlyPayment = parseFloat(monthlyPayment);
         data.outcome += parseFloat(monthlyPayment);
         data.finance -= deposit;
+        this.calculateNetWorth(data);
         data.interestRate = interestRate;
 
         //data.changeTabTrue = 1;
@@ -1886,6 +1958,7 @@ export class ShareService {
                 let fitness = this.randomAtoB(1, 100);
 
                 child.name = name;
+                child.surname = data.surname;
                 child.appearance = appearance;
                 child.intelligence = intelligence;
                 child.fitness = fitness;
@@ -1894,6 +1967,9 @@ export class ShareService {
                 child.goingToElementary = 0;
                 child.goingToHighSchool = 0;
                 child.colleges = [];
+                child.livingWithParents = 1;
+                child.passedElementarySchool = 0;
+                child.passedHighSchool = 0;
 
                 data.children.push(child);
 
@@ -1906,7 +1982,7 @@ export class ShareService {
                     data.years[data.age].events.push(`${data.lover.name} gave birth to ${name}.`);
                 }
             }
-        } catch(err) {
+        } catch (err) {
             console.log("Empty name");
         }
     }
@@ -2362,6 +2438,124 @@ export class ShareService {
 
         this.carsForSaleModal(data, cars);
     }
+    googlePlayLogin() {
+        //this.data["GPS"] = this.googlePlayGamesServices;
+        //let showNetWorth = this.googlePlayShowNetWorth();
+
+        var self = this;
+        this.googlePlayGamesServices.auth().then(function () {
+            //alert("logged in");
+            self.data["googlePlayText"] = "Sign off Google Play";
+            /*            this.data["GPS"].showPlayer().then(function (data) {
+                            alert(JSON.stringify(data))
+                            
+                        }); */
+        }).catch(function (err) {
+
+            self.data["googlePlayText"] = "Sign in to Google Play";
+            alert(err);
+        });
+    }
+
+    googlePlayLogin2() {
+        console.log('Logging trying...');
+        /* try {
+            this.googlePlayGamesServices.auth()
+            .then(() => this.data["googlePlayText"] = "Sign off Google Play")   
+        } catch(e) {
+            console.log('Error logging in Play Games Services', e)
+        } */
+        this.googlePlayGamesServices.auth()
+            .then(() => this.data["googlePlayText"] = "Sign off Google Play")
+            .catch((e) => console.log('Error logging in Play Games Services', e));
+    }
+
+    googlePlayLeaderboards() {
+        /* this.googlePlayGamesServices.showLeaderboard({
+            leaderboardId: "CgkI186f9JkYEAIQAQ"
+        });*/
+
+
+
+        this.googlePlayGamesServices.isSignedIn()
+            .then((data) => {
+                //alert(data.isSignedIn);
+                if (data.isSignedIn) {
+                    this.googlePlayGamesServices.showAllLeaderboards();
+                } else {
+                    this.googlePlayLogin2();
+                }
+            });
+    }
+
+    googlePlayLogout() {
+        /* this.googlePlayGamesServices.signOut();
+        alert("logged out");
+        this.data["googlePlayText"] = "Sign in to Google Play"; */
+
+        this.googlePlayGamesServices.isSignedIn()
+            .then((data) => {
+                //alert(data.isSignedIn);
+                if (data.isSignedIn) {
+                    //alert(data);
+                }
+            });
+    }
+
+    googlePlayCheckLogin() {
+        //alert("1" + JSON.stringify(this.data["GPS"].isSignedIn()))
+        var result = false;
+        this.googlePlayGamesServices.isSignedIn().then(function (data) {
+            //alert("1" + data.isSignedIn);
+            result = data.isSignedIn;
+        });
+
+        return result;
+
+        /* this.data["GPS"].isSignedIn().then((data) => {
+            alert("2" + data.isSignedIn);
+            return data.isSignedIn;
+        }); */
+    }
+
+    googlePlayButton() {
+        /* let is = this.googlePlayCheckLogin();
+        //alert(is);
+        if (is == false) {
+            alert("Lets go to logout")
+            this.googlePlayLogout();
+        } else {
+            alert("Lets go to login")
+            this.googlePlayLogin();
+        } */
+        //var self = this;
+        this.googlePlayGamesServices.isSignedIn()
+            .then((data) => {
+                alert(data.isSignedIn);
+                if (data.isSignedIn) {
+                    this.googlePlayGamesServices.signOut();
+                    //alert("logged out");
+                    this.data["googlePlayText"] = "Sign in to Google Play";
+                } else {
+                    this.googlePlayLogin2();
+                    //alert("Lets go to login");
+                    //this.googlePlayLogin();
+
+
+                    //this.googlePlayGamesServices.auth();
+
+
+                    /* .then(() => {
+                        alert("logged in");
+                        //self.data["googlePlayText"] = "Sign off Google Play";
+                        /*            this.data["GPS"].showPlayer().then(function (data) {
+                                        alert(JSON.stringify(data))
+                                        
+                                    }); */
+                }
+            });
+    }
+
 
     update(data) {
         data.update += 1;
@@ -2376,6 +2570,30 @@ export class ShareService {
 
         //console.log(posjedi)
         this.propertyListingModal(data, posjedi);
+    }
+
+    calculateNetWorth(data) {
+        let net = 0;
+        //cars, ownedProperties
+        net = data.finance;
+
+        for (let i = 0; i < data.cars.length; i++) {
+            net += data.cars[i].value;
+        }
+
+        for (let i = 0; i < data.posjedi.length; i++) {
+            let index = 0;
+            if (data.posjedi[i][0] == "House") {
+                index = 4;
+            } else if (data.posjedi[i][0] == "Apartment" || data.posjedi[i][0] == "Condo") {
+                index = 3;
+            }
+
+            net += parseFloat(data.posjedi[i][index]);
+            //console.log(data.posjedi[i][3]);
+        }
+
+        data.netWorth = net;
     }
 
     goForDate(data, lover) {
@@ -2628,6 +2846,7 @@ export class ShareService {
         } else {
             data.weddingModal.dismiss();
             data.finance -= price;
+            this.calculateNetWorth(data);
             data.years[data.age].events.push(`I married ${data.lover.name}.<br>We went to ${honeymoon} for our honeymoon.`);
             data.lover.status = "Married";
             this.handleHappiness(data, "+", this.randomAtoB(5, 20));
@@ -2826,6 +3045,7 @@ export class ShareService {
     // Quit job
     quitJob(data) {
         data.income -= (data.myJob[2] / 12 * 1000) * (1 - data.tax);
+        data.jobHistory.push({ title: data.myJob[1]["title"], years: data.jobService, firm: data.myJob[0] });
         data.jobService = 0;
         data.years[data.age].events.push("I quit my job as " + data.myJob[1]["title"] + ".");
         data.myJob = ["", { "title": "", "salary": "", "experience": 0, "education": 0, "skills": [] }, ""];
@@ -2925,7 +3145,7 @@ export class commitSuicideModal {
         if (suicideMethod == "Set yourself on fire") suicideMethod = "setting myself on fire";
         suicideMethod = suicideMethod.toLowerCase();
 
-        let chance = 35;
+        let chance = 40;
         if (data.shareService.randomAtoB(0, 100) <= chance) {
             data.alive = 0;
             data.shareService.disableAll(data);
@@ -2935,7 +3155,13 @@ export class commitSuicideModal {
             data.years[data.age].events.push(`I failed to kill myself by ${suicideMethod}.`);
         }
         this.dismiss();
-        this.events.publish("goToHome");
+
+        if (data.alive == 0) {
+            //this.events.publish("goToObituary");
+            this.events.publish("goToHome");
+        } else {
+            this.events.publish("goToHome");
+        }
     }
 
     backButtonAction() {
@@ -3061,6 +3287,53 @@ export class musicModal {
 
     bandNameModal(data) {
         data.shareService.bandNameModal(data);
+    }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+@Component({
+    templateUrl: '../../pages/me/myChild.html'
+})
+export class myChildModal {
+    data: object;
+    child: object;
+    livingWithParents;
+    colleges = "";
+    alive;
+
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
+        this.data = shareService.getData();
+        this.child = params.get("child");
+        //console.log(this.child);
+        //console.log();
+
+        if (this.child["alive"] == 1) {
+            this.alive = "Yes";
+        } else {
+            this.alive = "No";
+        }
+
+        if (this.child["livingWithParents"] == 1) {
+            this.livingWithParents = "Yes";
+        } else {
+            this.livingWithParents = "No";
+        }
+
+        this.colleges = "None";
+        let tmp = ", ";
+        for (let i = 0; i < this.child["colleges"].length; i++) {
+            if (i + 1 == this.child["colleges"].length) {
+                tmp = "";
+            }
+            this.colleges += tmp + this.child["colleges"][i];
+        }
     }
 
     backButtonAction() {
@@ -3212,6 +3485,7 @@ export class createAlbumModal {
                     data.createAlbumModal.dismiss();
                     this.events.publish("goToHome");
                     band.albums += 1;
+                    data.shareService.calculateNetWorth(data);
                     console.log("Published an album");
                 }
             }
@@ -3380,6 +3654,8 @@ export class holidayModal {
     invitePartner;
     varijacija;
     vacation: object;
+    bringChildren;
+
     constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
         this.data = shareService.getData();
 
@@ -3387,6 +3663,7 @@ export class holidayModal {
         this.hotelStars = 1;
         this.travelClass = "Economy Class";
         this.invitePartner = false;
+        this.bringChildren = false;
         this.varijacija = this.randomAtoB(80, 120);
         this.vacation = {};
         //console.log();
@@ -3404,6 +3681,10 @@ export class holidayModal {
 
         if (this.invitePartner == true) {
             osnovica = osnovica * Math.sqrt(3);
+        }
+
+        if (this.bringChildren == true) {
+            osnovica += osnovica / Math.sqrt(5) * this.data["children"].length;
         }
         this.vacation["travelClass"] = this.travelClass;
         this.vacation["hotelStars"] = this.hotelStars;

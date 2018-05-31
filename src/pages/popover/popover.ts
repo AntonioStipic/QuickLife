@@ -35,6 +35,10 @@ export class PopoverContentPage {
     return text;
   }
 
+  dismiss() {
+    this.viewCtrl.dismiss();
+  }
+
   changeTab(index) {
     var t: Tabs = this.data["navCtrl"];
     t.select(index);

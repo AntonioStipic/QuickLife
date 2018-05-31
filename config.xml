@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.cloude.quicklife" version="0.0.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.cloude.quicklife" version="0.0.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>QuickLife</name>
     <description>Textual life simulator.</description>
     <author email="antonio.stipic2@gmail.com" href="http://cloude-3.herokuapp.com/">@Antonio Stipić</author>
@@ -77,4 +77,9 @@
     <plugin name="cordova-plugin-appcenter-push" spec="^0.1.4" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
+    <plugin name="cordova-plugin-play-games-services" spec="^1.1.0">
+        <variable name="APP_ID" value="831588394839" />
+    </plugin>
+    <allow-navigation href="http://192.168.1.107:8100" />
+    <plugin name="cordova-plugin-firebase" spec="^1.0.3" />
 </widget>

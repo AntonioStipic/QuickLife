@@ -151,6 +151,15 @@
 
         <ion-item>
           <ion-label class="ion-select-text">
+            <h2 class="h25">
+              <b>Net worth:</b>
+            </h2>
+          </ion-label>
+          <ion-input class="h21" value="${{data.shareService.formatMoney(data.netWorth)}}" disabled></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="ion-select-text">
             <b>Account balance:</b>
           </ion-label>
           <ion-input value="${{data.shareService.formatMoney(data.finance)}}" disabled></ion-input>
@@ -220,6 +229,7 @@
             </button>
           </ion-list>
         </ion-card>
+        <div class="emptySpace"></div>
       </div>
 
       <div [hidden]="data.meAssets != 'Car'">
@@ -242,7 +252,7 @@
             </button>
           </ion-list>
         </ion-card>
-
+        <div class="emptySpace"></div>
         <!-- <ion-footer no-shadow [hidden]="data.meAssets != 'Car'">
           <ion-toolbar position="bottom">
             <button ion-button full round color="royal-v1" (click)="data.shareService.carsForSale(data)">Cars for sale
@@ -255,7 +265,9 @@
 
     <ion-list *ngSwitchCase="'Misc'">
       <ion-item-group>
-        <ion-item-divider color="light"><b>Activities</b></ion-item-divider>
+        <ion-item-divider color="light">
+          <b>Activities</b>
+        </ion-item-divider>
         <!-- <button ion-item (click)="logout()">
               <ion-icon name="log-out"></ion-icon>
               Learning
@@ -268,34 +280,44 @@
         <ion-item>
           <ion-label>
             <!-- (click)="(data.isLearning == 0) ? data.isLearning = 1 : data.isLearning = 0" -->
-            <ion-icon name="md-bookmarks" class="miscListIcon"></ion-icon><span class="absolutePosition"> Learning</span></ion-label>
+            <ion-icon name="md-bookmarks" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition"> Learning</span>
+          </ion-label>
           <ion-toggle [(ngModel)]="data.isLearning" disabled="{{data.age < 6}}" (ionChange)="data.shareService.learningChanged(data)"></ion-toggle>
         </ion-item>
         <ion-item>
           <ion-label>
             <!-- (click)="(data.isReadingBooks == 0) ? data.isReadingBooks = 1 : data.isReadingBooks = 0" -->
-            <ion-icon name="md-book" class="miscListIcon"></ion-icon><span class="absolutePosition"> Reading books</span></ion-label>
+            <ion-icon name="md-book" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition"> Reading books</span>
+          </ion-label>
           <ion-toggle [(ngModel)]="data.isReadingBooks" disabled="{{data.age < 9}}" (ionChange)="data.shareService.readingChanged(data)"></ion-toggle>
         </ion-item>
 
         <ion-item>
           <ion-label>
             <!-- (click)="(data.goingToGym == 0) ? data.goingToGym = 1 : data.goingToGym = 0" -->
-            <ion-icon name="ios-body" class="miscListIcon"></ion-icon><span class="absolutePosition"> Go to gym (50$/mo)</span></ion-label>
+            <ion-icon name="ios-body" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition"> Go to gym (50$/mo)</span>
+          </ion-label>
           <ion-toggle [(ngModel)]="data.goingToGym" disabled="{{data.age < 12}}" (ionChange)="data.shareService.gymChanged(data)"></ion-toggle>
         </ion-item>
 
         <ion-item class="bottomLine">
           <ion-label>
             <!-- (click)="(data.goingToGym == 0) ? data.goingToGym = 1 : data.goingToGym = 0" -->
-            <ion-icon name="quicklife-smoking" class="miscListIcon"></ion-icon><span class="absolutePosition"> Smoke</span></ion-label>
+            <ion-icon name="quicklife-smoking" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition"> Smoke</span>
+          </ion-label>
           <ion-toggle [(ngModel)]="data.smoking" disabled="{{data.age < 16}}" (ionChange)="data.shareService.smokingChanged(data)"></ion-toggle>
         </ion-item>
 
         <ion-list>
-          <ion-item>
+          <ion-item class="hideSelection">
             <ion-label class="ion-select-text">
-              <ion-icon name="ios-musical-notes" class="miscListIcon"></ion-icon><span class="absolutePosition"> Play instrument (100$/mo each)</span></ion-label>
+              <ion-icon name="ios-musical-notes" class="miscListIcon"></ion-icon>
+              <span class="absolutePosition"> Play instrument (100$/mo each)</span>
+            </ion-label>
             <ion-select [(ngModel)]="data.instruments" multiple="true" cancelText="Dismiss" okText="Ok" disabled="{{data.age < 3 || data.inDebt == 1}}"
               (ionChange)="data.shareService.instrumentsChanged(data)">
               <ion-option value="guitar">Acoustic guitar</ion-option>
@@ -312,9 +334,11 @@
             </ion-select>
           </ion-item>
 
-          <ion-item>
+          <ion-item class="hideSelection">
             <ion-label class="ion-select-text">
-              <ion-icon name="md-football" class="miscListIcon"></ion-icon><span class="absolutePosition"> Train sport (60$/mo each)</span></ion-label>
+              <ion-icon name="md-football" class="miscListIcon"></ion-icon>
+              <span class="absolutePosition"> Train sport (60$/mo each)</span>
+            </ion-label>
             <ion-select [(ngModel)]="data.sports" multiple="true" cancelText="Dismiss" okText="Ok" disabled="{{data.age < 5 || data.inDebt == 1}}"
               (ionChange)="data.shareService.sportsChanged(data)">
               <ion-option value="football">Football</ion-option>
@@ -357,7 +381,9 @@
             <span class="absolutePosition"> Commit suicide</span>
           </button>
 
-          <ion-item-divider color="light"><b>Documents</b></ion-item-divider>
+          <ion-item-divider color="light">
+            <b>Documents</b>
+          </ion-item-divider>
 
           <button ion-item class="button-ion-item" [disabled]="data.shareService.passedDrivingTestButton(data)" (click)="data.shareService.takeDrivingTest(data); changeTab(0, data)">
             <ion-icon name="quicklife-steering-wheel" class="miscListIcon"></ion-icon>
@@ -365,13 +391,15 @@
             <ion-icon [name]="data.passedDrivingTest == 1?'md-checkbox-outline':'md-square-outline'" class="miscListIcon" item-right></ion-icon>
           </button>
 
-          <ion-item-divider color="light"><b>Art</b></ion-item-divider>
+          <ion-item-divider color="light">
+            <b>Art</b>
+          </ion-item-divider>
 
           <button ion-item class="button-ion-item topLine" (click)="data.shareService.musicModal(data)" [disabled]="data.age < 12">
             <ion-icon name="md-microphone" class="miscListIcon"></ion-icon>
             <span class="absolutePosition"> Music</span>
           </button>
-        
+
         </ion-list>
       </ion-item-group>
 
@@ -387,8 +415,8 @@
   </ion-toolbar>
 
   <ion-toolbar position="bottom" [hidden]="data.meAssets != 'Car'">
-      <button ion-button full round color="royal-v1" (click)="data.shareService.carsForSale(data)">Cars for sale
-        <ion-icon id="clockIcon" name="quicklife-buy-car"></ion-icon>
-      </button>
-    </ion-toolbar>
+    <button ion-button full round color="royal-v1" (click)="data.shareService.carsForSale(data)">Cars for sale
+      <ion-icon id="clockIcon" name="quicklife-buy-car"></ion-icon>
+    </button>
+  </ion-toolbar>
 </ion-footer>

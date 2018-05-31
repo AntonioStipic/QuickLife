@@ -16,15 +16,26 @@
 
 <ion-content>
   <ion-card>
-      <ion-card-header>
-          Rest in peace {{data.name}}!
-      </ion-card-header>
+    <ion-card-header>
+      Rest in peace {{data.name}}!
+    </ion-card-header>
 
-      <ion-card-content>
-          {{data.name}} {{data.surname}} died at the age of {{data.age}} from {{data.deathCause}}.
-          {{childrenText}}
-          {{prisonText}}
-         <!-- {{data.hisOrHers}} funeral was attended by {{data.hisOrHers.toLowerCase()}} spouse and children.-->
-      </ion-card-content>
+    <ion-card-content>
+      {{data.name}} {{data.surname}} died at the age of {{data.age}} from {{data.deathCause}}. {{childrenText}} {{prisonText}}
+      <br>
+      {{preposition}} had a net worth of: ${{data.shareService.formatMoney(data.netWorth)}}.
+      <br><br>
+      <i [innerHTML]="speech"></i> <!-- {{speech}} -->
+      <!-- {{data.hisOrHers}} funeral was attended by {{data.hisOrHers.toLowerCase()}} spouse and children.-->
+    </ion-card-content>
   </ion-card>
 </ion-content>
+
+<ion-footer no-shadow>
+  <ion-toolbar position="bottom">
+    <button ion-button class="width48 floatLeft" round (click)="newLife()" id="ageButton" [disabled]="data.alive" color="dark">New
+    </button>
+    <button ion-button class="width48 floatRight" round (click)="customLife()" id="ageButton" [disabled]="data.alive" color="danger">Custom
+    </button>
+  </ion-toolbar>
+</ion-footer>

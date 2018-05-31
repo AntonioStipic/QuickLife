@@ -12,7 +12,7 @@ import { HomePage } from '../pages/home/home';
 import { ObituaryPage } from '../pages/obituary/obituary';
 import { TabsPage } from '../pages/tabs/tabs';
 import { PrisonPage } from '../pages/prison/prison';
-import { findLoveModal, propertyListingModal, carsForSaleModal, socialNetworkModal, holidayModal, mortgageModal, weddingModal, childModal, musicModal, bandNameModal, createAlbumModal, commitSuicideModal, carInfoModal } from '../services/share/share';
+import { findLoveModal, propertyListingModal, carsForSaleModal, socialNetworkModal, holidayModal, mortgageModal, weddingModal, childModal, musicModal, bandNameModal, createAlbumModal, commitSuicideModal, carInfoModal, myChildModal } from '../services/share/share';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -29,6 +29,9 @@ import { ModalScaleUpLeaveTransition } from "../transitions/scale-up-leave.trans
 import { HttpModule } from '@angular/http';
 
 import { IonicStorageModule } from '@ionic/storage';
+
+import { GooglePlayGamesServices } from '@ionic-native/google-play-games-services';
+//import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 
 @NgModule({
@@ -58,7 +61,8 @@ import { IonicStorageModule } from '@ionic/storage';
     carInfoModal,
     achievementsModal,
     aboutModal,
-    PrisonPage
+    PrisonPage,
+    myChildModal
   ],
   imports: [
     BrowserModule,
@@ -101,13 +105,16 @@ import { IonicStorageModule } from '@ionic/storage';
     carInfoModal,
     achievementsModal,
     aboutModal,
-    PrisonPage
+    PrisonPage,
+    myChildModal
   ],
   providers: [
     StatusBar,
     SplashScreen,
     ShareService,
     Keyboard,
+    GooglePlayGamesServices,
+    //FirebaseAnalytics,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })

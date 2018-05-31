@@ -165,7 +165,7 @@
         <!-- <ion-label><b>You don't have children.</b></ion-label> -->
         <!-- </ion-item> -->
         <ion-list>
-          <button ion-item *ngFor="let child of data.children">
+          <button ion-item *ngFor="let child of data.children" (click)="data.shareService.myChildModal(data, child)">
             <ion-icon item-start></ion-icon>
             <div>
               {{child.name}} <span [hidden]="child.alive == 0">({{child.age}} years old)</span>

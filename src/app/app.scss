@@ -450,8 +450,25 @@ ion-icon {
   width: 92vw;
 }
 
+.topSmall {
+  position: absolute;
+  //padding-top: 0.1em;
+}
+
 .modalContent ion-card {
   width: 95% !important;
+}
+
+.width48 {
+  width: 48% !important;
+}
+
+.floatLeft {
+  float: left;
+}
+
+.floatRight {
+  float: right;
 }
 
 .width96 {
@@ -520,3 +537,20 @@ ion-icon {
 body {
   
 }
+
+.h25 {
+  font-size: 1.2em!important;
+}
+
+.h21 {
+  font-size: 1.1em!important;
+}
+
+.emptySpace {
+  margin-bottom: 5em;
+}
+
+.hideSelection .select-text {
+  display: none;
+}
+//.select2-results__option[aria-disabled="true"] {color:#f00 !important;}

@@ -44,6 +44,10 @@
             <ion-label>Invite partner</ion-label>
             <ion-checkbox color="royal-v1" [(ngModel)]="invitePartner" item-right></ion-checkbox>
           </ion-item>
+          <ion-item [hidden]="data.children.length == 0">
+            <ion-label>Bring children</ion-label>
+            <ion-checkbox color="royal-v1" [(ngModel)]="bringChildren" item-right></ion-checkbox>
+          </ion-item>
           <ion-item>
             <ion-label class="ion-select-text">
               <b>Price:</b>

@@ -1,27 +1,55 @@
 {
   "project_info": {
-    "project_number": "465502565839",
-    "firebase_url": "https://quicklife-1c7ce.firebaseio.com",
-    "project_id": "quicklife-1c7ce",
-    "storage_bucket": "quicklife-1c7ce.appspot.com"
+    "project_number": "831588394839",
+    "firebase_url": "https://quicklife-79485909.firebaseio.com",
+    "project_id": "quicklife-79485909",
+    "storage_bucket": "quicklife-79485909.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:465502565839:android:5413613e6a7440fe",
+        "mobilesdk_app_id": "1:831588394839:android:5413613e6a7440fe",
         "android_client_info": {
           "package_name": "com.cloude.quicklife"
         }
       },
       "oauth_client": [
         {
-          "client_id": "465502565839-a9gmm26k9o9us4lebjepnhrm0phqj3vi.apps.googleusercontent.com",
+          "client_id": "831588394839-6iqpk7helf7p6e6unnrn5skft3d6n3mv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cloude.quicklife",
+            "certificate_hash": "a7cfe451cfe06592d2d4e25eb7d8ef6c0bd98517"
+          }
+        },
+        {
+          "client_id": "831588394839-vlqu0p39jajfesg9n1u7n9ubuspvdj7h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cloude.quicklife",
+            "certificate_hash": "71781036f01a0dea748b8b87d59282e5f45d8d1f"
+          }
+        },
+        {
+          "client_id": "831588394839-dp9dsdo2nj7ba1t1rdg82far3k8iohjh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cloude.quicklife",
+            "certificate_hash": "e76ebae790e6166abc97cc872aa7518be34f66fe"
+          }
+        },
+        {
+          "client_id": "831588394839-mcvefn7tbn98bot0kebk540d8fjhmelt.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "831588394839-mcvefn7tbn98bot0kebk540d8fjhmelt.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB-BIOXhEB5S9CBTNYuSAAHmBVO8LxnCiI"
+          "current_key": "AIzaSyCf2XwYkkAHlr8Ag4AqCU3sf-1lU8uoSJI"
         }
       ],
       "services": {
@@ -29,8 +57,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "831588394839-mcvefn7tbn98bot0kebk540d8fjhmelt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

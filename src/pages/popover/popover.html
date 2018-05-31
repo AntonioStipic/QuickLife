@@ -3,6 +3,8 @@
     <button ion-item (click)="close()" [navPush]="HomePage"><b>New life</b></button>
     <button ion-item (click)="customLife(data)"><b>Custom life</b></button>
     <button ion-item (click)="achievements(data)"><b>Achievements</b></button>
+    <button ion-item (click)="dismiss(); data.shareService.googlePlayLeaderboards()"><b>Leaderboards</b></button>
+    <!-- <button ion-item (click)="dismiss(); data.shareService.googlePlayButton()"><b>{{data.googlePlayText}}</b></button> --> <!-- googlePlayButton -->
     <button ion-item (click)="about(data)"><b>About</b></button>
     <!-- <button ion-item>Share life</button>
     <button ion-item>Settings</button> -->

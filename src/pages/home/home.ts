@@ -4,6 +4,8 @@ import { PopoverContentPage } from '../popover/popover';
 import { ShareService } from '../../services/share/share';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
+import { Events } from 'ionic-angular';
+import { Platform } from 'ionic-angular';
 
 @Component({
   selector: 'page-home',
@@ -17,13 +19,45 @@ export class HomePage {
   countries: object;
   popover = this.popoverCtrl.create(PopoverContentPage);
   private _differ: any;
-  causes = ["a heart attack", "a lung cancer", "a tuberculosis", "a stroke", "a chronic obstructive pulmonary disease", "a lower respiratory infection", "a tetanus"];
+  causes = ["a heart attack", "a lung cancer", "a tuberculosis", "a stroke", "a chronic obstructive pulmonary disease", "a lower respiratory infection", "a tetanus", "a colon cancer"];
+  babyCauses = ["a sudden infant death syndrome", "a malnutrition", "a blood infection", "a pneumonia"];
 
   @ViewChild(Content) content: Content;
 
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public alertCtrl: AlertController, private http: Http, public KeyValueDiffers: KeyValueDiffers) {
+  constructor(platform: Platform, public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public alertCtrl: AlertController, private http: Http, public KeyValueDiffers: KeyValueDiffers, public events: Events) {
     //this.data["years"] = [];
+    //, private googlePlayGamesServices: GooglePlayGamesServices
+    /* try {
+      this.googlePlayGamesServices.auth()
+      console.log('Logged in to Play Games Services')
+
+      this.googlePlayGamesServices.showPlayer().then((data: Player) => {
+        console.log('Player data', data);
+     });
+    } catch(error) {
+      console.log('Error logging in Play Games Services', error);
+    } */
+
+    /* try {
+      this.googlePlayGamesServices.auth();
+      console.log("Hehe")
+
+      console.log(this.googlePlayGamesServices.showPlayer());
+      alert(this.googlePlayGamesServices.showPlayer()['displayName'])
+    } catch(err) {
+      console.log("Bad bad", err)
+    } */
+
     this.data = shareService.getData();
+
+    /* if (platform.is('core') || platform.is('mobileweb')) {
+      
+    } else {
+      this.data["shareService"].googlePlayLogin();
+    } */
+    
+    
+    
     console.log(KeyValueDiffers);
     this._differ = KeyValueDiffers.find({}).create();
     this.data["shareService"] = shareService;
@@ -76,6 +110,8 @@ export class HomePage {
         console.log(error);
       });
   }
+
+
   ngDoCheck() {
     const change = this._differ.diff(this.data);
     if (change) {
@@ -233,6 +269,7 @@ export class HomePage {
 
               if (data.isWorking == 1) {
                 data.income -= (data.myJob[2] / 12 * 1000) * (1 - data.tax);
+                data.jobHistory.push({ title: data.myJob[1]["title"], years: data.jobService, firm: data.myJob[0] });
                 data.jobService = 0;
                 //data.years[data.age].events.push("I quit my job as " + data.myJob[1]["title"] + ".");
                 data.myJob = ["", { "title": "", "salary": "", "experience": 0, "education": 0, "skills": [] }, ""];
@@ -245,7 +282,7 @@ export class HomePage {
               data.numOfCrimes += 1;
               data.prisonYears += penalty;
             } else {
-              let crazyDrugs = 10; // 10
+              let crazyDrugs = 20; // 10
 
               if (data.shareService.randomAtoB(0, 100) <= crazyDrugs) {
                 let stories = ["You thought your bed was trying to eat you. You ended up taking the sheets off and laying on the floor curled in a ball. You woke up with the worst back pain you've ever had.",
@@ -330,7 +367,7 @@ export class HomePage {
   }
 
   willChildDie(data, age) {
-    let chance = 1;
+    let chance = 0.4;
 
     if (age > 40) chance = 3;
     else if (age > 50) chance = 7;
@@ -341,7 +378,7 @@ export class HomePage {
     else if (age > 97) chance = 60;
     else if (age > 100) chance = 80;
 
-    let rollDice = data.shareService.randomAtoB(1, 100);
+    let rollDice = data.shareService.randomAtoB(1, 10000) / 100;
 
     if (rollDice <= chance) {
       let cause = this.causes[data.shareService.randomAtoB(0, this.causes.length - 1)];
@@ -399,6 +436,12 @@ export class HomePage {
     data.selfiesPerYear = 0;
     data.numOfAlbums = 0;
 
+    //console.log(data.jobHistory);
+
+    if (data.age == 122) {
+      data.alive = 0;
+    }
+
     /* if (data.age == 1) {
       console.log(data.shareService.verifyLifeId(data));
     } */
@@ -452,7 +495,7 @@ export class HomePage {
 
             if (child.goingToCollegeYears == 3) {
               child.goingToCollege = 0;
-              
+
               child.colleges.push(child.studying);
               data.years[data.age].events.push(`${child.name} graduated from college in ${child.studying}.`);
               child.studying = "";
@@ -621,6 +664,7 @@ export class HomePage {
     for (let i = 0; i < data.posjedi.length; i++) {
       data.finance -= parseFloat(data.posjedi[i].maintenance) * 12;
     }
+    data.shareService.calculateNetWorth(data);
 
     this.willIDie(data);
     if (data.alive && data.inPrison == 0) {
@@ -668,6 +712,7 @@ export class HomePage {
           data.outcome -= parseFloat(data.monthlyPayment);
           data.years[data.age].events.push("I've paid off my mortgage.");
         }
+        data.shareService.calculateNetWorth(data);
       }
 
       if (data.isPregnant == 1) {
@@ -792,14 +837,17 @@ export class HomePage {
       if (data.goingToGym == 1) {
         data.finance -= 50 * 12;
         if (data.fitness <= 99.3) data.fitness += 0.7;
+        data.shareService.calculateNetWorth(data);
       }
 
       if (data.instruments.length > 0) {
         data.finance -= data.instruments.length * 100 * 12;
+        data.shareService.calculateNetWorth(data);
       }
 
       if (data.sports.length > 0) {
         data.finance -= data.sports.length * 60 * 12;
+        data.shareService.calculateNetWorth(data);
       }
 
       if (data.age == 3) {
@@ -902,11 +950,20 @@ export class HomePage {
         data.inPrison = 0;
       }
     } else {
-      let cause = this.causes[data.shareService.randomAtoB(0, this.causes.length - 1)];
+      let cause = "";
+
+      if (data.age > 3) {
+        cause = this.causes[data.shareService.randomAtoB(0, this.causes.length - 1)];
+      } else {
+        cause = this.babyCauses[data.shareService.randomAtoB(0, this.babyCauses.length - 1)];
+      }
       data.shareService.disableAll(data);
       data.deathCause = cause;
       data.years[data.age].events.push(`I died from ${cause}.`);
+      //this.events.publish("goToObituary");
     }
+
+    data.shareService.calculateNetWorth(data);
 
   }
 

@@ -25,6 +25,14 @@ export class MePage {
     events.subscribe("goToHome", () => {
       this.changeTab(0);
     });
+
+    events.subscribe("goToHomeNewLife", () => {
+      console.log("goToHomeNewLife")
+    })
+
+    events.subscribe("goToObituary", () => {
+      this.changeTab(5);
+    });
   }
 
 
