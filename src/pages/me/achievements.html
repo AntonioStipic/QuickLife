@@ -14,6 +14,9 @@
 
       <ion-card>
         <ion-card-content class="noPadding">
+            <ion-card class="width100 achievementPercent">
+                <b class="h21">Completed: {{data.achievementCompletedPercent}}%</b>
+            </ion-card>
           <ion-card *ngFor="let achievement of data.achievements; let index = index" (click)="toggleAchievement(index)" class="width100">
             <ion-card-header class="noBottomMargin">
               <b class="h25">

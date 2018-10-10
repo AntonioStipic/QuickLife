@@ -191,8 +191,8 @@
         <!-- <ion-label><b>You don't have children.</b></ion-label> -->
         <!-- </ion-item> -->
         <ion-list>
-          <button ion-item *ngFor="let friend of data.friends">
-            <ion-icon item-start></ion-icon>
+          <button ion-item *ngFor="let friend of data.friends" (click)="data.shareService.myFriendModal(data, friend)">
+            <ion-icon item-start [name]="friend.profileId" class="miscListIcon"></ion-icon>
             <div>
               {{friend.name}} {{friend.surname}} ({{friend.age}} years old)
             </div>

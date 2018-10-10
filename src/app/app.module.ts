@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { Config } from 'ionic-angular';
+import { AppVersion } from '@ionic-native/app-version';
 
 import { MePage } from '../pages/me/me';
 import { JobPage } from '../pages/job/job';
@@ -12,7 +13,7 @@ import { HomePage } from '../pages/home/home';
 import { ObituaryPage } from '../pages/obituary/obituary';
 import { TabsPage } from '../pages/tabs/tabs';
 import { PrisonPage } from '../pages/prison/prison';
-import { findLoveModal, propertyListingModal, carsForSaleModal, socialNetworkModal, holidayModal, mortgageModal, weddingModal, childModal, musicModal, bandNameModal, createAlbumModal, commitSuicideModal, carInfoModal, myChildModal } from '../services/share/share';
+import { findLoveModal, propertyListingModal, carsForSaleModal, socialNetworkModal, holidayModal, mortgageModal, weddingModal, childModal, musicModal, bandNameModal, createAlbumModal, commitSuicideModal, carInfoModal, myChildModal, myFriendModal } from '../services/share/share';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -62,7 +63,8 @@ import { GooglePlayGamesServices } from '@ionic-native/google-play-games-service
     achievementsModal,
     aboutModal,
     PrisonPage,
-    myChildModal
+    myChildModal,
+    myFriendModal
   ],
   imports: [
     BrowserModule,
@@ -106,7 +108,8 @@ import { GooglePlayGamesServices } from '@ionic-native/google-play-games-service
     achievementsModal,
     aboutModal,
     PrisonPage,
-    myChildModal
+    myChildModal,
+    myFriendModal
   ],
   providers: [
     StatusBar,
@@ -114,6 +117,7 @@ import { GooglePlayGamesServices } from '@ionic-native/google-play-games-service
     ShareService,
     Keyboard,
     GooglePlayGamesServices,
+    AppVersion,
     //FirebaseAnalytics,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]

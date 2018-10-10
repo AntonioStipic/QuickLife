@@ -7,6 +7,7 @@ import { Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { ToastController } from 'ionic-angular';
 import { GooglePlayGamesServices } from '@ionic-native/google-play-games-services';
+import { AppVersion } from '@ionic-native/app-version';
 //import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 @Injectable()
@@ -50,30 +51,39 @@ export class ShareService {
         storage.get("achievements").then((val) => {
             console.log('Achievements', val);
 
-            let resetAchievement = 0;
-            if (val == null || resetAchievement == 1) {
-                storage.set("achievements", [
-                    { id: "Internet celebrity", title: "Internet celebrity", description: "Gain more than 1,000,000 followers on social network", finished: false },
-                    { id: "Aced it!", title: "Aced it!", description: "Finish elementary school with grade A", finished: false },
-                    { id: "Our little genius", title: "Our little genius", description: "Finish elementary school with grade A+", finished: false },
-                    { id: "Little Einstein", title: "Little Einstein", description: "Finish high school with grade A+", finished: false },
-                    { id: "Academic", title: "Academic", description: "Finish college", finished: false },
-                    { id: "Centenarian", title: "Centenarian", description: "Live to a hundred years", finished: false },
-                    { id: "Druggie", title: "Druggie", description: "Take a drug", finished: false },
-                    { id: "Elvis has left the building", title: "Elvis has left the building", description: "Sell more than 1,000,000 albums", finished: false },
-                    { id: "Niki Lauda", title: "Niki Lauda", description: "Pass driving test from first time", finished: false },
-                    { id: "Spongebob style", title: "Spongebob style", description: "Fail driving test at least 5 times", finished: false },
-                    { id: "Garage band", title: "Garage band", description: "Form a band", finished: false },
-                    { id: "Socialization", title: "Socialization", description: "Join a social network", finished: false },
-                    { id: "Superhuman", title: "Superhuman", description: "Have 100% in every stat", finished: false }
+            let currectVersion = "0.2.1.";
+            
+            storage.get("appVersion").then((appVersionStorage) => {
+                let resetAchievement = 0;
+                if (val == null || resetAchievement == 1 || currectVersion != appVersionStorage) {
+                    storage.set("appVersion", currectVersion);
+                    storage.set("achievements", [
+                        { id: "Internet celebrity", title: "Internet celebrity", description: "Gain more than 1,000,000 followers on social network", finished: false },
+                        { id: "Aced it!", title: "Aced it!", description: "Finish elementary school with grade A", finished: false },
+                        { id: "Our little genius", title: "Our little genius", description: "Finish elementary school with grade A+", finished: false },
+                        { id: "Little Einstein", title: "Little Einstein", description: "Finish high school with grade A+", finished: false },
+                        { id: "Academic", title: "Academic", description: "Finish college", finished: false },
+                        { id: "Centenarian", title: "Centenarian", description: "Live to a hundred years", finished: false },
+                        { id: "Henry VIII", title: "Henry VIII", description: "Have six spouses in one life", finished: false },
+                        { id: "Druggie", title: "Druggie", description: "Take a drug", finished: false },
+                        { id: "BFF", title: "BFF", description: "Have 100% friendship", finished: false },
+                        { id: "Elvis has left the building", title: "Elvis has left the building", description: "Sell more than 1,000,000 albums", finished: false },
+                        { id: "Casanova", title: "Casanova", description: "Have at least 15 one night stands in one life", finished: false },
+                        { id: "Niki Lauda", title: "Niki Lauda", description: "Pass driving test from the first time", finished: false },
+                        { id: "No Protection?", title: "No Protection?", description: "Contract HIV", finished: false },
+                        { id: "Spongebob style", title: "Spongebob style", description: "Fail driving test at least 5 times", finished: false },
+                        { id: "Garage band", title: "Garage band", description: "Form a band", finished: false },
+                        { id: "Socialization", title: "Socialization", description: "Join a social network", finished: false },
+                        { id: "Superhuman", title: "Superhuman", description: "Have 100% in every stat", finished: false }
 
-                ]);
-                storage.get("achievements").then((val2) => {
-                    this.data["achievements"] = val2;
-                });
-            } else {
-                this.data["achievements"] = val;
-            }
+                    ]);
+                    storage.get("achievements").then((val2) => {
+                        this.data["achievements"] = val2;
+                    });
+                } else {
+                    this.data["achievements"] = val;
+                }
+            });
         });
     }
 
@@ -186,7 +196,7 @@ export class ShareService {
         let toast = this.toastCtrl.create({
             message: `<div class="toastText">"${id}" unlocked! <img class="toastImg" src="assets/imgs/circle-loader.svg"></div>`,
             duration: 5000,
-            position: 'top',
+            position: "top",
             cssClass: "toast"
         });
 
@@ -213,6 +223,36 @@ export class ShareService {
             leaveAnimation: 'modal-scale-up-leave' */
         });
         data.socialModal.present();
+    }
+
+    goToHospital(data) {
+        // ["chlamydia", "gonorrhea", "hepatitis B", "genital herpes", "HIV", "syphilis", "trichomoniasis"];
+
+        let textToAdd = ``;
+        if (data.diseases.length == 0) {
+            textToAdd += "I'm healthy.";
+        }
+        for (let i = 0; i < data.diseases.length; i++) {
+            console.log(data.diseases[i]);
+            let chance = 0;
+            if (data.curableStd.indexOf(data.diseases[i]) > -1) {
+                chance = 35;
+            }
+
+            let recoverChance = this.randomAtoB(1, 100);
+
+            if (recoverChance < chance) {
+                textToAdd += `I have been cured from ${data.diseases[i]}.<br>`;
+                data.diseases.splice(i, 1);
+            } else {
+                textToAdd += `Doctors couldn't cure my ${data.diseases[i]}.<br>`;
+            }
+
+        }
+
+        this.events.publish("goToHome");
+        data.years[data.age].events.push(`I went to Hospital.<br>${textToAdd}`);
+        this.update(data);
     }
 
     musicModal(data) {
@@ -243,6 +283,14 @@ export class ShareService {
             leaveAnimation: 'modal-scale-up-leave' */
         });
         data.myChildModal.present();
+    }
+
+    myFriendModal(data, friend) {
+        data.myFriendModal = this.modalCtrl.create(myFriendModal, { data: data, friend: friend }, {
+            showBackdrop: false,
+            enableBackdropDismiss: true,
+        });
+        data.myFriendModal.present();
     }
 
     carInfoModal(data, car) {
@@ -372,6 +420,8 @@ export class ShareService {
             data.finance -= property[data.propertyValueIndex];
             data.ownedProperties.push(property[data.propertyValueIndex + 1]);
             data.posjedi.push(property);
+            data.homeless = 0;
+            data.homelessFor = 0;
             this.calculateNetWorth(data);
             data.propertyModal.dismiss();
 
@@ -379,7 +429,10 @@ export class ShareService {
 
             if (data.posjedi.length == 1) {
                 data.livingIn = property[data.propertyValueIndex + 1];
-                textToAdd = " and moved out of my parent's house";
+
+                if (data.homeless == 0) {
+                    textToAdd = " and moved out of my parent's house";
+                }
             }
             let preposition = "";
             if (property[0] == "Apartment") preposition = "an";
@@ -1002,7 +1055,10 @@ export class ShareService {
         this.cars = cars;
     }
 
-    createMe(data, names, lifeId, obituary) {
+    createMe(data, names, lifeId, obituary, force) {
+
+        this.googlePlayLogin2();
+
         //this.firebaseAnalytics.logEvent("New Life", {})
 
 
@@ -1030,15 +1086,21 @@ export class ShareService {
             data.genderFull = data.customLifeInfo.gender;
             data.nationality = data.customLifeInfo.nationality;
 
+            data.city = this.randomCity(data, data.nationality);
+
             if (data.genderFull == "male") data.gender = "M";
             else data.gender = "F";
+
+            force = "force";
         } else {
             data.nationality = this.data["countries"]["nationalities"][this.randomAtoB(0, this.data["countries"]["nationalities"].length - 1)];
-            console.log(data.nationality)
+            // console.log(data.nationality)
             data.gender = this.randomGender(data);
             data.name = this.randomName(data, data.genderFull, data.nationality);
 
             data.surname = this.randomSurname(data, data.nationality);
+
+            data.city = this.randomCity(data, data.nationality);
         }
 
         if (data.genderFull == "male") data.hisOrHers = "His";
@@ -1075,6 +1137,9 @@ export class ShareService {
         data.finance = 100;
         //data.finance = 10000000;
         //data.finance = 150000;
+
+        // Number of years left to paid of mortgage
+        data.repaymentTerm = 0;
 
         // Player is none sexuality until 12th yo
         data.sexuality = "None";
@@ -1240,6 +1305,9 @@ export class ShareService {
 
         data.deathCause = "";
 
+        // List of diseases player has
+        data.diseases = [];
+
         // At this age player will be asked if it wanted to go to retirement
         data.retirementAge = this.randomAtoB(62, 69);
 
@@ -1298,11 +1366,23 @@ export class ShareService {
         // Things person may do if they like you
         data.acceptions = ["smiles shyly", "gazes into your eyes", "giggles", "takes you by the hand", "blows you a kiss", "invites you over", "is delighted"];
 
+        // List of possible STD diseases
+        data.possibleStdDiseases = ["chlamydia", "gonorrhea", "hepatitis B", "genital herpes", "HIV", "syphilis", "trichomoniasis"];
+
+        // List of Curable STDs
+        data.curableStd = ["chlamydia", "gonorrhea", "syphilis", "trichomoniasis"];
+
+        // Things friend may say when he doesn't want to play
+        data.friendRejection = ["is busy", "is tired", "doesn't want to go", "is not answering your call"];
+
         // Boolean indicators for passing elementary and high school
         data.passed = { "elementary": 0, "highschool": 0 };
 
         // Boolan is player currently learning
         data.isLearning = 0;
+
+        // Number of One Night Stands player had
+        data.numOfOneNightStands = 0;
 
         // Boolan is player currently reading books
         data.isReadingBooks = 0;
@@ -1352,6 +1432,9 @@ export class ShareService {
         // Inficator to tell if player is pregnant
         data.isPregnant = 0;
 
+        // Number of times player has married and divorced
+        data.numberOfExSpouses = 0;
+
         // List containing children objects
         data.children = [];
 
@@ -1378,6 +1461,15 @@ export class ShareService {
 
         // ID of property in which the player is living
         data.livingIn = "";
+
+        // Boolean to check if player is homeless
+        data.homeless = 0;
+
+        // How many years was player homeless
+        data.homelessFor = 0;
+
+        // Text to show under properties
+        data.livingText = "You're living with your parents.";
 
         // If this is true then function on me.html will activate which will change tab to 0
         data.changeTabTrue = 0;
@@ -1424,9 +1516,141 @@ export class ShareService {
         data.genres = this.shuffle(["Rock", "Classical", "Jazz", "Heavy Metal", "Dance", "Hip-hop", "R&B", "Funk", "Country", "Thrash Metal", "Punk Rock", "Grunge", "Reggae", "Blues", "Religious", "Pop", "Folk", "Synthwave", "Electronic", "A cappella", "Crunk", "Death Metal", "Industrial"]);
 
         // Empty log
-        data.years = [{ "year": 0, "events": ["You have been born as " + data.name + " " + data.surname + ".", " You are " + data.nationality + ", " + data.genderFull + ".", "Your parents are:<br>" + data.father.name + " " + data.surname + " (" + data.father.age + " years old),<br>" + data.mother.name + " " + data.surname + " (" + data.mother.age + " years old)."] }];
+        data.years = [{ "year": 0, "events": ["You have been born as " + data.name + " " + data.surname + ".", " You are " + data.nationality + ", " + data.genderFull + ".<br>You are living in " + data.city + ".", "Your parents are:<br>" + data.father.name + " " + data.surname + " (" + data.father.age + " years old),<br>" + data.mother.name + " " + data.surname + " (" + data.mother.age + " years old)."] }];
 
         data.shareService.calculateNetWorth(data);
+
+
+        this.storage.get("lifeSave").then((val) => {
+            console.log('lifeSave', val);
+
+            let saveData = val;
+
+            if (val != null && force != "force") {
+
+                data.lifeId = saveData["lifeId"];
+                data.name = saveData["name"];
+                data.surname = saveData["surname"];
+                data.genderFull = saveData["genderFull"];
+                data.gender = saveData["gender"];
+                data.city = saveData["city"];
+                data.nationality = saveData["nationality"];
+                data.hisOrHers = saveData["hisOrHers"];
+                data.age = saveData["age"];
+                data.alive = saveData["alive"];
+                data.appearance = saveData["appearance"];
+                data.intelligence = saveData["intelligence"];
+                data.sociability = saveData["sociability"];
+                data.fitness = saveData["fitness"];
+                data.musicality = saveData["musicality"];
+                data.happiness = saveData["happiness"];
+                data.finance = saveData["finance"];
+                data.repaymentTerm = saveData["repaymentTerm"];
+                data.sexuality = saveData["sexuality"];
+                data.learnedElementary = saveData["learnedElementary"];
+                data.elementaryGrade = saveData["elementaryGrade"];
+                data.goingToElementary = saveData["goingToElementary"];
+                data.learnedHighSchool = saveData["learnedHighSchool"];
+                data.goingToHighSchool = saveData["goingToHighSchool"];
+                data.goingToHighSchoolYears = saveData["goingToHighSchoolYears"];
+                data.goingToCollegeYears = saveData["goingToCollegeYears"];
+                data.goingToCollege = saveData["goingToCollege"];
+                data.currentCollegeMajor = saveData["currentCollegeMajor"];
+                data.myMajors = saveData["myMajors"];
+                data.listOfColleges = saveData["listOfColleges"];
+                data.highSchoolGrade = saveData["highSchoolGrade"];
+                data.inDebt = saveData["inDebt"];
+                data.income = saveData["income"];
+                data.outcome = saveData["outcome"];
+                data.numOfJobs = saveData["numOfJobs"];
+                data.allowance = saveData["allowance"];
+                data.workExperience = saveData["workExperience"];
+                data.netWorth = saveData["netWorth"];
+                data.jobsWithoutLabel = saveData["jobsWithoutLabel"];
+                data.cars = saveData["cars"];
+                data.friends = saveData["friends"];
+                data.passedDrivingTest = saveData["passedDrivingTest"];
+                data.allowedToTakeDrivingTest = saveData["allowedToTakeDrivingTest"];
+                data.drivingTestCount = saveData["drivingTestCount"];
+                data.educationLevel = saveData["educationLevel"];
+                data.jobService = saveData["jobService"];
+                data.deathCause = saveData["deathCause"];
+                data.diseases = saveData["diseases"];
+                data.retirementAge = saveData["retirementAge"];
+                data.inRetirement = saveData["inRetirement"];
+                data.pension = saveData["pension"];
+                data.inPrison = saveData["inPrison"];
+                data.prisonYears = saveData["prisonYears"];
+                data.yearsServed = saveData["yearsServed"];
+                data.numOfCrimes = saveData["numOfCrimes"];
+                data.update = saveData["update"];
+                data.mySkills = saveData["mySkills"];
+                data.myJob = saveData["myJob"];
+                data.jobHistory = saveData["jobHistory"];
+                data.isWorking = saveData["isWorking"];
+                data.tax = saveData["tax"];
+                data.listedJobs = saveData["listedJobs"];
+                data.ownedProperties = saveData["ownedProperties"];
+                data.gotJobNum = saveData["gotJobNum"];
+                data.likingHobbies = saveData["likingHobbies"];
+                data.rejections = saveData["rejections"];
+                data.acceptions = saveData["acceptions"];
+                data.possibleStdDiseases = saveData["possibleStdDiseases"];
+                data.curableStd = saveData["curableStd"];
+                data.friendRejection = saveData["friendRejection"];
+                data.passed = saveData["passed"];
+                data.isLearning = saveData["isLearning"];
+                data.numOfOneNightStands = saveData["numOfOneNightStands"];
+                data.isReadingBooks = saveData["isReadingBooks"];
+                data.goingToGym = saveData["goingToGym"];
+                data.smoking = saveData["smoking"];
+                data.smokingFor = saveData["smokingFor"];
+                data.startSmokingAgain = saveData["startSmokingAgain"];
+                data.dontAnnounceSmoking = saveData["dontAnnounceSmoking"];
+                data.oldInstruments = saveData["oldInstruments"];
+                data.instruments = saveData["instruments"];
+                data.oldSports = saveData["oldSports"];
+                data.hasSocialNetwork = saveData["hasSocialNetwork"];
+                data.numOfSocialFans = saveData["numOfSocialFans"];
+                data.numOfSelfies = saveData["numOfSelfies"];
+                data.numOfAlbums = saveData["numOfAlbums"];
+                data.numOfPosts = saveData["numOfPosts"];
+                data.havePartner = saveData["havePartner"];
+                data.isPregnant = saveData["isPregnant"];
+                data.numberOfExSpouses = saveData["numberOfExSpouses"];
+                data.children = saveData["children"];
+                data.lover = saveData["lover"];
+                data.exPartners = saveData["exPartners"];
+                data.sports = saveData["sports"];
+                data.posjedi = saveData["posjedi"];
+                data.alreadyVerified = saveData["alreadyVerified"];
+                data.monthlyPayment = saveData["monthlyPayment"];
+                data.dontAskForDrivingTestOn18 = saveData["dontAskForDrivingTestOn18"];
+                data.livingIn = saveData["livingIn"];
+                data.homeless = saveData["homeless"];
+                data.homelessFor = saveData["homelessFor"];
+                data.livingText = saveData["livingText"];
+                data.changeTabTrue = saveData["changeTabTrue"];
+                data.colors = saveData["colors"];
+                data.lastHappiness = saveData["lastHappiness"];
+                data.hasDepression = saveData["hasDepression"];
+                data.selfiesPerYear = saveData["selfiesPerYear"];
+                data.brokeLegLastYear = saveData["brokeLegLastYear"];
+                data.brokeArmLastYear = saveData["brokeArmLastYear"];
+                data.selectedBandObject = saveData["selectedBandObject"];
+                data.selectedBand = saveData["selectedBand"];
+                data.isFamous = saveData["isFamous"];
+                data.changeThisLifeIdNextYear = saveData["changeThisLifeIdNextYear"];
+                data.bands = saveData["bands"];
+                data.father = saveData["father"];
+                data.mother = saveData["mother"];
+                data.meAssets = saveData["meAssets"];
+                data.lastChoosenBand = saveData["lastChoosenBand"];
+                data.genres = saveData["genres"];
+                data.years = saveData["years"];
+            }
+        });
+
 
         return data;
     }
@@ -1566,6 +1790,9 @@ export class ShareService {
         data.jobService = 0;
         data.pension = pension;
         data.inRetirement = 1;
+
+        this.events.publish("goToHome");
+        this.update(data);
     }
 
     takeSelfie(data) {
@@ -1759,13 +1986,18 @@ export class ShareService {
 
         data.ownedProperties.push(property[data.propertyValueIndex + 1]);
         data.posjedi.push(property);
+        data.homeless = 0;
+        data.homelessFor = 0;
 
         data.propertyModal.dismiss();
         let textToAdd = "";
 
         if (data.posjedi.length == 1) {
             data.livingIn = property[data.propertyValueIndex + 1];
-            textToAdd = " and moved out of my parent's house";
+
+            if (data.homeless == 0) {
+                textToAdd = " and moved out of my parent's house";
+            }
         }
         let preposition = "";
         if (property[0] == "Apartment") preposition = "an";
@@ -1903,6 +2135,14 @@ export class ShareService {
         let intelligence = this.random1to100();
         let fitness = this.randomAtoB(1, 100);
         let alive = 1;
+        let profileId = "";
+        let strength = 30;
+
+        if (gender == "male") {
+            profileId = "profile-boy-" + this.randomAtoB(1, 23);
+        } else {
+            profileId = "profile-girl-" + this.randomAtoB(1, 23);
+        }
 
         let id = this.randomId(8);
 
@@ -1925,7 +2165,7 @@ export class ShareService {
             age = playerAge - variety;
         }
 
-        return { name: name, surname: surname, appearance: appearance, intelligence: intelligence, gender: gender, age: age, fitness: fitness, id: id, alive: alive };
+        return { name: name, surname: surname, appearance: appearance, intelligence: intelligence, gender: gender, age: age, fitness: fitness, id: id, alive: alive, profileId: profileId, strength: strength };
     }
 
     createChild(data, who) {
@@ -2044,6 +2284,24 @@ export class ShareService {
         }
     }
 
+    handleFriendshipStrength(data, friendIndex, character, amount) {
+        // data, friend.id, "+", data.shareService.randomAtoB(10, 15)
+        if (character == "+") {
+            if (data.friends[friendIndex].strength + amount > 100) data.friends[friendIndex].strength = 100;
+            else data.friends[friendIndex].strength += amount;
+        } else if (character == "-") {
+            if ((data.friends[friendIndex].strength - amount) < 0) data.friends[friendIndex].strength = 0;
+            else data.friends[friendIndex].strength -= amount;
+        } else {
+            if (data.friends[friendIndex] + amount > 100) data.friends[friendIndex].strength = 100;
+            else if (data.friends[friendIndex] + amount < 0) data.friends[friendIndex].strength = 0;
+        }
+
+        if (data.friends[friendIndex].strength == 100) {
+            this.checkAchievement("BFF");
+        }
+    }
+
     handleStability(data, character, amount) {
         if (character == "+") {
             if (data.lover.stability + amount > 100) data.lover.stability = 100;
@@ -2073,47 +2331,191 @@ export class ShareService {
 
     // If already went is 0, push event to log
     goToClub(data, alreadyWent) {
-        this.update(data);
-        //console.log("You went to club.");
-        let meetingChance = 35; //35
-        let smokingChance = 15;
-        let meetingExChance = 5; //90
+        let chanceOfGettingIntoClub = 101;
+        if (data.homeless == 1) {
+            chanceOfGettingIntoClub = 30;
+        } else if (data.age < 18) {
+            chanceOfGettingIntoClub = 50;
+        }
 
-        if (alreadyWent == 0) data.years[data.age].events.push(`I went to club.`);
-        else alreadyWent = 0;
+        if (this.randomAtoB(1, 100) < chanceOfGettingIntoClub) {
+            this.update(data);
+            //console.log("You went to club.");
+            let meetingChance = 35; //35
+            let smokingChance = 15;
+            let meetingExChance = 10; //90
+            let doingSomethingCrazyChance = 8;
 
-        if (this.randomAtoB(1, 100) <= meetingExChance && data.exPartners.length > 0) {
-            let partner = data.exPartners[this.randomAtoB(0, data.exPartners.length - 1)];
+            if (alreadyWent == 0) data.years[data.age].events.push(`I went to club.`);
+            else alreadyWent = 0;
 
-            let text = `I run into my ex partner ${partner.name} ${partner.surname} at the club.`;
-            data.years[data.age].events.push(text);
-            let alert = this.alertCtrl.create({
-                subTitle: '"It takes a long time to grow an old friend"',
-                message: `You run into your ex partner ${partner.name} ${partner.surname} at the club.`,
-                buttons: [{
-                    text: 'Flirt',
-                    handler: () => {
-                        let chances = this.randomAtoB(0, 1);
-                        let title = "Uh-oh!";
-                        let text = "";
-                        if (chances == 0) {
-                            if (partner.whoBrokeUp == 0) {
-                                let chances2 = this.randomAtoB(1, 5);
+            if (this.randomAtoB(1, 100) <= meetingExChance && data.exPartners.length > 0) {
+                let partner = data.exPartners[this.randomAtoB(0, data.exPartners.length - 1)];
 
-                                if (chances2 < 3) {
-                                    let preposition = "";
-                                    if (partner.gender == "male") preposition = "him";
-                                    else preposition = "her";
-                                    text = `${partner.name} doesn't want to forgive you for breaking up with ${preposition}.`;
+                let text = `I run into my ex partner ${partner.name} ${partner.surname} at the club.`;
+                data.years[data.age].events.push(text);
+                let alert = this.alertCtrl.create({
+                    subTitle: '"It takes a long time to grow an old friend"',
+                    message: `You run into your ex partner ${partner.name} ${partner.surname} at the club.`,
+                    buttons: [{
+                        text: 'Flirt',
+                        handler: () => {
+                            let chances = this.randomAtoB(0, 1);
+                            let title = "Uh-oh!";
+                            let text = "";
+                            if (chances == 0) {
+                                if (partner.whoBrokeUp == 0) {
+                                    let chances2 = this.randomAtoB(1, 5);
+
+                                    if (chances2 < 3) {
+                                        let preposition = "";
+                                        if (partner.gender == "male") preposition = "him";
+                                        else preposition = "her";
+                                        text = `${partner.name} doesn't want to forgive you for breaking up with ${preposition}.`;
+                                    } else {
+                                        text = `${partner.name} doesn't want to talk to you.`;
+                                    }
                                 } else {
-                                    text = `${partner.name} doesn't want to talk to you.`;
+                                    text = `${partner.name} doesn't regret breaking up with you.`;
                                 }
+
+                                let alert = this.alertCtrl.create({
+                                    subTitle: title,
+                                    message: text,
+                                    buttons: [{
+                                        text: 'Okay',
+                                        handler: () => {
+
+                                        }
+                                    }]
+                                });
+                                alert.present();
                             } else {
-                                text = `${partner.name} doesn't regret breaking up with you.`;
+                                let preposition = "";
+                                title = "Why, hello there!"
+                                if (partner.gender == "male") preposition = "He";
+                                else preposition = "She";
+                                text = `${partner.name} smiles shyly.<br>${preposition} starts touching your hand.`;
+
+                                let alert = this.alertCtrl.create({
+                                    subTitle: title,
+                                    message: text,
+                                    buttons: [{
+                                        text: 'Date',
+                                        handler: () => {
+                                            this.forceDate(data, partner);
+                                        }
+                                    }, {
+                                        text: 'One night stand',
+                                        handler: () => {
+                                            this.update(data);
+                                            let textToAdd = "";
+                                            if (data.havePartner == 1) {
+                                                //this.goForDate(data, tmpPerson);
+                                                let chance = this.randomAtoB(0, 2);
+                                                if (chance == 0) {
+                                                    let preposition = "";
+                                                    if (data.lover.gender == "male") preposition = "him";
+                                                    else preposition = "her";
+                                                    textToAdd = `<br>${data.lover.name} found out I cheated on ${preposition}.`;
+                                                    this.handleStability(data, "-", 100);
+                                                    let chance2 = this.randomAtoB(0, 1);
+
+                                                    if (chance2 == 0) {
+                                                        let preposition2 = "";
+                                                        if (preposition == "him") preposition2 = "He";
+                                                        else preposition2 = "She";
+
+                                                        if (data.lover.status == "Relationship") textToAdd += `<br>${preposition2} broke up with me.`;
+                                                        else if (data.lover.status == "Engaged") textToAdd += `<br>${preposition2} broke off our engagement.`;
+                                                        else if (data.lover.status == "Married") textToAdd += `<br>${preposition2} divorced me.`;
+
+                                                        data.havePartner = 0;
+                                                        this.handleHappiness(data, "-", 50);
+                                                        data.lover = { stability: 50, time: 0 };
+                                                    }
+                                                }
+
+                                            }
+                                            data.numOfOneNightStands += 1;
+
+                                            if (data.numOfOneNightStands == 15) {
+                                                this.checkAchievement("Casanova");
+                                            }
+
+                                            data.years[data.age].events.push(`I had a one night stand.${textToAdd}`);
+                                        }
+                                    }, {
+                                        text: 'Leave',
+                                        handler: () => {
+
+                                        }
+                                    }]
+                                });
+                                alert.present();
                             }
 
+                        }
+                    }, {
+                        text: 'Assault',
+                        handler: () => {
+                            let preposition = "";
+                            let preposition2 = "";
+                            let preposition3 = "";
+                            if (partner.gender == "male") {
+                                preposition = "him";
+                                preposition2 = "his";
+                                preposition3 = "He";
+                            } else {
+                                preposition = "her";
+                                preposition2 = "hers";
+                                preposition3 = "She";
+                            }
+
+                            let adjectives = ["angrily", "frustrated", "jealously", "bitterly"];
+                            let adjective = adjectives[this.randomAtoB(0, adjectives.length - 1)];
+
+                            let adjectives2 = ["Suddenly", "All of a sudden", "Abruptly"]
+                            let adjective2 = adjectives2[this.randomAtoB(0, adjectives2.length - 1)];
+
+                            let things = ["glass", "table", "bottle"];
+                            let thing = things[this.randomAtoB(0, things.length - 1)];
+
+                            let actions = [`punched ${preposition}`, `threw a ${thing} at ${preposition}`, `jumped on ${preposition}`];
+                            let action = actions[this.randomAtoB(0, actions.length - 1)];
+                            let numOfInjuries = this.randomAtoB(0, 3);
+                            let title = "A recipe for disaster";
+                            let text = `I stared at ${preposition} ${adjective}.<br>${adjective2}, I started yelling at ${preposition}. People started turning around to see what's going on.<br>I ${action}.`;
+
+                            if (numOfInjuries > 1) {
+                                text += ` and attacked ${preposition}.`;
+                            }
+
+
+                            let injuries = [`broke ${preposition} nose`, `cracked ${preposition} skull`, `broke ${preposition} arm`, `broke ${preposition} leg`, `broke ${preposition} back`];
+                            let injuryId = 0;
+                            text += "<br>";
+                            if (numOfInjuries == 0) {
+                                text += `<br>${preposition3} got away without any injuries.`;
+                            } else {
+                                for (let i = 0; i < numOfInjuries; i++) {
+                                    injuryId = this.randomAtoB(0, injuries.length - 1);
+                                    text += `<br>I ${injuries[injuryId]}.`
+                                    injuries.splice(injuryId, 1);
+                                }
+
+                                let prisonChance = 50;
+
+                                if (data.shareService.randomAtoB(0, 100) <= prisonChance) {
+                                    let penalty = data.shareService.randomAtoB(1, 7);
+
+                                    data.inPrison = 1;
+                                    data.numOfCrimes += 1;
+                                    data.prisonYears += penalty;
+                                }
+                            }
                             let alert = this.alertCtrl.create({
-                                subTitle: title,
+                                title: title,
                                 message: text,
                                 buttons: [{
                                     text: 'Okay',
@@ -2123,296 +2525,208 @@ export class ShareService {
                                 }]
                             });
                             alert.present();
-                        } else {
-                            let preposition = "";
-                            title = "Why, hello there!"
-                            if (partner.gender == "male") preposition = "He";
-                            else preposition = "She";
-                            text = `${partner.name} smiles shyly.<br>${preposition} starts touching your hand.`;
-
-                            let alert = this.alertCtrl.create({
-                                subTitle: title,
-                                message: text,
-                                buttons: [{
-                                    text: 'Date',
-                                    handler: () => {
-                                        this.forceDate(data, partner);
-                                    }
-                                }, {
-                                    text: 'One night stand',
-                                    handler: () => {
-                                        this.update(data);
-                                        let textToAdd = "";
-                                        if (data.havePartner == 1) {
-                                            //this.goForDate(data, tmpPerson);
-                                            let chance = this.randomAtoB(0, 2);
-                                            if (chance == 0) {
-                                                let preposition = "";
-                                                if (data.lover.gender == "male") preposition = "him";
-                                                else preposition = "her";
-                                                textToAdd = `<br>${data.lover.name} found out I cheated on ${preposition}.`;
-                                                this.handleStability(data, "-", 100);
-                                                let chance2 = this.randomAtoB(0, 1);
-
-                                                if (chance2 == 0) {
-                                                    let preposition2 = "";
-                                                    if (preposition == "him") preposition2 = "He";
-                                                    else preposition2 = "She";
-
-                                                    if (data.lover.status == "Relationship") textToAdd += `<br>${preposition2} broke up with me.`;
-                                                    else if (data.lover.status == "Engaged") textToAdd += `<br>${preposition2} broke off our engagement.`;
-                                                    else if (data.lover.status == "Married") textToAdd += `<br>${preposition2} divorced me.`;
-
-                                                    data.havePartner = 0;
-                                                    this.handleHappiness(data, "-", 50);
-                                                    data.lover = { stability: 50, time: 0 };
-                                                }
-                                            }
-
-                                        }
-
-                                        data.years[data.age].events.push(`I had a one night stand.${textToAdd}`);
-                                    }
-                                }, {
-                                    text: 'Leave',
-                                    handler: () => {
-
-                                    }
-                                }]
-                            });
-                            alert.present();
                         }
+                    }, {
+                        text: 'Ignore',
+                        handler: () => {
 
-                    }
-                }, {
-                    text: 'Assault',
-                    handler: () => {
-                        let preposition = "";
-                        let preposition2 = "";
-                        let preposition3 = "";
-                        if (partner.gender == "male") {
-                            preposition = "him";
-                            preposition2 = "his";
-                            preposition3 = "He";
-                        } else {
-                            preposition = "her";
-                            preposition2 = "hers";
-                            preposition3 = "She";
                         }
-
-                        let adjectives = ["angrily", "frustrated", "jealously", "bitterly"];
-                        let adjective = adjectives[this.randomAtoB(0, adjectives.length - 1)];
-
-                        let adjectives2 = ["Suddenly", "All of a sudden", "Abruptly"]
-                        let adjective2 = adjectives2[this.randomAtoB(0, adjectives2.length - 1)];
-
-                        let things = ["glass", "table", "bottle"];
-                        let thing = things[this.randomAtoB(0, things.length - 1)];
-
-                        let actions = [`punched ${preposition}`, `threw a ${thing} at ${preposition}`, `jumped on ${preposition}`];
-                        let action = actions[this.randomAtoB(0, actions.length - 1)];
-                        let numOfInjuries = this.randomAtoB(0, 3);
-                        let title = "A recipe for disaster";
-                        let text = `I stared at ${preposition} ${adjective}.<br>${adjective2}, I started yelling at ${preposition}. People started turning around to see what's going on.<br>I ${action}.`;
-
-                        if (numOfInjuries > 1) {
-                            text += ` and attacked ${preposition}.`;
-                        }
-
-
-                        let injuries = [`broke ${preposition} nose`, `cracked ${preposition} skull`, `broke ${preposition} arm`, `broke ${preposition} leg`, `broke ${preposition} back`];
-                        let injuryId = 0;
-                        text += "<br>";
-                        if (numOfInjuries == 0) {
-                            text += `<br>${preposition3} got away without any injuries.`;
-                        } else {
-                            for (let i = 0; i < numOfInjuries; i++) {
-                                injuryId = this.randomAtoB(0, injuries.length - 1);
-                                text += `<br>I ${injuries[injuryId]}.`
-                                injuries.splice(injuryId, 1);
-                            }
-
-                            let prisonChance = 50;
-
-                            if (data.shareService.randomAtoB(0, 100) <= prisonChance) {
-                                let penalty = data.shareService.randomAtoB(1, 7);
-
-                                data.inPrison = 1;
-                                data.numOfCrimes += 1;
-                                data.prisonYears += penalty;
-                            }
-                        }
-                        let alert = this.alertCtrl.create({
-                            title: title,
-                            message: text,
-                            buttons: [{
-                                text: 'Okay',
-                                handler: () => {
-
-                                }
-                            }]
-                        });
-                        alert.present();
-                    }
-                }, {
-                    text: 'Ignore',
-                    handler: () => {
-
-                    }
-                }]
-            });
-            alert.present();
-        }
-
-        if (this.randomAtoB(1, 100) < smokingChance) {
-            let alert = this.alertCtrl.create({
-                subTitle: 'How about that?',
-                message: "Your friend offers you a cigarette.",
-                buttons: [{
-                    text: 'Smoke',
-                    handler: () => {
-                        if (data.smoking == 0) {
-                            data.smoking = 1;
-                            data.dontAnnounceSmoking = 1;
-                            data.years[data.age].events.push("I started smoking.");
-                        }
-
-                        //this.smokingChanged(data);
-
-                        //console.log("You smoked");
-                    }
-                }, {
-                    text: 'Leave',
-                    handler: () => {
-                        //console.log("You didn't smoked");
-                    }
-                }]
-            });
-            alert.present();
-        }
-
-        if (this.randomAtoB(1, 100) < meetingChance && data.sexuality != "Asexual") {
-            let tmpPerson = this.createLover(data);
-
-            let meetingPlace = "", meetingAppearanceText = "";
-            let places = ["at the bar", "on the dance floor", "in front of the club", "in the bathroom waiting line", "in a private booth"];
-            meetingPlace = places[this.randomAtoB(0, places.length - 1)];
-
-            if (data.appearance > tmpPerson["appearance"]) {
-                meetingAppearanceText = (data.appearance - tmpPerson["appearance"]) + "% less than you";
-            } else if (data.appearance < tmpPerson["appearance"]) {
-                meetingAppearanceText = (tmpPerson["appearance"] - data.appearance) + "% more than you";
-            } else {
-                meetingAppearanceText = "same as you";
+                    }]
+                });
+                alert.present();
             }
 
-            let meetingText = `You met ${tmpPerson["name"]} ${tmpPerson["surname"]} ${meetingPlace}. <br> ${tmpPerson["name"]} has appearance ${meetingAppearanceText}.`;
+            if (this.randomAtoB(1, 100) < meetingChance && data.sexuality != "Asexual") {
+                let tmpPerson = this.createLover(data);
 
-            let alert = this.alertCtrl.create({
-                cssClass: 'alert3Buttons',
-                subTitle: `Hi! I’m ${data.name}. And you?`,
-                message: meetingText,
-                buttons: [{
-                    text: 'Flirt',
-                    handler: () => {
-                        let likingChances = this.randomAtoB(1, 5);
+                let meetingPlace = "", meetingAppearanceText = "";
+                let places = ["at the bar", "on the dance floor", "in front of the club", "in the bathroom waiting line", "in a private booth"];
+                meetingPlace = places[this.randomAtoB(0, places.length - 1)];
 
-                        let randomHobby = this.randomAtoB(0, data.likingHobbies.length - 1);
-                        let subtitle = "Uh-oh!";
-                        if (data.likingHobbies[randomHobby] == "shoes") subtitle = "What are thooose?!";
+                if (data.appearance > tmpPerson["appearance"]) {
+                    meetingAppearanceText = (data.appearance - tmpPerson["appearance"]) + "% less than you";
+                } else if (data.appearance < tmpPerson["appearance"]) {
+                    meetingAppearanceText = (tmpPerson["appearance"] - data.appearance) + "% more than you";
+                } else {
+                    meetingAppearanceText = "same as you";
+                }
 
-                        let preposition = "";
-                        if (tmpPerson["gender"] == "male") preposition = "He";
-                        else preposition = "She";
+                let meetingText = `You met ${tmpPerson["name"]} ${tmpPerson["surname"]} ${meetingPlace}. <br> ${tmpPerson["name"]} has appearance ${meetingAppearanceText}.`;
 
-                        if (likingChances < 3) {
-                            //alert.dismiss();
-                            let rejectionAction = data.rejections[this.randomAtoB(0, data.rejections.length - 1)];
-                            let rejectingText = `${tmpPerson["name"]} disliked your ${data.likingHobbies[randomHobby]}. <br> ${preposition} ${rejectionAction}.`;
-                            // This opens when parner doesn't like you
-                            let alert0 = this.alertCtrl.create({
-                                subTitle: subtitle,
-                                message: rejectingText,
-                                buttons: [{
-                                    text: 'Okay',
-                                    handler: () => {
+                let alert = this.alertCtrl.create({
+                    cssClass: 'alert3Buttons',
+                    subTitle: `Hi! I’m ${data.name}. And you?`,
+                    message: meetingText,
+                    buttons: [{
+                        text: 'Flirt',
+                        handler: () => {
+                            let likingChances = this.randomAtoB(1, 5);
 
-                                    }
-                                }]
-                            });
-                            alert0.present();
-                        } else {
-                            let acceptionAction = data.acceptions[this.randomAtoB(0, data.acceptions.length - 1)];
-                            let acceptingText = `${tmpPerson["name"]} liked your ${data.likingHobbies[randomHobby]}. <br> ${preposition} ${acceptionAction}.`;
-                            // This opens when parner doesn't like you
-                            let alert1 = this.alertCtrl.create({
-                                subTitle: 'How does that sound?',
-                                message: acceptingText,
-                                buttons: [{
-                                    text: 'Date',
-                                    handler: () => {
-                                        this.forceDate(data, tmpPerson);
-                                    }
-                                }, {
-                                    text: 'One night stand',
-                                    handler: () => {
-                                        this.update(data);
-                                        let textToAdd = "";
-                                        if (data.havePartner == 1) {
-                                            //this.goForDate(data, tmpPerson);
-                                            let chance = this.randomAtoB(0, 2);
-                                            if (chance == 0) {
-                                                let preposition = "";
-                                                if (data.lover.gender == "male") preposition = "him";
-                                                else preposition = "her";
-                                                textToAdd = `<br>${data.lover.name} found out I cheated on ${preposition}.`;
-                                                this.handleStability(data, "-", 100);
-                                                let chance2 = this.randomAtoB(0, 1);
+                            let randomHobby = this.randomAtoB(0, data.likingHobbies.length - 1);
+                            let subtitle = "Uh-oh!";
+                            if (data.likingHobbies[randomHobby] == "shoes") subtitle = "What are thooose?!";
 
-                                                if (chance2 == 0) {
-                                                    let preposition2 = "";
-                                                    if (preposition == "him") preposition2 = "He";
-                                                    else preposition2 = "She";
+                            let preposition = "";
+                            if (tmpPerson["gender"] == "male") preposition = "He";
+                            else preposition = "She";
 
-                                                    if (data.lover.status == "Relationship") textToAdd += `<br>${preposition2} broke up with me.`;
-                                                    else if (data.lover.status == "Engaged") textToAdd += `<br>${preposition2} broke off our engagement.`;
-                                                    else if (data.lover.status == "Married") textToAdd += `<br>${preposition2} divorced me.`;
+                            if (likingChances < 3) {
+                                //alert.dismiss();
+                                let rejectionAction = data.rejections[this.randomAtoB(0, data.rejections.length - 1)];
+                                let rejectingText = `${tmpPerson["name"]} disliked your ${data.likingHobbies[randomHobby]}. <br> ${preposition} ${rejectionAction}.`;
+                                // This opens when parner doesn't like you
+                                let alert0 = this.alertCtrl.create({
+                                    subTitle: subtitle,
+                                    message: rejectingText,
+                                    buttons: [{
+                                        text: 'Okay',
+                                        handler: () => {
+                                            data.shareService.checkNightOutSummary(data, doingSomethingCrazyChance);
+                                        }
+                                    }]
+                                });
+                                alert0.present();
+                            } else {
+                                let acceptionAction = data.acceptions[this.randomAtoB(0, data.acceptions.length - 1)];
+                                let acceptingText = `${tmpPerson["name"]} liked your ${data.likingHobbies[randomHobby]}. <br> ${preposition} ${acceptionAction}.`;
+                                // This opens when parner doesn't like you
+                                let alert1 = this.alertCtrl.create({
+                                    subTitle: 'How does that sound?',
+                                    message: acceptingText,
+                                    buttons: [{
+                                        text: 'Date',
+                                        handler: () => {
+                                            this.forceDate(data, tmpPerson);
+                                            data.shareService.checkNightOutSummary(data, doingSomethingCrazyChance);
+                                        }
+                                    }, {
+                                        text: 'One night stand',
+                                        handler: () => {
+                                            this.update(data);
+                                            let textToAdd = "";
+                                            if (data.havePartner == 1) {
+                                                //this.goForDate(data, tmpPerson);
+                                                let chance = this.randomAtoB(0, 2);
+                                                if (chance == 0) {
+                                                    let preposition = "";
+                                                    if (data.lover.gender == "male") preposition = "him";
+                                                    else preposition = "her";
+                                                    textToAdd = `<br>${data.lover.name} found out I cheated on ${preposition}.`;
+                                                    this.handleStability(data, "-", 100);
+                                                    let chance2 = this.randomAtoB(0, 1);
 
-                                                    data.havePartner = 0;
-                                                    this.handleHappiness(data, "-", 50);
-                                                    data.lover = { stability: 50, time: 0 };
+                                                    if (chance2 == 0) {
+                                                        let preposition2 = "";
+                                                        if (preposition == "him") preposition2 = "He";
+                                                        else preposition2 = "She";
+
+                                                        if (data.lover.status == "Relationship") textToAdd += `<br>${preposition2} broke up with me.`;
+                                                        else if (data.lover.status == "Engaged") textToAdd += `<br>${preposition2} broke off our engagement.`;
+                                                        else if (data.lover.status == "Married") textToAdd += `<br>${preposition2} divorced me.`;
+
+                                                        data.havePartner = 0;
+                                                        this.handleHappiness(data, "-", 50);
+                                                        data.lover = { stability: 50, time: 0 };
+                                                    }
+                                                }
+
+                                            }
+
+                                            data.shareService.checkNightOutSummary(data, doingSomethingCrazyChance);
+
+                                            let chanceOfSTD = 30; //30
+
+                                            if (this.randomAtoB(1, 100) <= chanceOfSTD && data.possibleStdDiseases.length > 0) {
+                                                let contractedDisease = data.possibleStdDiseases[this.randomAtoB(0, data.possibleStdDiseases.length - 1)];
+
+                                                data.diseases.push(contractedDisease);
+                                                data.possibleStdDiseases.splice(data.possibleStdDiseases.indexOf(contractedDisease), 1);
+
+                                                this.handleHappiness(data, "-", 30);
+                                                textToAdd += `<br>I contracted ${contractedDisease}.`;
+
+                                                if (contractedDisease == "HIV") {
+                                                    this.checkAchievement("No Protection?");
                                                 }
                                             }
 
+                                            data.numOfOneNightStands += 1;
+
+                                            if (data.numOfOneNightStands == 15) {
+                                                this.checkAchievement("Casanova");
+                                            }
+
+                                            data.years[data.age].events.push(`I had a one night stand.${textToAdd}`);
                                         }
-                                        data.years[data.age].events.push(`I had a one night stand.${textToAdd}`);
-                                    }
-                                }, {
-                                    text: 'Ignore',
-                                    handler: () => {
+                                    }, {
+                                        text: 'Ignore',
+                                        handler: () => {
 
-                                    }
-                                }]
-                            });
-                            alert1.present();
+                                            data.shareService.checkNightOutSummary(data, doingSomethingCrazyChance);
+
+                                        }
+                                    }]
+                                });
+                                alert1.present();
+                            }
+
+
                         }
+                    }, {
+                        text: 'Chat',
+                        handler: () => {
+                            console.log("You chatted!");
 
+                            data.shareService.checkNightOutSummary(data, doingSomethingCrazyChance);
+                        }
+                    }, {
+                        text: 'Ignore',
+                        handler: () => {
 
-                    }
-                }, {
-                    text: 'Chat',
-                    handler: () => {
-                        console.log("You chatted!");
-                    }
-                }, {
-                    text: 'Ignore',
-                    handler: () => {
+                            data.shareService.checkNightOutSummary(data, doingSomethingCrazyChance);
+                        }
+                    }]
+                });
+                alert.present();
 
-                    }
-                }]
-            });
-            alert.present();
+            } else {
+                data.shareService.checkNightOutSummary(data, doingSomethingCrazyChance);
+            }
 
+            if (this.randomAtoB(1, 100) < smokingChance) {
+                let alert = this.alertCtrl.create({
+                    subTitle: 'How about that?',
+                    message: "Your friend offers you a cigarette.",
+                    buttons: [{
+                        text: 'Smoke',
+                        handler: () => {
+                            if (data.smoking == 0) {
+                                data.smoking = 1;
+                                data.dontAnnounceSmoking = 1;
+                                data.years[data.age].events.push("I started smoking.");
+                            }
+
+                            //this.smokingChanged(data);
+
+                            //console.log("You smoked");
+                        }
+                    }, {
+                        text: 'Leave',
+                        handler: () => {
+                            //console.log("You didn't smoked");
+                        }
+                    }]
+                });
+                alert.present();
+            }
+
+        } else {
+            if (data.homeless == 1) {
+                data.years[data.age].events.push(`Bouncer didn't let me in the club because I'm homeless.`);
+            } else if (data.age < 18) {
+                data.years[data.age].events.push(`Bouncer didn't let me in the club because I'm too young.`);
+            }
+            this.update(data);
         }
         //document.getElementById("tab-t0-0").click();
         //this.data.navCtrl.push(TabsPage, {tabIndex:0}); 
@@ -2422,7 +2736,33 @@ export class ShareService {
         //nav.push(HomePage);
         //TabsPage.homeButtonTab.nativeElement.click();
         //this.goToHomePage();
-        // etc
+        //etc
+    }
+
+    checkNightOutSummary(data, doingSomethingCrazyChance) {
+        if (this.randomAtoB(1, 100) < doingSomethingCrazyChance) {
+            let stories = [`I ran over a stop sign. I brought it back home, drew a face on him and named it ${data.shareService.randomName(data, "male", data.nationality)}.`,
+                `I was so intoxicated that I signed myself up for Talent Show. I was rejected.`,
+                `I'm so embarrassed. Last night after night out I called a taxi and when I arrived home I proudly slid over a $10 bill, winked and said "keep the change". The cab ride was $24.`,
+                `I almost set my home on fire. I spilled drink on my socks at a party and decided that the quickest way for me to dry them off was a minute or two in the microwave... Socks caught on fire.`,
+                `I got kicked out of a club because the circle of life came on, I jumped on the table and held up my beer pretending it was Simba. As I saw the bouncer making his way for me I got down and he had to chase me around the table a couple of times before dragging me out.`,
+                `When I came home I sat on the toilet and I fell off into the shower, broke the splash guard and I really hurt my back.`,
+                `People told me I ordered a hot tub online worth about $600. Checked my Amazon and found out they were right. I managed to cancel my order.`];
+
+            let story = stories[this.randomAtoB(0, stories.length - 1)];
+
+            let alert = this.alertCtrl.create({
+                subTitle: "Summary of last night",
+                message: story,
+                buttons: [{
+                    text: 'Ok',
+                    handler: () => {
+
+                    }
+                }]
+            });
+            alert.present();
+        }
     }
 
     goToHomePage() {
@@ -2458,7 +2798,7 @@ export class ShareService {
     }
 
     googlePlayLogin2() {
-        console.log('Logging trying...');
+        //console.log('Logging trying...');
         /* try {
             this.googlePlayGamesServices.auth()
             .then(() => this.data["googlePlayText"] = "Sign off Google Play")   
@@ -2485,6 +2825,27 @@ export class ShareService {
                 } else {
                     this.googlePlayLogin2();
                 }
+            });
+    }
+
+    googlePlaySubmitScore(data) {
+        let age = data.age;
+        let netWorth = data.netWorth * 100;
+        let followers = data.numOfSocialFans;
+        this.googlePlayGamesServices.isSignedIn()
+            .then(() => {
+                this.googlePlayGamesServices.submitScore({
+                    score: netWorth,
+                    leaderboardId: "CgkI186f9JkYEAIQBQ"
+                });
+                this.googlePlayGamesServices.submitScore({
+                    score: age,
+                    leaderboardId: "CgkI186f9JkYEAIQCg"
+                });
+                this.googlePlayGamesServices.submitScore({
+                    score: followers,
+                    leaderboardId: "CgkI186f9JkYEAIQCw"
+                });
             });
     }
 
@@ -2572,6 +2933,36 @@ export class ShareService {
         this.propertyListingModal(data, posjedi);
     }
 
+    friendAction(data, friend, action) {
+        this.events.publish("goToHome");
+        this.update(data);
+
+        data.myFriendModal.dismiss();
+
+        let accept = this.randomAtoB(0, 2);
+
+        let amount = this.randomAtoB(1, 10);
+
+        if (accept == 0) {
+
+            let reason = data.friendRejection[this.randomAtoB(0, data.friendRejection.length - 1)];
+
+            let alert = this.alertCtrl.create({
+                subTitle: "Uh-oh!",
+                message: `${friend.name} ${reason}.`,
+                buttons: ["Ok"]
+            });
+            alert.present();
+
+            this.handleFriendshipStrength(data, friend.friendIndex, "-", amount);
+        } else {
+            data.years[data.age].events.push(`I went out ${action} with ${friend.name}.`);
+
+            this.handleFriendshipStrength(data, friend.friendIndex, "+", amount);
+            this.handleHappiness(data, "+", this.randomAtoB(2, 8));
+        }
+    }
+
     calculateNetWorth(data) {
         let net = 0;
         //cars, ownedProperties
@@ -2594,6 +2985,286 @@ export class ShareService {
         }
 
         data.netWorth = net;
+    }
+
+    saveGame(data) {
+        let saveData = {};
+
+        saveData["lifeId"] = data.lifeId;
+        saveData["name"] = data.name;
+        saveData["surname"] = data.surname;
+        saveData["genderFull"] = data.genderFull;
+        saveData["gender"] = data.gender;
+        saveData["city"] = data.city;
+        saveData["nationality"] = data.nationality;
+        saveData["hisOrHers"] = data.hisOrHers;
+        saveData["age"] = data.age;
+        saveData["alive"] = data.alive;
+        saveData["appearance"] = data.appearance;
+        saveData["intelligence"] = data.intelligence;
+        saveData["sociability"] = data.sociability;
+        saveData["fitness"] = data.fitness;
+        saveData["musicality"] = data.musicality;
+        saveData["happiness"] = data.happiness;
+        saveData["finance"] = data.finance;
+        saveData["repaymentTerm"] = data.repaymentTerm;
+        saveData["sexuality"] = data.sexuality;
+        saveData["learnedElementary"] = data.learnedElementary;
+        saveData["elementaryGrade"] = data.elementaryGrade;
+        saveData["goingToElementary"] = data.goingToElementary;
+        saveData["learnedHighSchool"] = data.learnedHighSchool;
+        saveData["goingToHighSchool"] = data.goingToHighSchool;
+        saveData["goingToHighSchoolYears"] = data.goingToHighSchoolYears;
+        saveData["goingToCollegeYears"] = data.goingToCollegeYears;
+        saveData["goingToCollege"] = data.goingToCollege;
+        saveData["currentCollegeMajor"] = data.currentCollegeMajor;
+        saveData["myMajors"] = data.myMajors;
+        saveData["listOfColleges"] = data.listOfColleges;
+        saveData["highSchoolGrade"] = data.highSchoolGrade;
+        saveData["inDebt"] = data.inDebt;
+        saveData["income"] = data.income;
+        saveData["outcome"] = data.outcome;
+        saveData["numOfJobs"] = data.numOfJobs;
+        saveData["allowance"] = data.allowance;
+        saveData["workExperience"] = data.workExperience;
+        saveData["netWorth"] = data.netWorth;
+        saveData["jobsWithoutLabel"] = data.jobsWithoutLabel;
+        saveData["cars"] = data.cars;
+        saveData["friends"] = data.friends;
+        saveData["passedDrivingTest"] = data.passedDrivingTest;
+        saveData["allowedToTakeDrivingTest"] = data.allowedToTakeDrivingTest;
+        saveData["drivingTestCount"] = data.drivingTestCount;
+        saveData["educationLevel"] = data.educationLevel;
+        saveData["jobService"] = data.jobService;
+        saveData["deathCause"] = data.deathCause;
+        saveData["diseases"] = data.diseases;
+        saveData["retirementAge"] = data.retirementAge;
+        saveData["inRetirement"] = data.inRetirement;
+        saveData["pension"] = data.pension;
+        saveData["inPrison"] = data.inPrison;
+        saveData["prisonYears"] = data.prisonYears;
+        saveData["yearsServed"] = data.yearsServed;
+        saveData["numOfCrimes"] = data.numOfCrimes;
+        saveData["update"] = data.update;
+        saveData["mySkills"] = data.mySkills;
+        saveData["myJob"] = data.myJob;
+        saveData["jobHistory"] = data.jobHistory;
+        saveData["isWorking"] = data.isWorking;
+        saveData["tax"] = data.tax;
+        saveData["listedJobs"] = data.listedJobs;
+        saveData["ownedProperties"] = data.ownedProperties;
+        saveData["gotJobNum"] = data.gotJobNum;
+        saveData["likingHobbies"] = data.likingHobbies;
+        saveData["rejections"] = data.rejections;
+        saveData["acceptions"] = data.acceptions;
+        saveData["possibleStdDiseases"] = data.possibleStdDiseases;
+        saveData["curableStd"] = data.curableStd;
+        saveData["friendRejection"] = data.friendRejection;
+        saveData["passed"] = data.passed;
+        saveData["isLearning"] = data.isLearning;
+        saveData["numOfOneNightStands"] = data.numOfOneNightStands;
+        saveData["isReadingBooks"] = data.isReadingBooks;
+        saveData["goingToGym"] = data.goingToGym;
+        saveData["smoking"] = data.smoking;
+        saveData["smokingFor"] = data.smokingFor;
+        saveData["startSmokingAgain"] = data.startSmokingAgain;
+        saveData["dontAnnounceSmoking"] = data.dontAnnounceSmoking;
+        saveData["oldInstruments"] = data.oldInstruments;
+        saveData["instruments"] = data.instruments;
+        saveData["oldSports"] = data.oldSports;
+        saveData["hasSocialNetwork"] = data.hasSocialNetwork;
+        saveData["numOfSocialFans"] = data.numOfSocialFans;
+        saveData["numOfSelfies"] = data.numOfSelfies;
+        saveData["numOfAlbums"] = data.numOfAlbums;
+        saveData["numOfPosts"] = data.numOfPosts;
+        saveData["havePartner"] = data.havePartner;
+        saveData["isPregnant"] = data.isPregnant;
+        saveData["numberOfExSpouses"] = data.numberOfExSpouses;
+        saveData["children"] = data.children;
+        saveData["lover"] = data.lover;
+        saveData["exPartners"] = data.exPartners;
+        saveData["sports"] = data.sports;
+        saveData["posjedi"] = data.posjedi;
+        saveData["alreadyVerified"] = data.alreadyVerified;
+        saveData["monthlyPayment"] = data.monthlyPayment;
+        saveData["dontAskForDrivingTestOn18"] = data.dontAskForDrivingTestOn18;
+        saveData["livingIn"] = data.livingIn;
+        saveData["homeless"] = data.homeless;
+        saveData["homelessFor"] = data.homelessFor;
+        saveData["livingText"] = data.livingText;
+        saveData["changeTabTrue"] = data.changeTabTrue;
+        saveData["colors"] = data.colors;
+        saveData["lastHappiness"] = data.lastHappiness;
+        saveData["hasDepression"] = data.hasDepression;
+        saveData["selfiesPerYear"] = data.selfiesPerYear;
+        saveData["brokeLegLastYear"] = data.brokeLegLastYear;
+        saveData["brokeArmLastYear"] = data.brokeArmLastYear;
+        saveData["selectedBandObject"] = data.selectedBandObject;
+        saveData["selectedBand"] = data.selectedBand;
+        saveData["isFamous"] = data.isFamous;
+        saveData["changeThisLifeIdNextYear"] = data.changeThisLifeIdNextYear;
+        saveData["bands"] = data.bands;
+        saveData["father"] = data.father;
+        saveData["mother"] = data.mother;
+        saveData["meAssets"] = data.meAssets;
+        saveData["lastChoosenBand"] = data.lastChoosenBand;
+        saveData["genres"] = data.genres;
+        saveData["years"] = data.years;
+
+        this.storage.set("lifeSave", saveData);
+    }
+
+    checkSaveGame() {
+
+        this.storage.get("lifeSave").then((val) => {
+            console.log('lifeSave', val);
+
+            if (val == null) {
+                return false;
+            } else {
+                return true;
+            }
+        });
+
+    }
+
+    loadSaveGame(data) {
+
+        this.storage.get("lifeSave").then((val) => {
+            // console.log('lifeSave', val);
+
+            let saveData = val;
+
+            data.lifeId = saveData["lifeId"];
+            data.name = saveData["name"];
+            data.surname = saveData["surname"];
+            data.genderFull = saveData["genderFull"];
+            data.gender = saveData["gender"];
+            data.city = saveData["city"];
+            data.nationality = saveData["nationality"];
+            data.hisOrHers = saveData["hisOrHers"];
+            data.age = saveData["age"];
+            data.alive = saveData["alive"];
+            data.appearance = saveData["appearance"];
+            data.intelligence = saveData["intelligence"];
+            data.sociability = saveData["sociability"];
+            data.fitness = saveData["fitness"];
+            data.musicality = saveData["musicality"];
+            data.happiness = saveData["happiness"];
+            data.finance = saveData["finance"];
+            data.repaymentTerm = saveData["repaymentTerm"];
+            data.sexuality = saveData["sexuality"];
+            data.learnedElementary = saveData["learnedElementary"];
+            data.elementaryGrade = saveData["elementaryGrade"];
+            data.goingToElementary = saveData["goingToElementary"];
+            data.learnedHighSchool = saveData["learnedHighSchool"];
+            data.goingToHighSchool = saveData["goingToHighSchool"];
+            data.goingToHighSchoolYears = saveData["goingToHighSchoolYears"];
+            data.goingToCollegeYears = saveData["goingToCollegeYears"];
+            data.goingToCollege = saveData["goingToCollege"];
+            data.currentCollegeMajor = saveData["currentCollegeMajor"];
+            data.myMajors = saveData["myMajors"];
+            data.listOfColleges = saveData["listOfColleges"];
+            data.highSchoolGrade = saveData["highSchoolGrade"];
+            data.inDebt = saveData["inDebt"];
+            data.income = saveData["income"];
+            data.outcome = saveData["outcome"];
+            data.numOfJobs = saveData["numOfJobs"];
+            data.allowance = saveData["allowance"];
+            data.workExperience = saveData["workExperience"];
+            data.netWorth = saveData["netWorth"];
+            data.jobsWithoutLabel = saveData["jobsWithoutLabel"];
+            data.cars = saveData["cars"];
+            data.friends = saveData["friends"];
+            data.passedDrivingTest = saveData["passedDrivingTest"];
+            data.allowedToTakeDrivingTest = saveData["allowedToTakeDrivingTest"];
+            data.drivingTestCount = saveData["drivingTestCount"];
+            data.educationLevel = saveData["educationLevel"];
+            data.jobService = saveData["jobService"];
+            data.deathCause = saveData["deathCause"];
+            data.diseases = saveData["diseases"];
+            data.retirementAge = saveData["retirementAge"];
+            data.inRetirement = saveData["inRetirement"];
+            data.pension = saveData["pension"];
+            data.inPrison = saveData["inPrison"];
+            data.prisonYears = saveData["prisonYears"];
+            data.yearsServed = saveData["yearsServed"];
+            data.numOfCrimes = saveData["numOfCrimes"];
+            data.update = saveData["update"];
+            data.mySkills = saveData["mySkills"];
+            data.myJob = saveData["myJob"];
+            data.jobHistory = saveData["jobHistory"];
+            data.isWorking = saveData["isWorking"];
+            data.tax = saveData["tax"];
+            data.listedJobs = saveData["listedJobs"];
+            data.ownedProperties = saveData["ownedProperties"];
+            data.gotJobNum = saveData["gotJobNum"];
+            data.likingHobbies = saveData["likingHobbies"];
+            data.rejections = saveData["rejections"];
+            data.acceptions = saveData["acceptions"];
+            data.possibleStdDiseases = saveData["possibleStdDiseases"];
+            data.curableStd = saveData["curableStd"];
+            data.friendRejection = saveData["friendRejection"];
+            data.passed = saveData["passed"];
+            data.isLearning = saveData["isLearning"];
+            data.numOfOneNightStands = saveData["numOfOneNightStands"];
+            data.isReadingBooks = saveData["isReadingBooks"];
+            data.goingToGym = saveData["goingToGym"];
+            data.smoking = saveData["smoking"];
+            data.smokingFor = saveData["smokingFor"];
+            data.startSmokingAgain = saveData["startSmokingAgain"];
+            data.dontAnnounceSmoking = saveData["dontAnnounceSmoking"];
+            data.oldInstruments = saveData["oldInstruments"];
+            data.instruments = saveData["instruments"];
+            data.oldSports = saveData["oldSports"];
+            data.hasSocialNetwork = saveData["hasSocialNetwork"];
+            data.numOfSocialFans = saveData["numOfSocialFans"];
+            data.numOfSelfies = saveData["numOfSelfies"];
+            data.numOfAlbums = saveData["numOfAlbums"];
+            data.numOfPosts = saveData["numOfPosts"];
+            data.havePartner = saveData["havePartner"];
+            data.isPregnant = saveData["isPregnant"];
+            data.numberOfExSpouses = saveData["numberOfExSpouses"];
+            data.children = saveData["children"];
+            data.lover = saveData["lover"];
+            data.exPartners = saveData["exPartners"];
+            data.sports = saveData["sports"];
+            data.posjedi = saveData["posjedi"];
+            data.alreadyVerified = saveData["alreadyVerified"];
+            data.monthlyPayment = saveData["monthlyPayment"];
+            data.dontAskForDrivingTestOn18 = saveData["dontAskForDrivingTestOn18"];
+            data.livingIn = saveData["livingIn"];
+            data.homeless = saveData["homeless"];
+            data.homelessFor = saveData["homelessFor"];
+            data.livingText = saveData["livingText"];
+            data.changeTabTrue = saveData["changeTabTrue"];
+            data.colors = saveData["colors"];
+            data.lastHappiness = saveData["lastHappiness"];
+            data.hasDepression = saveData["hasDepression"];
+            data.selfiesPerYear = saveData["selfiesPerYear"];
+            data.brokeLegLastYear = saveData["brokeLegLastYear"];
+            data.brokeArmLastYear = saveData["brokeArmLastYear"];
+            data.selectedBandObject = saveData["selectedBandObject"];
+            data.selectedBand = saveData["selectedBand"];
+            data.isFamous = saveData["isFamous"];
+            data.changeThisLifeIdNextYear = saveData["changeThisLifeIdNextYear"];
+            data.bands = saveData["bands"];
+            data.father = saveData["father"];
+            data.mother = saveData["mother"];
+            data.meAssets = saveData["meAssets"];
+            data.lastChoosenBand = saveData["lastChoosenBand"];
+            data.genres = saveData["genres"];
+            data.years = saveData["years"];
+
+
+        });
+
+    }
+
+    deleteSaveGame() {
+        console.log(1);
+        this.storage.remove("lifeSave");
+        console.log(2);
     }
 
     goForDate(data, lover) {
@@ -2624,7 +3295,7 @@ export class ShareService {
             let randomHobby = 0;
             let subtitle = "Uh-oh!";
             let rejectingText = "";
-            if (data.age > 25 && data.age < 50 && data.posjedi.length == 0) {
+            if (data.age > 25 && data.age < 50 && data.posjedi.length == 0 && data.homeless == 0) {
                 if (this.randomAtoB(0, 3) == 0) {
                     randomHobby = this.randomAtoB(0, data.likingHobbies.length - 1);
                     if (data.likingHobbies[randomHobby] == "shoes") subtitle = "What are thooose?!";
@@ -2687,6 +3358,7 @@ export class ShareService {
 
     breakUp(data) {
         data.havePartner = 0;
+        data.numberOfExSpouses += 1;
         let text = "";
         if (data.lover.status == "Relationship") text = `I broke up with ${data.lover.name}.`;
         else if (data.lover.status == "Engaged") text = `I broke off my engagement with ${data.lover.name}.`;
@@ -2697,6 +3369,9 @@ export class ShareService {
         data.exPartners.push(data.lover);
         data.lover = { stability: 50, time: 0 };
 
+        if (data.numberOfExSpouses == 6) {
+            this.checkAchievement("Henry VIII");
+        }
     }
 
     breakUp2(data) {
@@ -2738,6 +3413,13 @@ export class ShareService {
         var newSurname = this.names[nationality]["surname"][surnameNum];
 
         return newSurname;
+    }
+
+    randomCity(data, nationality) {
+        let cityNum = this.randomAtoB(0, this.names[nationality]["cities"].length - 1);
+        let newCity = this.names[nationality]["cities"][cityNum];
+
+        return newCity;
     }
 
     randomBandName(data) {
@@ -3027,9 +3709,13 @@ export class ShareService {
             //console.log(remainingSkills);
             //console.log("Qualified!");
         } else {
+            let textToAdd = "";
+            if (data.workExperience < job[1]["experience"]) {
+                textToAdd += `<br><br><i>You don't have the required amount of work experience!</i>`;
+            }
             let alert = this.alertCtrl.create({
                 title: 'Bad news...',
-                subTitle: '<br>You didn\'t get an interview.',
+                subTitle: '<br>You didn\'t get an interview.' + textToAdd,
                 buttons: [{
                     text: 'Ok',
                     handler: () => {
@@ -3151,6 +3837,8 @@ export class commitSuicideModal {
             data.shareService.disableAll(data);
             data.deathCause = suicideMethod;
             data.years[data.age].events.push(`I died from ${suicideMethod}.`);
+            this.data["shareService"].googlePlaySubmitScore(data);
+            data.shareService.deleteSaveGame(data);
         } else {
             data.years[data.age].events.push(`I failed to kill myself by ${suicideMethod}.`);
         }
@@ -3334,6 +4022,28 @@ export class myChildModal {
             }
             this.colleges += tmp + this.child["colleges"][i];
         }
+    }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+@Component({
+    templateUrl: '../../pages/me/myFriend.html'
+})
+export class myFriendModal {
+    data: object;
+    friend: object;
+
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
+        this.data = shareService.getData();
+        this.friend = params.get("friend");
+
     }
 
     backButtonAction() {

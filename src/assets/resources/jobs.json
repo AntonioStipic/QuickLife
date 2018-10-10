@@ -1,5 +1,5 @@
 {
-    "companies": ["Hypercentage", "Johnson Controls", "OMW Oil Co.", "DB Schenker Global Services", "Takko Fashion", "Electro Art", "Oracle", "Nestel", "Tiriac Auto", "Futurestep", "Ancer Recruitment LTD", "CPL Healthcare", "Workforce People Solutions Ltd", "Bluemarine Services", "Apple Networks", "Gorilla Acoustics", "Tucan Softwares", "Solsticetems", "Tuliproductions", "Beedlectrics", "Canics", "Twilightcoms", "Gembooks", "Woodshine", "Hog Motors", "Crystal Foods", "Primal Records", "Leopardworks", "Nightelligence", "Gorillacoustics", "Starecords", "Nemohut", "Wonderworks", "Hammerbit" ,"Soul Industries"],
+    "companies": ["Hypercentage", "Johnson Controls", "OMW Oil Co.", "DB Schenker Global Services", "Takkow Fashion", "Electro Art", "Oracle", "Nestel", "Tiriac Auto", "Futurestep", "Ancer Recruitment LTD", "CPL Healthcare", "Workforce People Solutions Ltd", "Bluemarine Services", "Apple Networks", "Gorilla Acoustics", "Tucan Softwares", "Solsticetems", "Tuliproductions", "Beedlectrics", "Canics", "Twilightcoms", "Gembooks", "Woodshine", "Hog Motors", "Crystal Foods", "Primal Records", "Leopardworks", "Nightelligence", "Gorillacoustics", "Starecords", "Nemohut", "Wonderworks", "Hammerbit" ,"Soul Industries", "History Research"],
     
     "jobs": [
         {   
@@ -52,13 +52,6 @@
             "skills": []
         },
         {
-            "title": "Archaeologist",
-            "salary": "25-30",
-            "experience": 2,
-            "education": 2,
-            "skills": ["History"]
-        },
-        {
             "title": "Nurse",
             "salary": "25-30",
             "experience": 0,
@@ -80,8 +73,15 @@
             "skills": ["Law Enforcement"]
         },
         {
+            "title": "Neuroscience Research Specialist",
+            "salary": "40-60",
+            "experience": 8,
+            "education": 2,
+            "skills": ["Behavior, Cognition, and Neuroscience", "Biology"]
+        },
+        {
             "title": "Doctor",
-            "salary": "32-60",
+            "salary": "32-62",
             "experience": 0,
             "education": 2,
             "skills": ["Public Health", "Biology", "Chemistry"]
@@ -113,6 +113,20 @@
             "experience": 0,
             "education": 2,
             "skills": ["Biology", "Teaching"]
+        },
+        {
+            "title": "History Professor",
+            "salary": "30-46",
+            "experience": 0,
+            "education": 2,
+            "skills": ["History", "Teaching"]
+        },
+        {
+            "title": "Archaeologist",
+            "salary": "34-54",
+            "experience": 8,
+            "education": 2,
+            "skills": ["History", "Teaching"]
         },
         {
             "title": "Social researcher",

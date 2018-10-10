@@ -1,4 +1,4 @@
-import { NavController, PopoverController, Tabs, AlertController, Content } from 'ionic-angular';
+import { NavController, PopoverController, Tabs, AlertController, Content, App } from 'ionic-angular';
 import { Component, ViewChild, KeyValueDiffers } from '@angular/core';
 import { PopoverContentPage } from '../popover/popover';
 import { ShareService } from '../../services/share/share';
@@ -19,12 +19,13 @@ export class HomePage {
   countries: object;
   popover = this.popoverCtrl.create(PopoverContentPage);
   private _differ: any;
-  causes = ["a heart attack", "a lung cancer", "a tuberculosis", "a stroke", "a chronic obstructive pulmonary disease", "a lower respiratory infection", "a tetanus", "a colon cancer"];
+  causes = ["a heart attack", "a lung cancer", "a tuberculosis", "a stroke", "a chronic obstructive pulmonary disease", "a lower respiratory infection", "a tetanus", "a colon cancer", "a leukemia", "a meningitis", "a liver cancer", "a pertussis", "a bladder cancer"];
   babyCauses = ["a sudden infant death syndrome", "a malnutrition", "a blood infection", "a pneumonia"];
+  firstWords = ["Dad", "Dada", "Daddy", "Papa", "Mom", "Mama", "Mommy", "Mum", "Hi", "Hiya", "Hey", "Buba", "Bub", "Baba", "Dog", "Doggy", "Puppy", "Ball",  "No", "Cat", "Kitty", "Nana", "Bye", "Duck", "Ta", "Tata", "Baby", "Uh oh", "Car", "Apple", "Banana", "Bee", "Dance"];
 
   @ViewChild(Content) content: Content;
 
-  constructor(platform: Platform, public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public alertCtrl: AlertController, private http: Http, public KeyValueDiffers: KeyValueDiffers, public events: Events) {
+  constructor(platform: Platform, public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public alertCtrl: AlertController, private http: Http, public KeyValueDiffers: KeyValueDiffers, public events: Events, public app: App) {
     //this.data["years"] = [];
     //, private googlePlayGamesServices: GooglePlayGamesServices
     /* try {
@@ -79,6 +80,8 @@ export class HomePage {
             this.names = this.names[0];
             //console.log(this.names);
             this.data = this.data["shareService"].createMe(this.data, this.names, this.randomId(8));
+
+            // this.data["shareService"].checkSaveGame(this.data);
           }, error => {
             console.log(error);
           });
@@ -201,14 +204,24 @@ export class HomePage {
     let chance = 0.4;
 
     if (data.age > 50) chance = 4;
-    else if (data.age > 60) chance = 14;
-    else if (data.age > 70) chance = 18;
+    else if (data.age > 60) chance = 10;
+    else if (data.age > 70) chance = 13;
     else if (data.age > 80) chance = 20;
     else if (data.age > 100) chance = 30;
     else if (data.age > 105) chance = 45;
     else if (data.age > 110) chance = 60;
     else if (data.age > 115) chance = 85;
     else if (data.age > 122) data.alive = 0;
+
+    if (data.homeless == 1) {
+      // chance += data.homelessFor;
+
+      let homelessChanceMessage = 30;
+
+      if (data.shareService.randomAtoB(1, 100) < homelessChanceMessage) {
+        data.years[data.age].events.push(`I'm homeless. I should find a job and home to live so I live longer.`);
+      }
+    }
 
     let rollDice = data.shareService.randomAtoB(1, 10000) / 100;
 
@@ -223,7 +236,7 @@ export class HomePage {
     let chance = 0;
 
     if (data.age >= 18) {
-      chance = 7; // 7
+      chance = 8; // 7
     }
 
     if (data.shareService.randomAtoB(1, 100) <= chance) {
@@ -282,7 +295,7 @@ export class HomePage {
               data.numOfCrimes += 1;
               data.prisonYears += penalty;
             } else {
-              let crazyDrugs = 20; // 10
+              let crazyDrugs = 40; // 10
 
               if (data.shareService.randomAtoB(0, 100) <= crazyDrugs) {
                 let stories = ["You thought your bed was trying to eat you. You ended up taking the sheets off and laying on the floor curled in a ball. You woke up with the worst back pain you've ever had.",
@@ -291,7 +304,10 @@ export class HomePage {
                   "You donated your shoes to some ducks because you thought they needed them. You threw them into a river and walked home barefoot.",
                   "You went to a club and had sex with a transsexual girl in the back alley.",
                   "You had a threesome with your close friends.",
-                  "You threw yourself on grass and looked at the stars for 3 hours straight."]
+                  "You threw yourself on grass and looked at the stars for 3 hours straight.",
+                  "You masturbated in a public park.",
+                  "You masturbated on public transport."
+                ]
 
                 let story = stories[data.shareService.randomAtoB(0, stories.length - 1)];
                 //console.log(story)
@@ -436,7 +452,9 @@ export class HomePage {
     data.selfiesPerYear = 0;
     data.numOfAlbums = 0;
 
-    //console.log(data.jobHistory);
+    if (data.homeless == 1) {
+      data.homelessFor += 1;
+    }
 
     if (data.age == 122) {
       data.alive = 0;
@@ -600,6 +618,19 @@ export class HomePage {
     for (let i = 0; i < data.friends.length; i++) {
       if (data.friends[i].alive == 1) {
         data.friends[i].age += 1;
+
+        let amount = data.shareService.randomAtoB(1, 5);
+        let prefix = data.shareService.randomAtoB(1, 5);
+
+        let character = "";
+        if (prefix < 3) {
+          character = "-";
+        } else {
+          character = "+";
+        }
+
+        data.shareService.handleFriendshipStrength(data, i, character, amount);
+
       }
     }
 
@@ -667,6 +698,63 @@ export class HomePage {
     data.shareService.calculateNetWorth(data);
 
     this.willIDie(data);
+
+
+
+
+
+
+
+
+    if (data.homeless == 0) {
+      if (data.father.alive == 0 && data.mother.alive == 0 && data.posjedi.length == 0) {
+        data.homeless = 1;
+        data.livingText = "You're homeless.";
+
+        data.years[data.age].events.push(`I became homeless.`);
+      }
+
+      if (data.age > 18 && (data.father.alive == 1 || data.mother.alive == 1) && data.posjedi.length == 0) {
+        let chance = 2;
+
+        if (data.age > 20) chance = 2;
+        else if (data.age > 30) chance = 5;
+        else if (data.age > 40) chance = 10;
+        else if (data.age > 45) chance = 20;
+        else if (data.age > 50) chance = 20;
+        else if (data.age > 60) chance = 20;
+        else if (data.age > 70) chance = 20;
+        else if (data.age > 80) chance = 20;
+        else if (data.age > 90) chance = 20;
+
+        let rollDice = data.shareService.randomAtoB(1, 10000) / 100;
+
+        //console.log(chance, rollDice);
+
+        if (rollDice <= chance) {
+          data.homeless = 1;
+          data.livingText = "You're homeless.";
+
+          if (data.father.alive == 1 && data.mother.alive == 1) {
+            data.years[data.age].events.push(`My parents kicked me out of my home. I am now homeless.`);
+          } else if (data.father.alive == 0 && data.mother.alive == 1) {
+            data.years[data.age].events.push(`My mother kicked me out of my home. I am now homeless.`);
+          } else if (data.father.alive == 1 && data.mother.alive == 0) {
+            data.years[data.age].events.push(`My father kicked me out of my home. I am now homeless.`);
+          }
+        }
+      }
+    }
+
+
+
+
+
+
+
+
+
+
     if (data.alive && data.inPrison == 0) {
       this.data["shareService"].updateJobs(this.data, this.jobs);
 
@@ -682,7 +770,7 @@ export class HomePage {
         let pension = (data.myJob[2] / 12 * 1000 * 0.7) + upOrDown * (data.myJob[2] / 12 * 1000 * 0.1);
 
         let alert = this.alertCtrl.create({
-          enableBackdropDismiss: true,
+          enableBackdropDismiss: false,
           title: 'Hard work pays off!',
           message: `You're old enough to retire. You will receive $${data.shareService.formatMoney(pension)} per month.<br>Do you want to retire?`,
           buttons: [
@@ -850,7 +938,11 @@ export class HomePage {
         data.shareService.calculateNetWorth(data);
       }
 
-      if (data.age == 3) {
+      if (data.age == 1) {
+        let firstWord = this.firstWords[data.shareService.randomAtoB(0, this.firstWords.length - 1)];
+        //console.log(firstWord);
+        data.years[data.age].events.push(`You said your first word! You said "${firstWord}".`);
+      } else if (data.age == 3) {
         data.years[data.age].events.push(`I started going to kindergarten.`);
         //console.log(data.shareService.createPerson(data));
 
@@ -872,6 +964,7 @@ export class HomePage {
           let text = "";
           for (let i = 0; i < numOfFriends; i++) {
             friends.push(data.shareService.createPerson(data));
+            friends[i].friendIndex = i;
             data.friends.push(friends[i]);
           }
 
@@ -960,12 +1053,81 @@ export class HomePage {
       data.shareService.disableAll(data);
       data.deathCause = cause;
       data.years[data.age].events.push(`I died from ${cause}.`);
+
+      data.shareService.googlePlaySubmitScore(data);
+      data.shareService.deleteSaveGame();
+
+
       //this.events.publish("goToObituary");
     }
 
+    if (data.age > 5 && data.age < 12 && data.alive == 1) {
+      if (data.friends.length > 0) {
+        let chanceOfAsking = 35; //35
+
+        if (data.shareService.randomAtoB(1, 100) < chanceOfAsking) {
+          let friendIndex = data.shareService.randomAtoB(0, data.friends.length - 1);
+          let friend = data.friends[friendIndex];
+
+          let activities = ["is calling me to go play outside",
+                            "wants to go skateboarding together",
+                            "wants to go rollerblading together",
+                            "is calling me out to play football on the playground",
+                            "is calling me out to play basketball",
+                            "wants to go to the playground",
+                            "wants to ride bicycles together"];
+
+          let finishedActivities = ["playing outside",
+                                    "skateboarding",
+                                    "rollerblading",
+                                    "out to play football",
+                                    "out to play basketball",
+                                    "out to the playground",
+                                    "riding bicycle"];
+
+          let activityIndex = data.shareService.randomAtoB(0, activities.length - 1);
+          let activity = activities[activityIndex];
+
+          let alert = this.alertCtrl.create({
+            enableBackdropDismiss: false,
+            subTitle: "Hangout",
+            message: `${friend.name} ${activity}.<br><br>Will I go?`,
+            buttons: [
+              {
+                text: 'Yes',
+                handler: () => {
+                  data.years[data.age].events.push(`I went ${finishedActivities[activityIndex]} with ${friend.name}.`);
+                  data.shareService.handleHappiness(data, "+", data.shareService.randomAtoB(5, 15));
+                  data.shareService.update(data);
+
+                  data.shareService.handleFriendshipStrength(data, friendIndex, "+", data.shareService.randomAtoB(10, 15));
+                  //console.log(data.friends[friendIndex]);
+                }
+              },
+              {
+                text: 'No',
+                handler: () => {
+                  data.shareService.handleFriendshipStrength(data, friendIndex, "-", data.shareService.randomAtoB(5, 15));
+                },
+                role: 'cancel'
+              }
+            ]
+          });
+          alert.present();
+        }
+      }
+    }
+
+
     data.shareService.calculateNetWorth(data);
 
+    if (data.alive == 1) {
+      data.shareService.saveGame(data);
+    }
+
   }
+
+
 
   checkDrivingTest(data) {
     let alert = this.alertCtrl.create({

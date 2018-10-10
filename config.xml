@@ -1,9 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.cloude.quicklife" version="0.0.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.cloude.quicklife" version="0.2.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>QuickLife</name>
     <description>Textual life simulator.</description>
     <author email="antonio.stipic2@gmail.com" href="http://cloude-3.herokuapp.com/">@Antonio Stipić</author>
     <content src="index.html" />
+    <content original-src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -12,12 +13,13 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <preference name="ScrollEnabled" value="false" />
-    <preference name="android-minSdkVersion" value="16" />
+    <preference name="android-minSdkVersion" value="19" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="orientation" value="portrait" />
     <preference name="FadeSplashScreen" value="true" />
     <preference name="AutoHideSplashScreen" value="true" />
     <preference name="SplashScreenDelay" value="0" />
+    <preference name="loadUrlTimeoutValue" value="700000" />
     <preference name="SplashMaintainAspectRatio" value="true" />
     <platform name="android">
         <allow-intent href="market:*" />
@@ -80,6 +82,8 @@
     <plugin name="cordova-plugin-play-games-services" spec="^1.1.0">
         <variable name="APP_ID" value="831588394839" />
     </plugin>
-    <allow-navigation href="http://192.168.1.107:8100" />
+    <allow-navigation href="*" />
     <plugin name="cordova-plugin-firebase" spec="^1.0.3" />
+    <engine name="android" spec="7.1.1" />
+    <plugin name="cordova-plugin-app-version" spec="~0.1.9" />
 </widget>

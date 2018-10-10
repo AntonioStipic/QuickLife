@@ -233,6 +233,9 @@ ion-icon {
   &[class*="quicklife-apartment"] {
     mask-image: url(../assets/imgs/apartment.svg);
   }
+  &[class*="quicklife-football"] {
+    mask-image: url(../assets/imgs/football.svg);
+  }
   &[class*="quicklife-city"] {
     mask-image: url(../assets/imgs/cityscape.svg);
   }
@@ -289,6 +292,220 @@ ion-icon {
   }
   &[class*="quicklife-bars"] {
     mask-image: url(../assets/imgs/bars.svg);
+  }
+  &[class*="quicklife-hospital"] {
+    mask-image: url(../assets/imgs/hospital.svg);
+  }
+  &[class*="quicklife-doctor"] {
+    mask-image: url(../assets/imgs/doctor.svg);
+  }
+
+
+  &[class*="profile-"] {
+    // Instead of using the font-based icons
+    // We're applying SVG masks
+    width: 1em;
+    height: 1em;
+  }
+  &[class*="profile-boy-1"] {
+    content: url("../assets/imgs/kids/boy-1.png") !important;
+  }
+  &[class*="profile-boy-2"] {
+    content: url("../assets/imgs/kids/boy-2.png") !important;
+  }
+  &[class*="profile-boy-3"] {
+    content: url("../assets/imgs/kids/boy-3.png") !important;
+  }
+  &[class*="profile-boy-4"] {
+    content: url("../assets/imgs/kids/boy-4.png") !important;
+  }
+  &[class*="profile-boy-5"] {
+    content: url("../assets/imgs/kids/boy-5.png") !important;
+  }
+  &[class*="profile-boy-6"] {
+    content: url("../assets/imgs/kids/boy-6.png") !important;
+  }
+  &[class*="profile-boy-7"] {
+    content: url("../assets/imgs/kids/boy-7.png") !important;
+  }
+  &[class*="profile-boy-8"] {
+    content: url("../assets/imgs/kids/boy-8.png") !important;
+  }
+  &[class*="profile-boy-9"] {
+    content: url("../assets/imgs/kids/boy-9.png") !important;
+  }
+  &[class*="profile-boy-10"] {
+    content: url("../assets/imgs/kids/boy-10.png") !important;
+  }
+  &[class*="profile-boy-11"] {
+    content: url("../assets/imgs/kids/boy-11.png") !important;
+  }
+  &[class*="profile-boy-12"] {
+    content: url("../assets/imgs/kids/boy-12.png") !important;
+  }
+  &[class*="profile-boy-13"] {
+    content: url("../assets/imgs/kids/boy-13.png") !important;
+  }
+  &[class*="profile-boy-14"] {
+    content: url("../assets/imgs/kids/boy-14.png") !important;
+  }
+  &[class*="profile-boy-15"] {
+    content: url("../assets/imgs/kids/boy-15.png") !important;
+  }
+  &[class*="profile-boy-16"] {
+    content: url("../assets/imgs/kids/boy-16.png") !important;
+  }
+  &[class*="profile-boy-17"] {
+    content: url("../assets/imgs/kids/boy-17.png") !important;
+  }
+  &[class*="profile-boy-18"] {
+    content: url("../assets/imgs/kids/boy-18.png") !important;
+  }
+  &[class*="profile-boy-19"] {
+    content: url("../assets/imgs/kids/boy-19.png") !important;
+  }
+  &[class*="profile-boy-20"] {
+    content: url("../assets/imgs/kids/boy-20.png") !important;
+  }
+  &[class*="profile-boy-21"] {
+    content: url("../assets/imgs/kids/boy-21.png") !important;
+  }
+  &[class*="profile-boy-22"] {
+    content: url("../assets/imgs/kids/boy-22.png") !important;
+  }
+  &[class*="profile-boy-23"] {
+    content: url("../assets/imgs/kids/boy-23.png") !important;
+  }
+
+  &[class*="profile-girl-1"] {
+    content: url("../assets/imgs/kids/girl-1.png") !important;
+  }
+  &[class*="profile-girl-2"] {
+    content: url("../assets/imgs/kids/girl-2.png") !important;
+  }
+  &[class*="profile-girl-3"] {
+    content: url("../assets/imgs/kids/girl-3.png") !important;
+  }
+  &[class*="profile-girl-4"] {
+    content: url("../assets/imgs/kids/girl-4.png") !important;
+  }
+  &[class*="profile-girl-5"] {
+    content: url("../assets/imgs/kids/girl-5.png") !important;
+  }
+  &[class*="profile-girl-6"] {
+    content: url("../assets/imgs/kids/girl-6.png") !important;
+  }
+  &[class*="profile-girl-7"] {
+    content: url("../assets/imgs/kids/girl-7.png") !important;
+  }
+  &[class*="profile-girl-8"] {
+    content: url("../assets/imgs/kids/girl-8.png") !important;
+  }
+  &[class*="profile-girl-9"] {
+    content: url("../assets/imgs/kids/girl-9.png") !important;
+  }
+  &[class*="profile-girl-10"] {
+    content: url("../assets/imgs/kids/girl-10.png") !important;
+  }
+  &[class*="profile-girl-11"] {
+    content: url("../assets/imgs/kids/girl-11.png") !important;
+  }
+  &[class*="profile-girl-12"] {
+    content: url("../assets/imgs/kids/girl-12.png") !important;
+  }
+  &[class*="profile-girl-13"] {
+    content: url("../assets/imgs/kids/girl-13.png") !important;
+  }
+  &[class*="profile-girl-14"] {
+    content: url("../assets/imgs/kids/girl-14.png") !important;
+  }
+  &[class*="profile-girl-15"] {
+    content: url("../assets/imgs/kids/girl-15.png") !important;
+  }
+  &[class*="profile-girl-16"] {
+    content: url("../assets/imgs/kids/girl-16.png") !important;
+  }
+  &[class*="profile-girl-17"] {
+    content: url("../assets/imgs/kids/girl-17.png") !important;
+  }
+  &[class*="profile-girl-18"] {
+    content: url("../assets/imgs/kids/girl-18.png") !important;
+  }
+  &[class*="profile-girl-19"] {
+    content: url("../assets/imgs/kids/girl-19.png") !important;
+  }
+  &[class*="profile-girl-20"] {
+    content: url("../assets/imgs/kids/girl-20.png") !important;
+  }
+  &[class*="profile-girl-21"] {
+    content: url("../assets/imgs/kids/girl-21.png") !important;
+  }
+  &[class*="profile-girl-22"] {
+    content: url("../assets/imgs/kids/girl-22.png") !important;
+  }
+  &[class*="profile-girl-23"] {
+    content: url("../assets/imgs/kids/girl-23.png") !important;
+  }
+
+  &[class*="color-"] {
+    // Instead of using the font-based icons
+    // We're applying SVG masks
+    width: 1em;
+    height: 1em;
+  }
+  &[class*="color-basketball"] {
+    content: url("../assets/imgs/basketball.png") !important;
+  }
+  &[class*="color-rollerblade"] {
+    content: url("../assets/imgs/rollerblade.png") !important;
+  }
+  &[class*="color-bicycle"] {
+    content: url("../assets/imgs/bicycle.png") !important;
+  }
+  &[class*="color-skateboard"] {
+    content: url("../assets/imgs/skateboard.png") !important;
+  }
+  &[class*="color-notebook"] {
+    content: url("../assets/imgs/notebook.png") !important;
+  }
+  &[class*="color-open-book"] {
+    content: url("../assets/imgs/open-book.png") !important;
+  }
+  &[class*="color-gym"] {
+    content: url("../assets/imgs/gym.png") !important;
+  }
+  &[class*="color-cigarette"] {
+    content: url("../assets/imgs/cigarette.png") !important;
+  }
+  &[class*="color-disco-ball"] {
+    content: url("../assets/imgs/disco-ball.png") !important;
+  }
+  &[class*="color-user"] {
+    content: url("../assets/imgs/user.png") !important;
+  }
+  &[class*="color-doctor"] {
+    content: url("../assets/imgs/doctor.png") !important;
+  }
+  &[class*="color-automobile"] {
+    content: url("../assets/imgs/automobile.png") !important;
+  }
+  &[class*="color-plane"] {
+    content: url("../assets/imgs/plane.png") !important;
+  }
+  &[class*="color-date-chat"] {
+    content: url("../assets/imgs/date-chat.png") !important;
+  }
+  &[class*="color-rope"] {
+    content: url("../assets/imgs/rope.png") !important;
+  }
+  &[class*="color-steering-wheel"] {
+    content: url("../assets/imgs/steering-wheel.png") !important;
+  }
+  &[class*="color-microphone"] {
+    content: url("../assets/imgs/microphone.png") !important;
+  }
+  &[class*="color-coffee-cup"] {
+    content: url("../assets/imgs/coffee-cup.png") !important;
   }
 }
 
@@ -553,4 +770,11 @@ body {
 .hideSelection .select-text {
   display: none;
 }
+
+.achievementPercent {
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+  padding-left: 20px !important;
+}
+
 //.select2-results__option[aria-disabled="true"] {color:#f00 !important;}

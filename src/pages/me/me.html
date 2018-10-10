@@ -40,19 +40,19 @@
         <ion-card-content>
           <ion-list>
             <div ion-item>
-              <label>Name: {{data.name}} {{data.surname}}</label>
+              <label><b>Name:</b> {{data.name}} {{data.surname}}</label>
             </div>
 
             <div ion-item>
-              <label>Gender: {{capitalize(data.genderFull)}}</label>
+              <label><b>Gender:</b> {{capitalize(data.genderFull)}}</label>
             </div>
 
             <div ion-item>
-              <label>Age: {{data.age}}</label>
+              <label><b>Age:</b> {{data.age}}</label>
             </div>
 
             <div ion-item>
-              <label>Nationality: {{data.nationality}}</label>
+              <label><b>Nationality:</b> {{data.nationality}}</label>
             </div>
 
             <!-- <div ion-item>
@@ -60,7 +60,7 @@
                   </div> -->
 
             <ion-item class="bottomLine">
-              <ion-label class="ion-select-text">Sexuality</ion-label>
+              <ion-label class="ion-select-text"><b>Sexuality</b></ion-label>
               <ion-select [(ngModel)]="data.sexuality" interface="popover" (ionChange)="sexualityChanged(data, selectedSexuality.value)"
                 #selectedSexuality disabled="{{data.age < 12}}">
                 <ion-option value="Heterosexual">Heterosexual</ion-option>
@@ -71,7 +71,14 @@
             </ion-item>
 
             <div ion-item>
-              <label>Happiness: {{data.happiness.toFixed(0)}}%
+              <b><label>Diseases:</label></b><br><br>
+              <label>
+                {{data.diseasesLabel}}
+              </label>
+            </div>
+
+            <div ion-item>
+              <label><b>Happiness:</b> {{data.happiness.toFixed(0)}}%
                 <br>
                 <div class="progressBar">
                   <div class="progress-bar">
@@ -83,7 +90,7 @@
 
 
             <div ion-item>
-              <label>Appearance: {{data.appearance}}%
+              <label><b>Appearance:</b> {{data.appearance}}%
                 <br>
                 <div class="progressBar">
                   <div class="progress-bar">
@@ -94,7 +101,7 @@
             </div>
 
             <div ion-item>
-              <label>Intelligence: {{data.intelligence.toFixed(0)}}%
+              <label><b>Intelligence:</b> {{data.intelligence.toFixed(0)}}%
                 <br>
                 <div class="progressBar">
                   <div class="progress-bar">
@@ -105,7 +112,7 @@
             </div>
 
             <div ion-item>
-              <label>Fitness: {{data.fitness.toFixed(0)}}%
+              <label><b>Fitness:</b> {{data.fitness.toFixed(0)}}%
                 <br>
                 <div class="progressBar">
                   <div class="progress-bar">
@@ -116,7 +123,7 @@
             </div>
 
             <div ion-item>
-              <label>Sociability: {{data.sociability.toFixed(0)}}%
+              <label><b>Sociability:</b> {{data.sociability.toFixed(0)}}%
                 <br>
                 <div class="progressBar">
                   <div class="progress-bar">
@@ -127,7 +134,7 @@
             </div>
 
             <div ion-item>
-              <label>Musicality: {{data.musicality.toFixed(0)}}%
+              <label><b>Musicality:</b> {{data.musicality.toFixed(0)}}%
                 <br>
                 <div class="progressBar">
                   <div class="progress-bar">
@@ -205,7 +212,7 @@
 
           <ion-list>
             <ion-item *ngIf="data.posjedi.length == 0">
-              <ion-label>You're living with your parents.</ion-label>
+              <ion-label>{{data.livingText}}</ion-label>
             </ion-item>
             <button ion-item *ngFor="let property of data.posjedi">
               <ion-icon [name]="(property[0] == 'House')? 'ios-home-outline':'quicklife-apartment'" item-start></ion-icon>
@@ -280,7 +287,8 @@
         <ion-item>
           <ion-label>
             <!-- (click)="(data.isLearning == 0) ? data.isLearning = 1 : data.isLearning = 0" -->
-            <ion-icon name="md-bookmarks" class="miscListIcon"></ion-icon>
+            <!-- <ion-icon name="md-bookmarks" class="miscListIcon"></ion-icon> -->
+            <ion-icon name="color-notebook" class="miscListIcon"></ion-icon>
             <span class="absolutePosition"> Learning</span>
           </ion-label>
           <ion-toggle [(ngModel)]="data.isLearning" disabled="{{data.age < 6}}" (ionChange)="data.shareService.learningChanged(data)"></ion-toggle>
@@ -288,7 +296,8 @@
         <ion-item>
           <ion-label>
             <!-- (click)="(data.isReadingBooks == 0) ? data.isReadingBooks = 1 : data.isReadingBooks = 0" -->
-            <ion-icon name="md-book" class="miscListIcon"></ion-icon>
+            <!-- <ion-icon name="md-book" class="miscListIcon"></ion-icon> -->
+            <ion-icon name="color-open-book" class="miscListIcon"></ion-icon>
             <span class="absolutePosition"> Reading books</span>
           </ion-label>
           <ion-toggle [(ngModel)]="data.isReadingBooks" disabled="{{data.age < 9}}" (ionChange)="data.shareService.readingChanged(data)"></ion-toggle>
@@ -297,7 +306,8 @@
         <ion-item>
           <ion-label>
             <!-- (click)="(data.goingToGym == 0) ? data.goingToGym = 1 : data.goingToGym = 0" -->
-            <ion-icon name="ios-body" class="miscListIcon"></ion-icon>
+            <!-- <ion-icon name="ios-body" class="miscListIcon"></ion-icon> -->
+            <ion-icon name="color-gym" class="miscListIcon"></ion-icon>
             <span class="absolutePosition"> Go to gym (50$/mo)</span>
           </ion-label>
           <ion-toggle [(ngModel)]="data.goingToGym" disabled="{{data.age < 12}}" (ionChange)="data.shareService.gymChanged(data)"></ion-toggle>
@@ -306,7 +316,8 @@
         <ion-item class="bottomLine">
           <ion-label>
             <!-- (click)="(data.goingToGym == 0) ? data.goingToGym = 1 : data.goingToGym = 0" -->
-            <ion-icon name="quicklife-smoking" class="miscListIcon"></ion-icon>
+            <!-- <ion-icon name="quicklife-smoking" class="miscListIcon"></ion-icon> -->
+            <ion-icon name="color-cigarette" class="miscListIcon"></ion-icon>
             <span class="absolutePosition"> Smoke</span>
           </ion-label>
           <ion-toggle [(ngModel)]="data.smoking" disabled="{{data.age < 16}}" (ionChange)="data.shareService.smokingChanged(data)"></ion-toggle>
@@ -336,7 +347,8 @@
 
           <ion-item class="hideSelection">
             <ion-label class="ion-select-text">
-              <ion-icon name="md-football" class="miscListIcon"></ion-icon>
+              <!-- <ion-icon name="md-football" class="miscListIcon"></ion-icon> -->
+              <ion-icon name="color-basketball" class="miscListIcon"></ion-icon>
               <span class="absolutePosition"> Train sport (60$/mo each)</span>
             </ion-label>
             <ion-select [(ngModel)]="data.sports" multiple="true" cancelText="Dismiss" okText="Ok" disabled="{{data.age < 5 || data.inDebt == 1}}"
@@ -351,33 +363,45 @@
           </ion-item>
 
           <button ion-item (click)="data.shareService.goToClub(data, 0); changeTab(0, data)" class="button-ion-item bottomLine" [disabled]="data.age < 16">
-            <ion-icon name="quicklife-disco" class="miscListIcon"></ion-icon>
+            <!-- <ion-icon name="quicklife-disco" class="miscListIcon"></ion-icon> -->
+            <ion-icon name="color-disco-ball" class="miscListIcon"></ion-icon>
             <span class="absolutePosition">Go to club</span>
           </button>
 
           <button ion-item (click)="data.shareService.socialNetworkModal(data)" class="button-ion-item bottomLine" [disabled]="data.age < 13">
-            <ion-icon name="quicklife-user" class="miscListIcon"></ion-icon>
+            <!-- <ion-icon name="quicklife-user" class="miscListIcon"></ion-icon> -->
+            <ion-icon name="color-user" class="miscListIcon"></ion-icon>
             <span class="absolutePosition">Social Network</span>
+          </button>
+
+          <button ion-item (click)="data.shareService.goToHospital(data)" class="button-ion-item" [disabled]="data.age < 12">
+            <!-- <ion-icon name="quicklife-doctor" class="miscListIcon"></ion-icon> -->
+            <ion-icon name="color-doctor" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition">Go to Hospital</span>
           </button>
 
           <button ion-item (click)="data.shareService.goForADrive(data); changeTab(0, data)" class="button-ion-item topLine bottomLine"
             [disabled]="!data.cars.length > 0 || !data.passedDrivingTest">
-            <ion-icon name="quicklife-car" class="miscListIcon"></ion-icon>
+            <!-- <ion-icon name="quicklife-car" class="miscListIcon"></ion-icon> -->
+            <ion-icon name="color-automobile" class="miscListIcon"></ion-icon>
             <span class="absolutePosition">Go for a drive</span>
           </button>
 
           <button ion-item (click)="data.shareService.holidayModal(data)" class="button-ion-item topLine bottomLine" [disabled]="data.age < 18">
-            <ion-icon name="ios-plane" class="miscListIcon"></ion-icon>
+            <!-- <ion-icon name="ios-plane" class="miscListIcon"></ion-icon> -->
+            <ion-icon name="color-plane" class="miscListIcon"></ion-icon>
             <span class="absolutePosition"> Book Holiday</span>
           </button>
 
           <button ion-item (click)="data.shareService.goOnADate(data); changeTab(0, data)" class="button-ion-item topLine" [disabled]="!data.havePartner">
-            <ion-icon name="quicklife-date-conversation" class="miscListIcon"></ion-icon>
+            <!-- <ion-icon name="quicklife-date-conversation" class="miscListIcon"></ion-icon> -->
+            <ion-icon name="color-date-chat" class="miscListIcon"></ion-icon>
             <span class="absolutePosition"> Go on a date</span>
           </button>
 
           <button ion-item (click)="data.shareService.commitSuicideModal(data)" class="button-ion-item topLine" [disabled]="data.age < 12">
-            <ion-icon name="quicklife-rope" class="miscListIcon"></ion-icon>
+            <!-- <ion-icon name="quicklife-rope" class="miscListIcon"></ion-icon> -->
+            <ion-icon name="color-rope" class="miscListIcon"></ion-icon>
             <span class="absolutePosition"> Commit suicide</span>
           </button>
 
@@ -386,7 +410,8 @@
           </ion-item-divider>
 
           <button ion-item class="button-ion-item" [disabled]="data.shareService.passedDrivingTestButton(data)" (click)="data.shareService.takeDrivingTest(data); changeTab(0, data)">
-            <ion-icon name="quicklife-steering-wheel" class="miscListIcon"></ion-icon>
+            <!-- <ion-icon name="quicklife-steering-wheel" class="miscListIcon"></ion-icon> -->
+            <ion-icon name="color-steering-wheel" class="miscListIcon"></ion-icon>
             <span class="absolutePosition">{{data.shareService.passedDrivingTestText(data)}}</span>
             <ion-icon [name]="data.passedDrivingTest == 1?'md-checkbox-outline':'md-square-outline'" class="miscListIcon" item-right></ion-icon>
           </button>
@@ -396,7 +421,8 @@
           </ion-item-divider>
 
           <button ion-item class="button-ion-item topLine" (click)="data.shareService.musicModal(data)" [disabled]="data.age < 12">
-            <ion-icon name="md-microphone" class="miscListIcon"></ion-icon>
+            <!-- <ion-icon name="md-microphone" class="miscListIcon"></ion-icon> -->
+            <ion-icon name="color-microphone" class="miscListIcon"></ion-icon>
             <span class="absolutePosition"> Music</span>
           </button>
 

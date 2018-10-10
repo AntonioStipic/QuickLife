@@ -23,9 +23,9 @@ export class PopoverContentPage {
     this.navCtrl.push(TabsPage, {}, { animate: false }); */
     /* this.splashscreen.show();
     window.location.reload(); */
-    this.data["shareService"].createMe(this.data, "", "");
-    this.viewCtrl.dismiss();
     this.events.publish("goToHome");
+    this.data["shareService"].createMe(this.data, "", "", "", "force");
+    this.viewCtrl.dismiss();
   }
 
   randomId(length) {
@@ -91,10 +91,12 @@ export class customLifeModal {
   name: string;
   surname: string;
   gender = "male";
-  nationality = "Croatian";
+  // nationality = "Croatian";
+  nationality = "";
   constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController, public navCtrl: NavController) {
     this.data = shareService.getData();
 
+    this.nationality = this.data["countries"]["nationalities"][this.data["shareService"].randomAtoB(0, this.data["countries"]["nationalities"].length - 1)];
     //console.log();
   }
 
@@ -124,13 +126,18 @@ export class achievementsModal {
 
     this.hidden = [];
 
+    let completedAchievements = 0;
+
     for (let i = 0; i < this.data["achievements"].length; i++) {
       if (this.data["achievements"][i]["finished"] == false) {
         this.hidden.push(true);
       } else {
         this.hidden.push(false);
+        completedAchievements += 1;
       }
     }
+
+    this.data["achievementCompletedPercent"] = (completedAchievements / this.data["achievements"].length * 100).toFixed(2);
     //this.hidden = new Array(this.data["achievements"].length).fill(true); // fill false
   }
 

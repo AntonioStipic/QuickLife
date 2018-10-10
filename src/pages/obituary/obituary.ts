@@ -13,8 +13,8 @@ import { customLifeModal } from '../popover/popover';
 export class ObituaryPage {
   data: object;
   popover = this.popoverCtrl.create(PopoverContentPage);
-  prisonText;
-  childrenText;
+  prisonText = "";
+  childrenText = "";
   speech = "";
   gender = "";
   preposition = "";
@@ -90,7 +90,7 @@ export class ObituaryPage {
                     `${this.preposition} was kind, smart, loving, and compassionate; pretty much all the good words I can think of apply to ${this.preposition3}.`,
                     `My ${this.data["name"]} was strong until the end, never losing ${this.preposition2} faith even on some of the most painful days.`
                   ];
-    console.log(this.data["jobHistory"]);
+    // console.log(this.data["jobHistory"]);
     
     if (this.checkJob("Nurse", this.data)) {
       eulogies.push(`${this.data["name"]} was a good hearted person who truly loved helping others. That is why ${this.preposition.toLowerCase()} put in decades as a nurse taking care of people who couldn’t take care of themselves.`);
@@ -133,7 +133,7 @@ export class ObituaryPage {
 
   newLife() {
     //this.events.publish("goToHomeNewLife");
-    this.data = this.data["shareService"].createMe(this.data, "", "", "obituary");
+    this.data = this.data["shareService"].createMe(this.data, "", "", "obituary", "force");
     this.changeTab(0);
   }
 

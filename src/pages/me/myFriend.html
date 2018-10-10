@@ -1,0 +1,70 @@
+<ion-scroll scrollX="false" scrollY="true" style="width: 100%; height: 100%; word-wrap: break-word;">
+  <div class="modalOverlay" (click)="dismiss()"></div>
+
+  <div class="modalContent marginTop10">
+    <ion-card>
+      <ion-card-header>
+        <b class="gurniDolje">{{friend.name}} {{friend.surname}}</b>
+        <button ion-button (click)="dismiss()" class="buttonright" color="danger" small>
+          <ion-icon name="md-close"></ion-icon>
+        </button>
+      </ion-card-header>
+    </ion-card>
+    <ion-list>
+
+      <ion-card>
+        <ion-card-content>
+          <ion-card-header>
+            Friendship Strength: {{friend.strength}}%
+            <br>
+            <div class="progressBar">
+              <div class="progress-bar">
+                <span class="progress-bar-fill progressBarDanger" [ngStyle]="{'width': friend.strength + '%'}"></span>
+              </div>
+            </div>
+          </ion-card-header>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-list>
+          <ion-item-divider color="light">
+            <b>Activities</b>
+          </ion-item-divider>
+
+          <button ion-item class="button-ion-item bottomLine" *ngIf="data.age > 15" (click)="data.shareService.friendAction(data, friend, 'for a coffee')">
+            <ion-icon name="color-coffee-cup" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition">Invite for a coffee</span>
+          </button>
+
+          <button ion-item class="button-ion-item bottomLine" (click)="data.shareService.friendAction(data, friend, 'to play football')">
+            <ion-icon name="quicklife-football" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition">Play football</span>
+          </button>
+
+          <button ion-item class="button-ion-item bottomLine" (click)="data.shareService.friendAction(data, friend, 'to play basketball')">
+            <ion-icon name="color-basketball" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition">Play basketball</span>
+          </button>
+
+          <button ion-item class="button-ion-item bottomLine" (click)="data.shareService.friendAction(data, friend, 'to rollerblade')">
+            <ion-icon name="color-rollerblade" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition">Go rollerblading</span>
+          </button>
+
+          <button ion-item class="button-ion-item bottomLine" (click)="data.shareService.friendAction(data, friend, 'to ride a bike')">
+            <ion-icon name="color-bicycle" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition">Ride a bike</span>
+          </button>
+
+          <button ion-item class="button-ion-item bottomLine" (click)="data.shareService.friendAction(data, friend, 'to ride a skateboard')"
+            *ngIf="data.age < 25">
+            <ion-icon name="color-skateboard" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition">Ride a skateboard</span>
+          </button>
+        </ion-list>
+      </ion-card>
+
+    </ion-list>
+  </div>
+</ion-scroll>

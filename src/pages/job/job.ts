@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { PopoverController } from 'ionic-angular';
+import { PopoverController, ViewController } from 'ionic-angular';
 import { PopoverContentPage } from '../popover/popover';
 import { ShareService } from '../../services/share/share';
 
@@ -11,7 +11,7 @@ import { ShareService } from '../../services/share/share';
 export class JobPage {
   data: object;
   jobTabs: string;
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public viewCtrl: ViewController) {
     this.data = shareService.getData();
     this.data["shareService"] = shareService;
 
@@ -23,6 +23,10 @@ export class JobPage {
     popover.present({
       ev: myEvent
     });
+  }
+
+  backButtonAction() {
+    this.viewCtrl.dismiss();
   }
 
 }

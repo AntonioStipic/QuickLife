@@ -33,8 +33,8 @@ export class MePage {
     events.subscribe("goToObituary", () => {
       this.changeTab(5);
     });
-  }
 
+  }
 
   ionViewDidEnter() {
     if (this.data["reloadLife"] == 1) {
@@ -48,8 +48,30 @@ export class MePage {
       this.data["reloadLife"] = 0;
       this.changeTab(0);
     }
+
+    this.checkDiseases(this.data);
+
   }
   
+  checkDiseases(data) {
+
+    if (data.diseases.length == 0) {
+      data.diseasesLabel = "None";
+    } else {
+      let tmp = "";
+
+      for (let i = 0; i < data.diseases.length; i++) {
+        if (i != data.diseases.length - 1) {
+          tmp += data.diseases[i] + ", ";
+        } else {
+          tmp += data.diseases[i];
+        }
+      }
+
+      data.diseasesLabel = tmp;
+    }
+  }
+
 
   openPopover(myEvent) {
     this.popover.present({

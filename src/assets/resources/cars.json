@@ -1524,6 +1524,7 @@
     {  
         "value":"FER",
         "title":"Ferrari",
+        "price":"118-210",
         "models":[  
             {  
                 "value":"308GTB",
@@ -2567,8 +2568,8 @@
         ]
     },
     {  
-        "value":"KIA",
-        "title":"Kia",
+        "value":"KEA",
+        "title":"Kea",
         "price":"5-30",
         "models":[  
             {  
@@ -4183,6 +4184,7 @@
     {  
         "value":"PEUG",
         "title":"Peugeot",
+        "price":"20-60",
         "models":[  
             {  
                 "value":"405",
@@ -4397,6 +4399,7 @@
     {  
         "value":"POR",
         "title":"Porsche",
+        "price":"110-210",
         "models":[  
             {  
                 "value":"911",

@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { Platform, ModalController } from 'ionic-angular';
+import { Platform, ModalController, AlertController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Keyboard } from '@ionic-native/keyboard';
-/* import { Events } from 'ionic-angular';
-import { NavController } from 'ionic-angular'; */
-//import { Tabs } from 'ionic-angular';
+import { App } from 'ionic-angular';
+import { Events } from 'ionic-angular';
 
 import { TabsPage } from '../pages/tabs/tabs';
 
@@ -14,8 +13,8 @@ import { TabsPage } from '../pages/tabs/tabs';
 })
 export class MyApp {
   rootPage: any = TabsPage;
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, keyboard: Keyboard, modalCtrl: ModalController) { //, public events: Events, public navCtrl: NavController
-    
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, keyboard: Keyboard, modalCtrl: ModalController, public app: App, public alertCtrl: AlertController, public events: Events) { //, public events: Events, public navCtrl: NavController
+
     statusBar.styleDefault();
     splashScreen.hide();
     keyboard.disableScroll(true);
@@ -24,12 +23,78 @@ export class MyApp {
 
     }).catch(err => {
       console.log(err);
-    });
-    platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      
     }); */
+    // platform.ready().then(() => {
+
+    //   platform.registerBackButtonAction(() => {
+    //     // Catches the active view
+    //     let nav = this.app.getActiveNavs()[0];
+    //     let activeView = nav.getActive();
+    //     // Checks if can go back before show up the alert
+    //     // if (activeView.name === "HomePage") {
+    //     if (nav.canGoBack()) { //Can we go back?
+    //       nav.pop();
+    //     } else {
+    //       let alert = this.alertCtrl.create({
+    //         title: 'Exit QuickLife',
+    //         message: 'Are you sure?',
+    //         buttons: [{
+    //           text: 'Yes',
+    //           handler: () => {
+    //             platform.exitApp();
+    //           }
+    //         }, {
+    //           text: 'No',
+    //           role: 'cancel',
+    //           handler: () => {
+
+    //           }
+    //         }]
+    //       });
+    //       alert.present();
+    //     }
+    //     // } else {
+    //     //   // this.events.publish("goToHome");
+    //     //   // alert(JSON.stringify(activeView, null, 4));
+    //     // }
+    //   });
+
+    // });
+
+
+    platform.registerBackButtonAction(() => {
+      let nav = app.getActiveNavs()[0];
+      let activeView = nav.getActive();
+
+      if (activeView != null) {
+        if (nav.canGoBack())
+          nav.pop();
+        else if (typeof activeView.instance.backButtonAction === 'function')
+          activeView.instance.backButtonAction();
+        else if (activeView.name != "HomePage")
+          nav.parent.select(0); // goes to the first tab
+        else {
+          let alert = this.alertCtrl.create({
+            title: 'Exit QuickLife',
+            message: 'Are you sure?',
+            buttons: [{
+              text: 'Yes',
+              handler: () => {
+                platform.exitApp();
+              }
+            }, {
+              text: 'No',
+              role: 'cancel',
+              handler: () => {
+
+              }
+            }]
+          });
+          alert.present();
+        }
+      }
+    });
+
 
   }
 
