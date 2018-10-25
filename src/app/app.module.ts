@@ -13,7 +13,7 @@ import { HomePage } from '../pages/home/home';
 import { ObituaryPage } from '../pages/obituary/obituary';
 import { TabsPage } from '../pages/tabs/tabs';
 import { PrisonPage } from '../pages/prison/prison';
-import { findLoveModal, propertyListingModal, carsForSaleModal, socialNetworkModal, holidayModal, mortgageModal, weddingModal, childModal, musicModal, bandNameModal, createAlbumModal, commitSuicideModal, carInfoModal, myChildModal, myFriendModal } from '../services/share/share';
+import { findLoveModal, propertyListingModal, carsForSaleModal, socialNetworkModal, holidayModal, mortgageModal, weddingModal, childModal, musicModal, bandNameModal, createAlbumModal, commitSuicideModal, carInfoModal, myChildModal, myFriendModal, artModal, paintModal, paintingsModal, petModal } from '../services/share/share';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -32,6 +32,10 @@ import { HttpModule } from '@angular/http';
 import { IonicStorageModule } from '@ionic/storage';
 
 import { GooglePlayGamesServices } from '@ionic-native/google-play-games-services';
+import { Screenshot } from '@ionic-native/screenshot';
+import { SocialSharing } from '@ionic-native/social-sharing';
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
+
 //import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 
@@ -52,10 +56,14 @@ import { GooglePlayGamesServices } from '@ionic-native/google-play-games-service
     socialNetworkModal,
     customLifeModal,
     holidayModal,
+    petModal,
     mortgageModal,
     weddingModal,
     childModal,
     musicModal,
+    artModal,
+    paintModal,
+    paintingsModal,
     bandNameModal,
     createAlbumModal,
     commitSuicideModal,
@@ -97,10 +105,14 @@ import { GooglePlayGamesServices } from '@ionic-native/google-play-games-service
     socialNetworkModal,
     customLifeModal,
     holidayModal,
+    petModal,
     mortgageModal,
     weddingModal,
     childModal,
     musicModal,
+    artModal,
+    paintModal,
+    paintingsModal,
     bandNameModal,
     createAlbumModal,
     commitSuicideModal,
@@ -116,6 +128,9 @@ import { GooglePlayGamesServices } from '@ionic-native/google-play-games-service
     SplashScreen,
     ShareService,
     Keyboard,
+    Screenshot,
+    SocialSharing,
+    FirebaseAnalytics,
     GooglePlayGamesServices,
     AppVersion,
     //FirebaseAnalytics,

@@ -10,14 +10,14 @@ import { ShareService } from '../../services/share/share';
 })
 export class FamilyPage {
   data: object;
-  familyTabs: string;
+  familyTabs: string = "Parents";
   popover = this.popoverCtrl.create(PopoverContentPage);
 
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService) {
     this.data = shareService.getData();
     this.data["shareService"] = shareService;
 
-    this.familyTabs = "Parents";
+    // this.familyTabs = "Parents";
   }
 
   changeTab(index, data) {

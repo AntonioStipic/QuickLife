@@ -133,6 +133,18 @@
               </label>
             </div>
 
+
+            <div ion-item>
+              <label><b>Painting:</b> {{data.painting.toFixed(0)}}%
+                <br>
+                <div class="progressBar">
+                  <div class="progress-bar">
+                    <span class="progress-bar-fill progressBarRoyal" [ngStyle]="{'width': data.painting + '%'}"></span>
+                  </div>
+                </div>
+              </label>
+            </div>
+
             <div ion-item>
               <label><b>Musicality:</b> {{data.musicality.toFixed(0)}}%
                 <br>
@@ -399,6 +411,12 @@
             <span class="absolutePosition"> Go on a date</span>
           </button>
 
+          <button ion-item (click)="data.shareService.petModal(data)" class="button-ion-item topLine" [disabled]="data.age < 12">
+            <!-- <ion-icon name="quicklife-date-conversation" class="miscListIcon"></ion-icon> -->
+            <ion-icon name="color-dog" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition"> Adopt a pet</span>
+          </button>
+
           <button ion-item (click)="data.shareService.commitSuicideModal(data)" class="button-ion-item topLine" [disabled]="data.age < 12">
             <!-- <ion-icon name="quicklife-rope" class="miscListIcon"></ion-icon> -->
             <ion-icon name="color-rope" class="miscListIcon"></ion-icon>
@@ -424,6 +442,12 @@
             <!-- <ion-icon name="md-microphone" class="miscListIcon"></ion-icon> -->
             <ion-icon name="color-microphone" class="miscListIcon"></ion-icon>
             <span class="absolutePosition"> Music</span>
+          </button>
+
+          <button ion-item class="button-ion-item topLine" (click)="data.shareService.artModal(data)" [disabled]="data.age < 10">
+            <!-- <ion-icon name="md-microphone" class="miscListIcon"></ion-icon> -->
+            <ion-icon name="color-palette" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition"> Art</span>
           </button>
 
         </ion-list>

@@ -71,17 +71,17 @@
 
             <button ion-button color="calm-v1" class="halfWidthModal" *ngIf="data.bands.length != 0 && data.selectedBandObject.active == 1" (click)="createAlbumModal(data)">
               Create album
-              <ion-icon id="clockIcon" name="md-disc"></ion-icon>
+              <ion-icon id="clockIcon" name="color-compact-disc"></ion-icon>
             </button>
 
             <button ion-button color="energized-v1" class="halfWidthModal" (click)="bandNameModal(data)">
               Create artist
-              <ion-icon id="clockIcon" name="md-musical-note"></ion-icon>
+              <ion-icon id="clockIcon" name="color-singer"></ion-icon>
             </button>
 
             <button ion-button color="danger" class="halfWidthModal" *ngIf="data.bands.length != 0 && data.selectedBandObject.active == 1" (click)="disband(data)">
               Disband
-              <ion-icon id="clockIcon" name="md-musical-note"></ion-icon>
+              <ion-icon id="clockIcon" name="color-prohibition"></ion-icon>
             </button>
 
             <button ion-button color="money" class="halfWidthModal" *ngIf="data.bands.length != 0 && data.selectedBandObject.active == 0" (click)="reunite(data)">

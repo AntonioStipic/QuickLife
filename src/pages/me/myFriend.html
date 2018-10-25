@@ -37,6 +37,11 @@
             <span class="absolutePosition">Invite for a coffee</span>
           </button>
 
+          <button ion-item class="button-ion-item bottomLine" *ngIf="data.shareService.showFlirtFriend(data, friend)" (click)="data.shareService.friendActionFlirt(data, friend)">
+            <ion-icon name="color-love-letter" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition">Flirt with {{friend.name}}</span>
+          </button>
+
           <button ion-item class="button-ion-item bottomLine" (click)="data.shareService.friendAction(data, friend, 'to play football')">
             <ion-icon name="quicklife-football" class="miscListIcon"></ion-icon>
             <span class="absolutePosition">Play football</span>

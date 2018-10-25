@@ -1,0 +1,50 @@
+<div class="modalOverlay" (click)="dismiss()"></div>
+
+<div class="modalContent verticalCenter">
+  <ion-card>
+    <ion-card-header>
+      <b class="gurniDolje">Paint</b>
+      <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1" small>
+        <ion-icon name="md-close"></ion-icon>
+      </button>
+    </ion-card-header>
+  </ion-card>
+  <ion-list>
+
+    <ion-card>
+      <ion-card-content>
+        <ion-list>
+          <ion-item>
+            <ion-label class="ion-select-text">
+              <b>Name:</b>
+            </ion-label>
+            <ion-input type="text" placeholder="Enter painting name" [(ngModel)]="paintingName" [attr.maxlength]="50" text-right></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label class="ion-select-text">
+              <b>Theme:</b>
+            </ion-label>
+            <ion-select [(ngModel)]="paintingTheme" multiple="false" cancelText="Dismiss" okText="Ok">
+              <ion-option *ngFor="let theme of themes" [value]="theme">{{theme}}</ion-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label class="ion-select-text">
+              <b>Colors used:</b>
+            </ion-label>
+            <ion-select [(ngModel)]="paintingColors" multiple="true" cancelText="Dismiss" okText="Ok">
+              <ion-option *ngFor="let color of colors" [value]="color">{{color}}</ion-option>
+            </ion-select>
+          </ion-item>
+          <button ion-button color="royal-v1" class="buttonright" (click)="createPainting(data, paintingName, paintingTheme, paintingColors)">
+            Create
+          </button>
+          <button style="text-transform: none;" ion-button color="royal-v1" class="buttonright" (click)="randomPaintingName(data)">
+            Random name
+          </button>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+  </ion-list>
+</div>

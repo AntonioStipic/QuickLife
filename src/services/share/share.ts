@@ -7,7 +7,9 @@ import { Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { ToastController } from 'ionic-angular';
 import { GooglePlayGamesServices } from '@ionic-native/google-play-games-services';
-import { AppVersion } from '@ionic-native/app-version';
+import { Screenshot } from '@ionic-native/screenshot';
+import { SocialSharing } from '@ionic-native/social-sharing';
+// import { AppVersion } from '@ionic-native/app-version';
 //import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 @Injectable()
@@ -19,8 +21,10 @@ export class ShareService {
     bands;
     albums;
     lifeId;
+    paintings;
+    screenshotURI;
     //, private firebaseAnalytics: FirebaseAnalytics
-    constructor(public app: App, public alertCtrl: AlertController, public modalCtrl: ModalController, public events: Events, private http: Http, private storage: Storage, private toastCtrl: ToastController, private googlePlayGamesServices: GooglePlayGamesServices) {
+    constructor(public app: App, public alertCtrl: AlertController, public modalCtrl: ModalController, public events: Events, private http: Http, private storage: Storage, private toastCtrl: ToastController, private googlePlayGamesServices: GooglePlayGamesServices, private screenshot: Screenshot, private socialSharing: SocialSharing) {
         this.data = {};
         console.log(storage);
         this.http.get("assets/resources/bands.json")
@@ -47,16 +51,46 @@ export class ShareService {
                 console.log(error);
             });
 
+        this.http.get("assets/resources/paintings.json")
+            .subscribe(res => {
+                this.paintings = res.json();
+                //this.albums = Array.of(this.albums);
+                this.paintings = this.paintings.names;
+                //console.log(this.bands[this.randomAtoB(0, this.bands.length - 1)]);
+                //console.log(this.names);
+                //this.data = this.data["shareService"].createMe(this.data, this.names);
+            }, error => {
+                console.log(error);
+            });
+
 
         storage.get("achievements").then((val) => {
             console.log('Achievements', val);
 
-            let currectVersion = "0.2.1.";
-            
+            let currectVersion = "0.2.6.";
+
             storage.get("appVersion").then((appVersionStorage) => {
                 let resetAchievement = 0;
-                if (val == null || resetAchievement == 1 || currectVersion != appVersionStorage) {
+
+
+                if (currectVersion != appVersionStorage) {
                     storage.set("appVersion", currectVersion);
+                    let alert = this.alertCtrl.create({
+                        subTitle: "QuickLife updated to 0.2.6!",
+                        message: `Here is what's new:<br><br>* Bug fixes`,
+                        buttons: [
+                            {
+                                text: 'Okay',
+                                handler: () => {
+
+                                }
+                            }]
+                    });
+                    alert.present();
+                }
+
+
+                if (val == null || resetAchievement == 1) {
                     storage.set("achievements", [
                         { id: "Internet celebrity", title: "Internet celebrity", description: "Gain more than 1,000,000 followers on social network", finished: false },
                         { id: "Aced it!", title: "Aced it!", description: "Finish elementary school with grade A", finished: false },
@@ -192,6 +226,17 @@ export class ShareService {
         data.holidayModal.present();
     }
 
+    petModal(data) {
+        data.petModal = this.modalCtrl.create(petModal, { data: data }, {
+            showBackdrop: false,
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
+        });
+        data.petModal.present();
+    }
+
+
     finishedAchievement(id) {
         let toast = this.toastCtrl.create({
             message: `<div class="toastText">"${id}" unlocked! <img class="toastImg" src="assets/imgs/circle-loader.svg"></div>`,
@@ -265,6 +310,36 @@ export class ShareService {
         data.musicModal.present();
     }
 
+    artModal(data) {
+        data.artModal = this.modalCtrl.create(artModal, { data: data }, {
+            showBackdrop: false,
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
+        });
+        data.artModal.present();
+    }
+
+    paintModal(data) {
+        data.paintModal = this.modalCtrl.create(paintModal, { data: data }, {
+            showBackdrop: false,
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
+        });
+        data.paintModal.present();
+    }
+
+    paintingsModal(data) {
+        data.paintingsModal = this.modalCtrl.create(paintingsModal, { data: data }, {
+            showBackdrop: false,
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
+        });
+        data.paintingsModal.present();
+    }
+
     childModal(data, child) {
         data.childBornModal = this.modalCtrl.create(childModal, { data: data, child: child }, {
             showBackdrop: false,
@@ -332,7 +407,11 @@ export class ShareService {
     }
 
     sexualityConfirm(data) {
-        data.years[data.age].events.push("I declared myself as " + data.sexuality + ".");
+        if (data.age > 10) {
+            data.years[data.age].events.push("I declared myself as " + data.sexuality + ".");
+
+            this.saveGame(data);
+        }
     }
 
     createRealEstate() {
@@ -666,7 +745,9 @@ export class ShareService {
         if (data.isLearning == 1) {
             data.years[data.age].events.push("I started learning.");
         } else {
-            data.years[data.age].events.push("I stopped learning.");
+            if (data.age > 6) {
+                data.years[data.age].events.push("I stopped learning.");
+            }
         }
     }
 
@@ -675,15 +756,17 @@ export class ShareService {
     }
 
     verifyLifeId(data, func) {
-        if (data.lifeId != this.lifeId) {
-            data.changeThisLifeIdNextYear = 1;
-            data.alreadyVerified[func] += 1;
-            if (data.alreadyVerified[func] > 1) {
-                return false;
-            } else {
-                return true;
-            }
-        } else return false;
+        // if (data.lifeId != this.lifeId) {
+        //     data.changeThisLifeIdNextYear = 1;
+        //     data.alreadyVerified[func] += 1;
+        //     if (data.alreadyVerified[func] > 1) {
+        //         return false;
+        //     } else {
+        //         return true;
+        //     }
+        // } else return false;
+
+        return false;
     }
 
     readingChanged(data) {
@@ -694,7 +777,9 @@ export class ShareService {
         if (data.isReadingBooks == 1) {
             data.years[data.age].events.push("I started reading books.");
         } else {
-            data.years[data.age].events.push("I stopped reading books.");
+            if (data.age > 8) {
+                data.years[data.age].events.push("I stopped reading books.");
+            }
         }
     }
 
@@ -710,7 +795,9 @@ export class ShareService {
             data.years[data.age].events.push("I started going to gym.");
             data.outcome += (50);
         } else {
-            data.years[data.age].events.push("I stopped going to gym.");
+            if (data.age > 8) {
+                data.years[data.age].events.push("I stopped going to gym.");
+            }
             data.outcome -= (50);
         }
     }
@@ -737,12 +824,14 @@ export class ShareService {
                 lessThan = data.smokingFor / 5;
             }
 
-            if (this.randomAtoB(1, data.smokingFor) < lessThan) {
-                data.smokingFor = 0;
-                data.years[data.age].events.push("I stopped smoking.");
-            } else {
-                data.years[data.age].events.push("I stopped smoking.");
-                data.startSmokingAgain = 1;
+            if (data.age > 15) {
+                if (this.randomAtoB(1, data.smokingFor) < lessThan) {
+                    data.smokingFor = 0;
+                    data.years[data.age].events.push("I stopped smoking.");
+                } else {
+                    data.years[data.age].events.push("I stopped smoking.");
+                    data.startSmokingAgain = 1;
+                }
             }
         }
     }
@@ -1044,9 +1133,106 @@ export class ShareService {
         this.updateJobs(data, data.jsonJobs); */
     }
 
+    takeScreenshot(data) {
+        // let id = this.randomScreenshotId(4);
+        // this.screenshot.save("jpg", 80, "QuickLife Screenshot " + id).then(res => {
+        //     this.screenshotURI = res.filePath;
+
+        //     this.socialSharing.share(null, null, [this.screenshotURI], null);
+        //     // alert(this.screenshotURI);
+        // });
+
+
+        // let id = this.randomScreenshotId(4);
+        // this.screenshot.save("jpg", 100, "QuickLife Screenshot " + id).then(res => {
+        //     alert(res.filePath);
+        //     let options = {
+        //         message: "I'm playing QuickLife!",
+        //         subject: "", // fi. for email
+        //         files: [res.filePath], // an array of filenames either locally or remotely
+        //         url: "", //this.SHARE_OPTIONS_URL
+        //         chooserTitle: "" // Android only this.SHARE_OPTIONS_CHOOSER_TITLE
+        //     }
+
+        //     this.socialSharing.shareWithOptions(options)
+        //         .then(() => {
+        //             // alert("Success sharing");
+        //         })
+        //         .catch((err) => {
+        //             // alert("err sharing " + JSON.stringify(err));
+        //         });
+        //     // alert(this.screenshotURI);
+        // });
+
+        setTimeout(() => {
+            this.screenshot.URI(100)
+                .then((res) => {
+                    var options = {
+                        message: "I'm playing QuickLife!",
+                        subject: "QuickLife Screenshot", // fi. for email
+                        files: [res.URI], // an array of filenames either locally or remotely
+                        url: "", //this.SHARE_OPTIONS_URL
+                        chooserTitle: "" // Android only this.SHARE_OPTIONS_CHOOSER_TITLE
+                    }
+
+                    this.socialSharing.shareWithOptions(options)
+                        .then(() => {
+                            // alert("Success sharing");
+                        })
+                        .catch((err) => {
+                            // alert("err sharing" + JSON.stringify(err));
+                        });
+
+                }, (err) => {
+
+                });
+        }, 500);
+    }
+
+    shareLife(data) {
+        let life = "";
+        for (let i = 0; i < data.years.length; i++) {
+            life += i + " years old\n";
+
+            for (let j = 0; j < data.years[i].events.length; j++) {
+                life += data.years[i].events[j] + "\n";
+            }
+
+            life += "\n";
+        }
+
+        life = life.replace(/<br>/g, "\n");
+        life = life.replace(/<i>/g, "");
+        life = life.replace(/<\/i>/g, "");
+
+        var options = {
+            message: life,
+            subject: "My QuickLife Life", // fi. for email
+            files: [], // an array of filenames either locally or remotely
+            url: "", //this.SHARE_OPTIONS_URL
+            chooserTitle: "" // Android only this.SHARE_OPTIONS_CHOOSER_TITLE
+        }
+
+        this.socialSharing.shareWithOptions(options)
+            .then(() => {
+                // alert("Success sharing");
+            })
+            .catch((err) => {
+                // alert("err sharing" + JSON.stringify(err));
+            });
+
+    }
+
     randomId(length) {
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        for (var i = 0; i < length; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+        return text;
+    }
+
+    randomScreenshotId(length) {
+        var text = "";
+        var possible = "0123456789";
         for (var i = 0; i < length; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
         return text;
     }
@@ -1129,13 +1315,20 @@ export class ShareService {
         data.sociability = this.random1to100();
         data.fitness = this.randomAtoB(1, 100);
         data.musicality = this.randomAtoB(1, 100);
+        // data.painting = this.randomAtoB(1, 100);
+
+        data.painting = 100;
 
         // Happiness player has at the beggining of game
         data.happiness = this.randomAtoB(50, 100);
 
         // Balance player has at the beggining of game
-        data.finance = 100;
-        //data.finance = 10000000;
+        // data.finance = 100;
+        // data.finance = 100;
+
+        let finance: number = 100;
+        data.finance = finance;
+
         //data.finance = 150000;
 
         // Number of years left to paid of mortgage
@@ -1197,7 +1390,8 @@ export class ShareService {
         data.workExperience = 0;
 
         // Net worth of player
-        data.netWorth = 0;
+        let netWorth: number = 0;
+        data.netWorth = netWorth;
 
         // List of jobs that don't need to specify where are you working at
         data.jobsWithoutLabel = ["Doctor", "Nurse", "Police Officer", "Mathematics Professor", "Chemistry Professor", "Biology Professor", "Sociology Professor", "Physics Professor"];
@@ -1245,8 +1439,8 @@ export class ShareService {
             value: 'Mathematics'
         }, {
             type: 'radio',
-            label: 'Neuroscience',
-            value: 'Neuroscience'
+            label: 'Art and Design',
+            value: 'Art and Design'
         }, {
             type: 'radio',
             label: 'Physics',
@@ -1390,6 +1584,9 @@ export class ShareService {
         // Boolean is player currently going to gym
         data.goingToGym = 0;
 
+        // Object with pets
+        data.pets = [];
+
         // Boolean is player currently smoking
         data.smoking = 0;
 
@@ -1415,7 +1612,8 @@ export class ShareService {
         data.hasSocialNetwork = 0;
 
         // Number of fans that player has on social network
-        data.numOfSocialFans = 0;
+        let numOfSocialFans: number = 0;
+        data.numOfSocialFans = numOfSocialFans;
 
         // Number of selfies player has taken
         data.numOfSelfies = 0;
@@ -1490,6 +1688,15 @@ export class ShareService {
         data.brokeLegLastYear = 0;
         data.brokeArmLastYear = 0;
 
+        // Number of paintings painted and sold
+        data.numOfPaintings = 0;
+        data.numOfSoldPaintings = 0;
+        data.paintEarn = 0.00;
+        data.paintingsThisYear = 0;
+
+        // Object with all paintings
+        data.paintings = [];
+
         // Reseting bands
         data.selectedBandObject = undefined;
         data.selectedBand = undefined;
@@ -1516,7 +1723,7 @@ export class ShareService {
         data.genres = this.shuffle(["Rock", "Classical", "Jazz", "Heavy Metal", "Dance", "Hip-hop", "R&B", "Funk", "Country", "Thrash Metal", "Punk Rock", "Grunge", "Reggae", "Blues", "Religious", "Pop", "Folk", "Synthwave", "Electronic", "A cappella", "Crunk", "Death Metal", "Industrial"]);
 
         // Empty log
-        data.years = [{ "year": 0, "events": ["You have been born as " + data.name + " " + data.surname + ".", " You are " + data.nationality + ", " + data.genderFull + ".<br>You are living in " + data.city + ".", "Your parents are:<br>" + data.father.name + " " + data.surname + " (" + data.father.age + " years old),<br>" + data.mother.name + " " + data.surname + " (" + data.mother.age + " years old)."] }];
+        data.years = [{ "year": 0, "events": ["I have been born as " + data.name + " " + data.surname + ".", " I am " + data.nationality + ", " + data.genderFull + ".<br>I am living in " + data.city + ".", "My parents are:<br>" + data.father.name + " " + data.surname + " (" + data.father.age + " years old),<br>" + data.mother.name + " " + data.surname + " (" + data.mother.age + " years old)."] }];
 
         data.shareService.calculateNetWorth(data);
 
@@ -1637,6 +1844,11 @@ export class ShareService {
                 data.selfiesPerYear = saveData["selfiesPerYear"];
                 data.brokeLegLastYear = saveData["brokeLegLastYear"];
                 data.brokeArmLastYear = saveData["brokeArmLastYear"];
+                data.numOfPaintings = saveData["numOfPaintings"];
+                data.numOfSoldPaintings = saveData["numOfSoldPaintings"];
+                data.paintingsThisYear = saveData["paintingsThisYear"];
+                data.paintings = saveData["paintings"];
+                data.paintEarn = saveData["paintEarn"];
                 data.selectedBandObject = saveData["selectedBandObject"];
                 data.selectedBand = saveData["selectedBand"];
                 data.isFamous = saveData["isFamous"];
@@ -2103,6 +2315,15 @@ export class ShareService {
 
         let loverId = this.randomId(8);
 
+        let profileId = "";
+        if (loverGender == "male") {
+            profileId = "profile-boy-" + this.randomAtoB(1, 23);
+        } else {
+            profileId = "profile-girl-" + this.randomAtoB(1, 23);
+        }
+
+        let strength = 30;
+
         var playerAge = data.age;
         var variety = 0;
         if (playerAge > 25) {
@@ -2120,7 +2341,7 @@ export class ShareService {
             loverAge = playerAge - variety;
         }
 
-        return { name: loverName, surname: loverSurname, appearance: loverAppearance, intelligence: loverIntelligence, gender: loverGender, age: loverAge, fitness: loverFitness, stability: loverStability, time: loverTime, isPregnant: 0, id: loverId };
+        return { name: loverName, surname: loverSurname, appearance: loverAppearance, intelligence: loverIntelligence, gender: loverGender, age: loverAge, fitness: loverFitness, stability: loverStability, time: loverTime, isPregnant: 0, id: loverId, profileId: profileId, strength: strength };
     }
 
     createPerson(data) {
@@ -2677,6 +2898,23 @@ export class ShareService {
                         handler: () => {
                             console.log("You chatted!");
 
+                            let chance = 30;
+
+                            if (this.randomAtoB(1, 100) < chance) {
+                                data.friends.push(tmpPerson);
+                                let alert = this.alertCtrl.create({
+                                    subTitle: "New Friend!",
+                                    message: `I liked ${tmpPerson["name"]} very much. We exchanged our telephone numbers.`,
+                                    buttons: [{
+                                        text: 'Ok',
+                                        handler: () => {
+
+                                        }
+                                    }]
+                                });
+                                alert.present();
+                            }
+
                             data.shareService.checkNightOutSummary(data, doingSomethingCrazyChance);
                         }
                     }, {
@@ -2920,6 +3158,7 @@ export class ShareService {
 
     update(data) {
         data.update += 1;
+        this.saveGame(data);
     }
 
     propertyListings(data) {
@@ -2931,6 +3170,53 @@ export class ShareService {
 
         //console.log(posjedi)
         this.propertyListingModal(data, posjedi);
+    }
+
+    showFlirtFriend(data, friend) {
+        let condition = true;
+
+        if (data.age < 13) condition = false;
+        // console.log(data.genderFull, friend.gender);
+        if (data.sexuality == "Heterosexual" && data.genderFull == friend.gender) {
+            condition = false;
+        } else if (data.sexuality == "Homosexual" && data.genderFull != friend.gender) {
+            condition = false;
+        } else if (data.sexuality == "Asexual") {
+            condition = false;
+        }
+
+        if (data.lover.id == friend.id) {
+            condition = false;
+        }
+
+        return condition;
+    }
+
+    friendActionFlirt(data, friend) {
+        let chance = (friend.strength * 30 + data.intelligence * 20 + data.appearance * 30 + data.fitness * 20) * 0.6 / 100;
+
+        if (this.randomAtoB(1, 100) < chance) {
+            this.forceDate(data, friend);
+
+            data.myFriendModal.dismiss();
+            this.update(data);
+            this.events.publish("goToHome");
+        } else {
+            let alert = this.alertCtrl.create({
+                subTitle: "Uh-oh!",
+                message: `${friend.name} just wants to stay friends.`,
+                buttons: ["Ok"]
+            });
+            alert.present();
+
+            this.update(data);
+            data.years[data.age].events.push(`I tried flirting with ${friend.name}.`);
+        }
+
+    }
+
+    soldOnePainting(data) {
+        data.numOfSoldPaintings += 1;
     }
 
     friendAction(data, friend, action) {
@@ -2998,6 +3284,7 @@ export class ShareService {
         saveData["city"] = data.city;
         saveData["nationality"] = data.nationality;
         saveData["hisOrHers"] = data.hisOrHers;
+        saveData["painting"] = data.painting;
         saveData["age"] = data.age;
         saveData["alive"] = data.alive;
         saveData["appearance"] = data.appearance;
@@ -3019,6 +3306,7 @@ export class ShareService {
         saveData["goingToCollege"] = data.goingToCollege;
         saveData["currentCollegeMajor"] = data.currentCollegeMajor;
         saveData["myMajors"] = data.myMajors;
+        saveData["pets"] = data.pets;
         saveData["listOfColleges"] = data.listOfColleges;
         saveData["highSchoolGrade"] = data.highSchoolGrade;
         saveData["inDebt"] = data.inDebt;
@@ -3099,6 +3387,11 @@ export class ShareService {
         saveData["selfiesPerYear"] = data.selfiesPerYear;
         saveData["brokeLegLastYear"] = data.brokeLegLastYear;
         saveData["brokeArmLastYear"] = data.brokeArmLastYear;
+        saveData["numOfPaintings"] = data.numOfPaintings;
+        saveData["numOfSoldPaintings"] = data.numOfSoldPaintings;
+        saveData["paintingsThisYear"] = data.paintingsThisYear;
+        saveData["paintings"] = data.paintings;
+        saveData["paintEarn"] = data.paintEarn;
         saveData["selectedBandObject"] = data.selectedBandObject;
         saveData["selectedBand"] = data.selectedBand;
         saveData["isFamous"] = data.isFamous;
@@ -3143,6 +3436,7 @@ export class ShareService {
             data.city = saveData["city"];
             data.nationality = saveData["nationality"];
             data.hisOrHers = saveData["hisOrHers"];
+            data.painting = saveData["painting"];
             data.age = saveData["age"];
             data.alive = saveData["alive"];
             data.appearance = saveData["appearance"];
@@ -3164,6 +3458,7 @@ export class ShareService {
             data.goingToCollege = saveData["goingToCollege"];
             data.currentCollegeMajor = saveData["currentCollegeMajor"];
             data.myMajors = saveData["myMajors"];
+            data.pets = saveData["pets"];
             data.listOfColleges = saveData["listOfColleges"];
             data.highSchoolGrade = saveData["highSchoolGrade"];
             data.inDebt = saveData["inDebt"];
@@ -3262,9 +3557,7 @@ export class ShareService {
     }
 
     deleteSaveGame() {
-        console.log(1);
         this.storage.remove("lifeSave");
-        console.log(2);
     }
 
     goForDate(data, lover) {
@@ -3352,6 +3645,7 @@ export class ShareService {
         data.lover = lover;
         data.lover["status"] = "Relationship";
         data.lover["stability"] = 50;
+        data.lover["time"] = 0;
         data.years[data.age].events.push(`I'm dating ${lover.name} ${lover.surname}.`);
         alert.present();
     }
@@ -3428,6 +3722,10 @@ export class ShareService {
 
     randomAlbumName(data) {
         return (this.albums[this.randomAtoB(0, this.albums.length - 1)]);
+    }
+
+    randomPaintingName(data) {
+        return (this.paintings[this.randomAtoB(0, this.paintings.length - 1)]);
     }
 
     // This function is adjusted for generating appearance and intelligence
@@ -3616,6 +3914,16 @@ export class ShareService {
 
     disableAll(data) {
 
+    }
+
+    handlePainting(data, amount) {
+        if (data.painting + amount > 100) {
+            data.painting = 100;
+        } else if (data.painting + amount < 0) {
+            data.painting = 0;
+        } else {
+            data.painting += amount;
+        }
     }
 
     // Update jobs list
@@ -3986,6 +4294,276 @@ export class musicModal {
     }
 }
 
+
+
+@Component({
+    templateUrl: '../../pages/me/art.html'
+})
+export class artModal {
+    data: object;
+    //selectedBand;
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController, public events: Events) {
+        this.data = shareService.getData();
+
+        //console.log();
+    }
+
+    calculateEarn(data) {
+        return ("$" + data.shareService.formatMoney(data.paintEarn));
+    }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+@Component({
+    templateUrl: '../../pages/me/myWork.html'
+})
+export class paintingsModal {
+    data: object;
+
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController, public events: Events) {
+        this.data = shareService.getData();
+    }
+
+    sellPainting(data, painting) {
+        this.events.publish("goToHome");
+
+        data.artModal.dismiss();
+        data.paintingsModal.dismiss();
+
+        for (let i = 0; i < data.paintings.length; i++) {
+            if (data.paintings[i].id == painting.id) {
+                data.paintings[i].sold = true;
+
+                data.shareService.soldOnePainting(data);
+
+                data.finance += painting.price;
+
+                data.years[data.age].events.push(`I sold my painting <i>${painting.name}</i> for $${data.shareService.formatMoney(painting.price)}.`);
+            }
+        }
+    }
+
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+@Component({
+    templateUrl: '../../pages/me/paint.html'
+})
+export class paintModal {
+    data: object;
+    themes = ["My Birth", "Landscape", "World", "Alcohol abuse", "Absctract", "Drugs"];
+    colors = ["Red", "Yellow", "Blue", "Black", "Grey", "Green", "Purple", "Pink", "White", "Brown", "Orange"];
+    paintingName = "";
+
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController, public events: Events, public alertCtrl: AlertController) {
+        this.data = shareService.getData();
+
+        this.themes = this.data["shareService"].shuffle(this.themes);
+        this.colors = this.data["shareService"].shuffle(this.colors);
+
+
+    }
+
+    createPainting(data, name, theme, colors) {
+        if (data.paintingsThisYear < 3) {
+            if (name != undefined && theme != undefined && colors != undefined) {
+                data.artModal.dismiss();
+                let price = data.painting;
+                data.paintingsThisYear += 1;
+
+                if (data.numOfPaintings < data.shareService.randomAtoB(5, 8)) {
+                    price = data.painting * data.shareService.randomAtoB(3, 6);
+
+                    if (data.mySkills.indexOf("Art and Design") > -1) {
+                        price = price * data.shareService.randomAtoB(3, 6);
+                    }
+
+                } else if (data.numOfPaintings < 20) {
+                    let highChance = data.shareService.randomAtoB(1, 6);
+
+                    if (highChance == 1) {
+                        price = data.painting * data.shareService.randomAtoB(100, 150);
+                    } else if (highChance == 2) {
+                        price = data.painting * data.shareService.randomAtoB(150, 250);
+                    } else {
+                        price = data.painting * data.shareService.randomAtoB(50, 100);
+                    }
+                } else if (data.numOfPainting < 50) {
+                    let highChance = data.shareService.randomAtoB(1, 6);
+
+                    if (highChance == 1) {
+                        price = data.painting * data.shareService.randomAtoB(900, 1800);
+                    } else if (highChance == 2) {
+                        price = data.painting * data.shareService.randomAtoB(500, 900);
+                    } else {
+                        price = data.painting * data.shareService.randomAtoB(300, 500);
+                    }
+                } else {
+                    let highChance = data.shareService.randomAtoB(1, 4);
+
+                    if (highChance == 1) {
+                        price = data.painting * data.shareService.randomAtoB(5000, 10000);
+                    } else {
+                        price = data.painting * data.shareService.randomAtoB(2000, 4500);
+                    }
+                }
+
+                data.numOfPaintings += 1;
+
+                let id = data.shareService.randomId(8);
+
+                data.paintModal.dismiss();
+
+                let quotes = ['"Every artist was first an amateur"', '"Creativity takes courage"', '"You don’t take a photograph, you make it"', '"We don’t make mistakes, just happy little accidents"', '"A picture is a poem without words"', '"Life is the art of drawing without an eraser"'];
+
+                let quote = quotes[data.shareService.randomAtoB(0, quotes.length - 1)];
+
+
+                let artworks = [
+                    "This work is a peculiar and banal, religious world in which death and waste are omnipresent consisting of elaborately beaded sculptures which is reminiscent of the mechanism that initiates the firing sequence of a gun.",
+                    "The work deploys semifictional characters with real-world knowledge as a dialectic between conflicting discourses of urbanism and ecology.",
+                    "This work is a repressive, hard-edge box of prisms that reflect viewers’ own eyes back consisting of visual and sonic fields which is reminiscent of New York’s population of 1,086,000 residents.",
+                    "The work deploys domestic spaces as groundwork for systematic acts of discrimination.",
+                    "This work is a precious and disturbing, allegorical intersection of painting, sculpture, and performance consisting of floating, ghostly pairs of eyes which is reminiscent of invented spaces.",
+                    "The work deploys Gojira as labor-intensive processes.",
+                    "This work is a destructive, kitsch box of prisms that reflect viewers’ own eyes back consisting of a multi-channel sound and video installation which is reminiscent of formal precision and tenderness.",
+                    "The work deploys pronouns like I, you, and we as the ongoing interplay between physical site and displacement.",
+                    "This work is a simultaneously open, changeable, and tyrannical, geometric set of six floor-to-ceiling windows consisting of visceral exploration of domesticity which is reminiscent of bodily anxiety.",
+                    "The work deploys natural disasters or political situations as turning the mundane into the fantastical.",
+                    "This work is a disorienting, color field ceremonial stage consisting of a seventeenth-century demonological spell book which is reminiscent of bodily anxiety.",
+                    "The work deploys violence as a rupture or distortion as a way to take control of censorship in order to eliminate everything from bland nonsense to mass-produced pop to expressions of fascist ideology.",
+                    "This work is a visually pleasing, assembled voice emitted by speakers consisting of river and sky which is reminiscent of landscape and the body.",
+                    "The work deploys post-capitalist consumer politics as the ongoing interplay between physical site and displacement.",
+                    "This work is a personal, communal, natural, and historical, interactive infinite visual abyss consisting of uncanny performance of media narrative as childlike theater which is reminiscent of colonialist projections onto the rainforest.",
+                    "The work deploys often-invisible labor that goes into the development of buildings and neighborhoods as alluding to left-wing radicalism.",
+                    "The work deploys experimental geography as alluding to rising sea levels.",
+                    "The work deploys instruments of communication, drops of blood, and surrogates for the human body as describing subjectivity is formed in the wake of post-feminism.",
+                    "This work is a ritualistically heightened, abstract painting that is experienced both visually and physically consisting of remnants of ancient cultures with fragments of the contemporary world which is reminiscent of surreal or nightmarish characters.",
+                    "The work deploys pageantry as the struggle to communicate.",
+                    "This work is an unique, ironic video of flickering, colorful projections consisting of The Bering Sea which is reminiscent of identity, loss, mortality, and love.",
+                    "The work deploys domestic spaces as the struggle to communicate.",
+                    "This work is an intimate and estranging, technological set of larger-than-life insects consisting of melting clocks which is reminiscent of loss and ephemerality.",
+                    "The work deploys semifictional characters with real-world knowledge as the ongoing interplay between physical site and displacement.",
+                    "This work is an erasure-inducing, lyrical box of prisms that reflect viewers’ own eyes back consisting of a seventeenth-century demonological spell book which is reminiscent of traditional family photo albums.",
+                    "The work deploys social gaming as the art of balancing similarity and difference.",
+                    "This work is a phantasmagoric, autobiographical precisely outlined areas of flat color consisting of rich textures and multilayered surfaces which is reminiscent of the social and environmental impacts of climate change.",
+                    "The work deploys meticulous attention as represntative of radicalization within the political system.",
+                    "This work is a visceral, still-life machete consisting of cartoons, manga, and anime characters which is reminiscent of dystopian futures.",
+                    "The work deploys the front-page layout design of the New York Times as a signifier of power structures.",
+                    "This work is a virtual reality, psychological set of stark hand-painted page-spreads consisting of an unsettling dance of seduction, power, trust, tenderness, loss, and betrayal which is reminiscent of the mechanism that initiates the firing sequence of a gun.",
+                    "The work deploys semifictional characters with real-world knowledge as a dialectic between conflicting discourses of urbanism and ecology.",
+                    "The work deploys feminist interrogating self-objectification as a way to frame and transform reality.",
+                    "This work is an ecstatic and nightmarish, fantastic ceremonial stage consisting of environments seemingly in conflict which is reminiscent of a flayed skin.",
+                    "The work deploys personal possessions as suggesting innumerable idiosyncrasies of human relations.",
+                    "This work is a ritualistically heightened, ironic set of twenty-six trees consisting of figures draped in heavy costumes which is reminiscent of an image of aspirational wealth.",
+                    "The work deploys monumental scale as the art of balancing similarity and difference.",
+                    "This work is an unique, reflective performative sculpture consisting of figures draped in heavy costumes which is reminiscent of the urgent need to be heard in a time of struggle.",
+                    "The work deploys expressions of desire and biological instinct as the struggle to communicate.",
+                    "The work deploys images of dicks and motorcycle jackets as alluding to left-wing radicalism.",
+                    "This work is an elegiacal and haunting, gendered calculated absurdity consisting of conflicts that inhere in postmodern urbanism which is reminiscent of wounded defiance.",
+                    "This work is an elusively sad, didactic kaleidoscopic grid consisting of tapestries and linens which is reminiscent of acts of estrangement, reversal, ritualized behavior, and fragmentation."
+                ];
+
+                let artwork = artworks[data.shareService.randomAtoB(0, artworks.length - 1)];
+
+
+                let painting = {
+                    name: name,
+                    theme: theme,
+                    colors: colors,
+                    sold: false,
+                    price: price,
+                    id: id,
+                    artwork: artwork
+                };
+                // painting.artwork = artwork;
+
+                this.events.publish("goToHome");
+
+                let alert = this.alertCtrl.create({
+                    subTitle: quote,
+                    enableBackdropDismiss: false,
+                    message: `I finished my painting named <i>${painting.name}</i>.<br><br>Art critic opinion has been published:<br><i>"${artwork}"</i><br><br>You received a $${data.shareService.formatMoney(painting.price)} offer for this painting.<br>Would you like to sell it?`,
+                    buttons: [
+                        {
+                            text: 'Yes',
+                            handler: () => {
+                                //console.log('Yes');
+                                data.numOfSoldPaintings += 1;
+                                data.paintEarn += painting.price;
+                                painting.sold = true;
+
+                                data.finance += painting.price;
+
+                                data.paintings.push(painting);
+
+                                data.years[data.age].events.push(`I finished my painting <i>${painting.name}</i>.<br>I sold it for $${data.shareService.formatMoney(painting.price)}.`);
+                                data.shareService.update(data);
+                            }
+                        },
+                        {
+                            text: 'No',
+                            role: 'cancel',
+                            handler: () => {
+                                data.paintings.push(painting);
+
+                                data.years[data.age].events.push(`I finished my painting <i>${painting.name}</i>.`);
+                                data.shareService.update(data);
+                            }
+                        }]
+                });
+                alert.present();
+
+                console.log(painting);
+            }
+
+            data.shareService.handlePainting(data, data.shareService.randomAtoB(1, 2))
+        } else {
+            let alert = this.alertCtrl.create({
+                subTitle: "Uh-oh!",
+                message: `I don't have enough time for painting this year.`,
+                buttons: [
+                    {
+                        text: 'Ok',
+                        handler: () => {
+
+                        }
+                    }]
+            });
+            alert.present();
+        }
+    }
+
+    randomPaintingName(data) {
+        this.paintingName = data.shareService.randomPaintingName();
+    }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+
+
+
 @Component({
     templateUrl: '../../pages/me/myChild.html'
 })
@@ -4141,6 +4719,10 @@ export class createAlbumModal {
                     let copies = (band.fans + (upOrDown * band.fans * chanceOfGiantSuccess)).toFixed(0);
                     if (copies < 0) copies = (band.fans * data.shareService.randomAtoB(500, 1500) / 1000).toFixed(0);
 
+                    if (numOfSongs > 8 && numOfSongs < 13) {
+
+                    }
+
                     let newFans = 0;
                     if (copies / band.fans > 2.5) newFans = parseInt((band.fans * data.shareService.randomAtoB(1300, 2500) / 1000).toFixed(0));
                     else if (copies / band.fans > 2) newFans = parseInt((band.fans * data.shareService.randomAtoB(1200, 2000) / 1000).toFixed(0));
@@ -4174,6 +4756,10 @@ export class createAlbumModal {
                             newFans = parseInt((newFans * data.musicality / 200 / (data.shareService.randomAtoB(1300, 2000) / 1000)).toFixed(0));
                             copies = parseInt((copies * data.musicality / 200 / (data.shareService.randomAtoB(1300, 2000) / 1000)).toFixed(0));
                         }
+                    }
+
+                    if (parseInt(copies) > 200000000) {
+                        copies = parseInt(copies) * (data.shareService.randomAtoB(1, 100) / data.shareService.randomAtoB(100, 300));
                     }
 
                     copies = parseInt(copies);
@@ -4402,6 +4988,61 @@ export class holidayModal {
         this.vacation["travelTo"] = this.travelTo;
         this.vacation["price"] = (osnovica * this.varijacija / 100).toFixed(2);
         return (osnovica * this.varijacija / 100).toFixed(2);
+    }
+
+    randomAtoB(A, B) {
+        return Math.floor(Math.random() * (B - A + 1) + A);
+    }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+@Component({
+    templateUrl: '../../pages/me/petModal.html'
+})
+export class petModal {
+    data: object;
+    numOfPets: number;
+    pets = [];
+
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
+        this.data = shareService.getData();
+
+        let petSpecies = ["Dog", "Cat"];
+        let randomSpecie = "";
+        let mOrF = 0;
+        let sex = "";
+
+        for (let i = 0; i < 10; i++) {
+            let tmpPet: object = {};
+            mOrF = this.data["shareService"].randomAtoB(0, 1);
+            if (mOrF == 0) {
+                sex = "male";
+            } else {
+                sex = "female";
+            }
+
+            randomSpecie = petSpecies[this.data["shareService"].randomAtoB(0, petSpecies.length - 1)];
+
+            tmpPet["name"] = this.data["allPets"][randomSpecie][sex][this.data["shareService"].randomAtoB(0, this.data["allPets"][randomSpecie][sex].length - 1)];
+            tmpPet["sex"] = sex;
+            tmpPet["specie"] = randomSpecie;
+            tmpPet["breed"] = this.data["allPets"][randomSpecie]["species"][this.data["shareService"].randomAtoB(0, this.data["allPets"][randomSpecie]["species"].length - 1)];
+
+            tmpPet["icon"] = "color-" + randomSpecie.toLowerCase();
+
+            this.pets.push(tmpPet);
+            // console.log(randomSpecie);
+        }
+        console.log(this.pets);
+
+        // console.log(this.data["allPets"]);
     }
 
     randomAtoB(A, B) {

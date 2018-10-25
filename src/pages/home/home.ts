@@ -17,11 +17,12 @@ export class HomePage {
   jobs: object;
   cars: object;
   countries: object;
+  allPets: object;
   popover = this.popoverCtrl.create(PopoverContentPage);
   private _differ: any;
   causes = ["a heart attack", "a lung cancer", "a tuberculosis", "a stroke", "a chronic obstructive pulmonary disease", "a lower respiratory infection", "a tetanus", "a colon cancer", "a leukemia", "a meningitis", "a liver cancer", "a pertussis", "a bladder cancer"];
   babyCauses = ["a sudden infant death syndrome", "a malnutrition", "a blood infection", "a pneumonia"];
-  firstWords = ["Dad", "Dada", "Daddy", "Papa", "Mom", "Mama", "Mommy", "Mum", "Hi", "Hiya", "Hey", "Buba", "Bub", "Baba", "Dog", "Doggy", "Puppy", "Ball",  "No", "Cat", "Kitty", "Nana", "Bye", "Duck", "Ta", "Tata", "Baby", "Uh oh", "Car", "Apple", "Banana", "Bee", "Dance"];
+  firstWords = ["Dad", "Dada", "Daddy", "Papa", "Mom", "Mama", "Mommy", "Mum", "Hi", "Hiya", "Hey", "Buba", "Bub", "Baba", "Dog", "Doggy", "Puppy", "Ball", "No", "Cat", "Kitty", "Nana", "Bye", "Duck", "Ta", "Tata", "Baby", "Uh oh", "Car", "Apple", "Banana", "Bee", "Dance"];
 
   @ViewChild(Content) content: Content;
 
@@ -56,9 +57,9 @@ export class HomePage {
     } else {
       this.data["shareService"].googlePlayLogin();
     } */
-    
-    
-    
+
+
+
     console.log(KeyValueDiffers);
     this._differ = KeyValueDiffers.find({}).create();
     this.data["shareService"] = shareService;
@@ -94,6 +95,16 @@ export class HomePage {
       .subscribe(res => {
         this.cars = res.json();
         this.data["shareService"].setCars(this.data, this.cars);
+        //console.log(res.json());
+        //console.log(this.cars);
+      }, error => {
+        console.log(error);
+      });
+
+    this.http.get("assets/resources/pets.json")
+      .subscribe(res => {
+        this.allPets = res.json();
+        this.data["allPets"] = this.allPets;
         //console.log(res.json());
         //console.log(this.cars);
       }, error => {
@@ -450,6 +461,7 @@ export class HomePage {
     data.years.push({ "year": data.age, "events": [] });
     data.gotJobNum = -1;
     data.selfiesPerYear = 0;
+    data.paintingsThisYear = 0;
     data.numOfAlbums = 0;
 
     if (data.homeless == 1) {
@@ -480,7 +492,7 @@ export class HomePage {
 
     data.finance += data.allowance * 12;
 
-    if (data.finance < 0) {
+    if (data.finance < 0 && data.age > 17) {
       data.inDebt = 1;
       let alert = this.alertCtrl.create({
         title: 'You are in debt!',
@@ -941,7 +953,7 @@ export class HomePage {
       if (data.age == 1) {
         let firstWord = this.firstWords[data.shareService.randomAtoB(0, this.firstWords.length - 1)];
         //console.log(firstWord);
-        data.years[data.age].events.push(`You said your first word! You said "${firstWord}".`);
+        data.years[data.age].events.push(`I said my first word! I said "${firstWord}".`);
       } else if (data.age == 3) {
         data.years[data.age].events.push(`I started going to kindergarten.`);
         //console.log(data.shareService.createPerson(data));
@@ -1070,20 +1082,20 @@ export class HomePage {
           let friend = data.friends[friendIndex];
 
           let activities = ["is calling me to go play outside",
-                            "wants to go skateboarding together",
-                            "wants to go rollerblading together",
-                            "is calling me out to play football on the playground",
-                            "is calling me out to play basketball",
-                            "wants to go to the playground",
-                            "wants to ride bicycles together"];
+            "wants to go skateboarding together",
+            "wants to go rollerblading together",
+            "is calling me out to play football on the playground",
+            "is calling me out to play basketball",
+            "wants to go to the playground",
+            "wants to ride bicycles together"];
 
           let finishedActivities = ["playing outside",
-                                    "skateboarding",
-                                    "rollerblading",
-                                    "out to play football",
-                                    "out to play basketball",
-                                    "out to the playground",
-                                    "riding bicycle"];
+            "skateboarding",
+            "rollerblading",
+            "out to play football",
+            "out to play basketball",
+            "out to the playground",
+            "riding bicycle"];
 
           let activityIndex = data.shareService.randomAtoB(0, activities.length - 1);
           let activity = activities[activityIndex];

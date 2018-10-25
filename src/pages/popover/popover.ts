@@ -5,6 +5,7 @@ import { ShareService } from '../../services/share/share';
 import { TabsPage } from '../tabs/tabs';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Events } from 'ionic-angular';
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 @Component({
   templateUrl: 'popover.html'
@@ -13,7 +14,7 @@ import { Events } from 'ionic-angular';
 export class PopoverContentPage {
   data: object;
   //TabsPage: TabsPage;
-  constructor(public viewCtrl: ViewController, public navCtrl: NavController, shareService: ShareService, public modalCtrl: ModalController, public splashscreen: SplashScreen, public events: Events) {
+  constructor(public viewCtrl: ViewController, public navCtrl: NavController, shareService: ShareService, public modalCtrl: ModalController, public splashscreen: SplashScreen, public events: Events, private firebaseAnalytics: FirebaseAnalytics) {
     this.data = shareService.getData();
     this.data["shareService"] = shareService;
   }
@@ -26,6 +27,13 @@ export class PopoverContentPage {
     this.events.publish("goToHome");
     this.data["shareService"].createMe(this.data, "", "", "", "force");
     this.viewCtrl.dismiss();
+
+    this.data["shareService"].saveGame(this.data);
+
+    this.firebaseAnalytics.logEvent("newLife", {});
+    // .catch((error: any) => console.error(error));
+
+    //.then((res: any) => console.log(res))
   }
 
   randomId(length) {
@@ -93,7 +101,7 @@ export class customLifeModal {
   gender = "male";
   // nationality = "Croatian";
   nationality = "";
-  constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController, public navCtrl: NavController) {
+  constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController, public navCtrl: NavController, private firebaseAnalytics: FirebaseAnalytics) {
     this.data = shareService.getData();
 
     this.nationality = this.data["countries"]["nationalities"][this.data["shareService"].randomAtoB(0, this.data["countries"]["nationalities"].length - 1)];
@@ -104,6 +112,10 @@ export class customLifeModal {
     data.customLife = 1;
     data.customLifeInfo = { name: name, surname: surname, gender: gender, nationality: nationality };
     this.navCtrl.push(TabsPage, {}, { animate: false });
+
+    this.firebaseAnalytics.logEvent("customLife", {});
+
+    // this.data["shareService"].saveGame(this.data);
   }
 
   backButtonAction() {

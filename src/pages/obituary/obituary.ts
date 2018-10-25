@@ -5,6 +5,7 @@ import { PopoverContentPage } from '../popover/popover';
 import { ShareService } from '../../services/share/share';
 import { Events } from 'ionic-angular';
 import { customLifeModal } from '../popover/popover';
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 @Component({
   selector: 'page-obituary',
@@ -21,7 +22,7 @@ export class ObituaryPage {
   preposition2 = "";
   preposition3 = "";
   lifeId;
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public events: Events, public modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, shareService: ShareService, public events: Events, public modalCtrl: ModalController, private firebaseAnalytics: FirebaseAnalytics) {
     this.data = shareService.getData();
     this.data["shareService"] = shareService;
 
@@ -135,6 +136,8 @@ export class ObituaryPage {
     //this.events.publish("goToHomeNewLife");
     this.data = this.data["shareService"].createMe(this.data, "", "", "obituary", "force");
     this.changeTab(0);
+
+    this.firebaseAnalytics.logEvent("newLife", {});
   }
 
   customLife(data) {

@@ -11,7 +11,7 @@ import { Events } from 'ionic-angular';
 })
 export class MePage {
   data: object;
-  meTabs: string;
+  meTabs: string = "Info";
   assetsTabs: string;
   popover = this.popoverCtrl.create(PopoverContentPage);
   
@@ -19,7 +19,7 @@ export class MePage {
     this.data = shareService.getData();
     this.data["shareService"] = shareService;
 
-    this.meTabs = "Info";
+    // this.meTabs = "Info";
     this.assetsTabs = "House";
 
     events.subscribe("goToHome", () => {

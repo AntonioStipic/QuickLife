@@ -1,0 +1,53 @@
+<div class="modalOverlay" (click)="dismiss()"></div>
+
+<div class="modalContent verticalCenter">
+  <ion-card>
+    <ion-card-header>
+      <b class="gurniDolje">Art</b>
+      <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1" small>
+        <ion-icon name="md-close"></ion-icon>
+      </button>
+    </ion-card-header>
+  </ion-card>
+  <ion-list>
+
+    <ion-card>
+      <ion-card-content>
+        <ion-list>
+          <ion-item>
+            <ion-label class="ion-select-text listItem">
+              Paintings:
+            </ion-label>
+            <ion-input [value]="data.numOfPaintings" text-right disabled class="listItem2"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label class="ion-select-text listItem">
+              Sold:
+            </ion-label>
+            <ion-input [value]="data.numOfSoldPaintings" text-right disabled class="listItem2"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label class="ion-select-text listItem">
+              Earned:
+            </ion-label>
+            <ion-input [value]="calculateEarn(data)" text-right disabled class="listItem2"></ion-input>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <div class="textCenter">
+
+      <button ion-button color="calm-v1" class="halfWidthModal" (click)="data.shareService.paintModal(data)">
+        Paint
+        <ion-icon id="clockIcon" name="color-brush"></ion-icon>
+      </button>
+
+      <button ion-button color="money" class="halfWidthModal" (click)="data.shareService.paintingsModal(data)">
+        My work
+        <ion-icon id="clockIcon" name="color-painting"></ion-icon>
+      </button>
+    </div>
+
+  </ion-list>
+</div>

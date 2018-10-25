@@ -43,6 +43,12 @@
             "experience": 5,
             "education": 2,
             "skills": []
+        },{
+            "title": "Furniture Designer",
+            "salary": "23-32",
+            "experience": 2,
+            "education": 2,
+            "skills": ["Art and Design"]
         },
         {
             "title": "Mechanical Engineer",

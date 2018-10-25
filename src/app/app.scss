@@ -507,7 +507,44 @@ ion-icon {
   &[class*="color-coffee-cup"] {
     content: url("../assets/imgs/coffee-cup.png") !important;
   }
+  &[class*="color-love-letter"] {
+    content: url("../assets/imgs/love-letter.png") !important;
+  }
+  &[class*="color-palette"] {
+    content: url("../assets/imgs/palette.png") !important;
+  }
+  &[class*="color-painting"] {
+    content: url("../assets/imgs/painting.png") !important;
+  }
+  &[class*="color-brush"] {
+    content: url("../assets/imgs/brush.png") !important;
+  }
+  &[class*="color-singer"] {
+    content: url("../assets/imgs/singer.png") !important;
+  }
+  &[class*="color-prohibition"] {
+    content: url("../assets/imgs/prohibition.png") !important;
+  }
+  &[class*="color-compact-disc"] {
+    content: url("../assets/imgs/compact-disc.png") !important;
+  }
+  &[class*="color-clock"] {
+    content: url("../assets/imgs/clock.png") !important;
+  }
+  &[class*="color-dog"] {
+    content: url("../assets/imgs/dog.png") !important;
+  }
+  &[class*="color-cat"] {
+    content: url("../assets/imgs/cat.png") !important;
+  }
 }
+
+
+.swipe-area {
+  height:100%;
+  width:100%;
+}
+
 
 .modal_content ion-card {
   width: 96% !important;

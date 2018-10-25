@@ -1,0 +1,34 @@
+<ion-scroll scrollX="false" scrollY="true" style="width: 100%; height: 100%; word-wrap: break-word;">
+    <div class="modalOverlay" (click)="dismiss()"></div>
+
+    <div class="modalContent marginTop10">
+        <ion-card>
+            <ion-card-header>
+                <b class="gurniDolje">My Work</b>
+                <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1" small>
+                    <ion-icon name="md-close"></ion-icon>
+                </button>
+            </ion-card-header>
+        </ion-card>
+        <ion-list>
+
+            <ion-card *ngFor="let painting of data.paintings">
+                <ion-card-header>
+                    <b>{{painting.name}}</b>
+                </ion-card-header>
+                <ion-card-content>
+                    <b>Theme:</b> {{painting.theme}}<br>
+                    <b>Colors:</b> {{painting.colors.join(", ")}}<br>
+                    <b>Value:</b> ${{data.shareService.formatMoney(painting.price)}}<br>
+                    <b>Critic:</b> <i>{{painting.artwork}}</i><br>
+                    <b>Sold:</b> {{painting.sold ? "Yes" : "No"}}<br>
+
+                    <button ion-button class="buttonright" (click)="sellPainting(data, painting)" *ngIf="!painting.sold" color="money" small>
+                            Sell
+                    </button>
+                </ion-card-content>
+            </ion-card>
+
+        </ion-list>
+    </div>
+</ion-scroll>

@@ -24,6 +24,9 @@
       <ion-segment-button value="Friends">
         Friends
       </ion-segment-button>
+      <ion-segment-button value="Pets">
+        Pets
+      </ion-segment-button>
     </ion-segment>
   </div>
 
@@ -195,6 +198,31 @@
             <ion-icon item-start [name]="friend.profileId" class="miscListIcon"></ion-icon>
             <div>
               {{friend.name}} {{friend.surname}} ({{friend.age}} years old)
+            </div>
+          </button>
+        </ion-list>
+      </ion-card>
+
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'Pets'">
+
+      <ion-card>
+        <!-- <ion-list> -->
+        <!-- <ion-item *ngIf="data.children.length == 0"> -->
+        <ion-card-header *ngIf="data.pets.length == 0">
+          <b>You don't have any pets.</b>
+        </ion-card-header>
+        <ion-card-content *ngIf="data.pets.length == 0">
+
+        </ion-card-content>
+        <!-- <ion-label><b>You don't have children.</b></ion-label> -->
+        <!-- </ion-item> -->
+        <ion-list>
+          <button ion-item *ngFor="let pet of data.pets">
+            <ion-icon item-start class="miscListIcon"></ion-icon>
+            <div>
+              {{pet.name}}
             </div>
           </button>
         </ion-list>
