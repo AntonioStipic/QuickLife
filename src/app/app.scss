@@ -537,6 +537,12 @@ ion-icon {
   &[class*="color-cat"] {
     content: url("../assets/imgs/cat.png") !important;
   }
+  &[class*="color-skyline"] {
+    content: url("../assets/imgs/skyline.png") !important;
+  }
+  &[class*="color-car-sale"] {
+    content: url("../assets/imgs/car-sale.png") !important;
+  }
 }
 
 
@@ -730,6 +736,7 @@ ion-icon {
   margin: 0 !important;
   padding: 0 !important;
 }
+
 .noPadding {
   padding: 0 !important;
 }
@@ -758,7 +765,7 @@ ion-icon {
 }
 
 .select-text {
-  //display: none;
+  // display: none;
 }
 
 .alert3Buttons button.alert-button-group {
@@ -813,5 +820,3 @@ body {
   padding-bottom: 15px !important;
   padding-left: 20px !important;
 }
-
-//.select2-results__option[aria-disabled="true"] {color:#f00 !important;}

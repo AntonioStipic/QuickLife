@@ -1,0 +1,47 @@
+<div class="modalOverlay" (click)="dismiss()"></div>
+
+<div class="modalContent verticalCenter">
+    <ion-card>
+        <ion-card-header>
+            <b class="gurniDolje">Property Info</b>
+            <button ion-button (click)="dismiss()" class="buttonright" color="royal-v1" small>
+                <ion-icon name="md-close"></ion-icon>
+            </button>
+        </ion-card-header>
+    </ion-card>
+    <ion-list>
+
+        <ion-card>
+            <ion-card-content>
+                <ion-list>
+                    <ion-item>
+                        <div *ngIf="property[0] == 'House'">
+                            <b>{{property[0]}}</b><br>
+                            <br> {{property[1] == 1? "1 bedroom":(property[1] + " bedrooms")}}
+                            <br> Garage: {{property[2]}}
+                            <br> Garden: {{property[3]}}
+                            <br> Value: ${{data.shareService.formatMoney(property[4])}}
+                          </div>
+            
+                          <div *ngIf="property[0] == 'Apartment' || property[0] == 'Condo'">
+                            <b>{{property[0]}}</b><br>
+                            <br> {{property[1] == 1? "1 bedroom":(property[1] + " bedrooms")}}
+                            <br> Parking: {{property[2]}}
+                            <br> Value: ${{data.shareService.formatMoney(property[3])}}
+                          </div>
+                    </ion-item>
+                    <button *ngIf="property[property.length - 1] != data.livingIn" ion-button full color="money" (click)="data.shareService.moveTo(data, property)">
+                            Move here
+                            <!-- &nbsp;<ion-icon name="logo-usd"></ion-icon> -->
+                        </button>
+                    <button ion-button full color="danger" (click)="data.shareService.sellProperty(data, property)">
+                            <!-- property[0] == 'House' -->
+                        Sell for ${{data.shareService.formatMoney(property[property[0] == "House"?4:3])}}
+                        <!-- &nbsp;<ion-icon name="logo-usd"></ion-icon> -->
+                    </button>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+
+    </ion-list>
+</div>

@@ -36,7 +36,17 @@ export class ObituaryPage {
       this.lifeId = this.data["lifeId"];
     }
   }
+
   refresh() {
+    this.prisonText = "";
+    this.childrenText = "";
+    this.speech = "";
+    this.gender = "";
+    this.preposition = "";
+    this.preposition2 = "";
+    this.preposition3 = "";
+
+
     this.speech = "";
     if (this.data["numOfCrimes"] > 0) {
       let preposition = "";

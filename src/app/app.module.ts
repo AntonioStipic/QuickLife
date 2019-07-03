@@ -13,7 +13,7 @@ import { HomePage } from '../pages/home/home';
 import { ObituaryPage } from '../pages/obituary/obituary';
 import { TabsPage } from '../pages/tabs/tabs';
 import { PrisonPage } from '../pages/prison/prison';
-import { findLoveModal, propertyListingModal, carsForSaleModal, socialNetworkModal, holidayModal, mortgageModal, weddingModal, childModal, musicModal, bandNameModal, createAlbumModal, commitSuicideModal, carInfoModal, myChildModal, myFriendModal, artModal, paintModal, paintingsModal, petModal } from '../services/share/share';
+import { findLoveModal, propertyListingModal, carsForSaleModal, socialNetworkModal, holidayModal, mortgageModal, weddingModal, childModal, musicModal, bandNameModal, createAlbumModal, commitSuicideModal, carInfoModal, myChildModal, myFriendModal, myPetModal, artModal, paintModal, paintingsModal, petModal, propertyInfoModal } from '../services/share/share';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -68,11 +68,13 @@ import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
     createAlbumModal,
     commitSuicideModal,
     carInfoModal,
+    propertyInfoModal,
     achievementsModal,
     aboutModal,
     PrisonPage,
     myChildModal,
-    myFriendModal
+    myFriendModal,
+    myPetModal
   ],
   imports: [
     BrowserModule,
@@ -117,11 +119,13 @@ import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
     createAlbumModal,
     commitSuicideModal,
     carInfoModal,
+    propertyInfoModal,
     achievementsModal,
     aboutModal,
     PrisonPage,
     myChildModal,
-    myFriendModal
+    myFriendModal,
+    myPetModal
   ],
   providers: [
     StatusBar,

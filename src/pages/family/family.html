@@ -219,10 +219,10 @@
         <!-- <ion-label><b>You don't have children.</b></ion-label> -->
         <!-- </ion-item> -->
         <ion-list>
-          <button ion-item *ngFor="let pet of data.pets">
-            <ion-icon item-start class="miscListIcon"></ion-icon>
+          <button ion-item *ngFor="let pet of data.pets" (click)="data.shareService.myPetModal(data, pet)">
+            <ion-icon item-start [name]="pet.icon" class="miscListIcon"></ion-icon>
             <div>
-              {{pet.name}}
+              {{pet.name}} ({{pet.age}} {{pet.age == 1?"year old":"years old"}})
             </div>
           </button>
         </ion-list>

@@ -646,6 +646,30 @@ export class HomePage {
       }
     }
 
+    for (let i = 0; i < data.pets.length; i++) {
+        data.pets[i].age += 1;
+
+        let chanceOfDying = 4;
+
+        if (data.pets[i].specie == "Cat") {
+          if (data.pets[i].age > 13) {
+            chanceOfDying += data.shareService.randomAtoB(8, 15);
+          }
+        }
+
+        if (data.pets[i].specie == "Dog") {
+          if (data.pets[i].age > 10) {
+            chanceOfDying += data.shareService.randomAtoB(8, 15);
+          }
+        }
+
+        if (chanceOfDying > data.shareService.randomAtoB(1, 100)) {
+          data.years[data.age].events.push(`My ${data.pets[i].specie.toLowerCase()} ${data.pets[i].name} died.`);
+          data.pets.splice(i, 1);
+          data.shareService.update(data);
+        }
+    }
+
     for (let i = 0; i < data.cars.length; i++) {
       data.cars[i]["age"] += 1;
 
@@ -678,6 +702,177 @@ export class HomePage {
 
     this.willParentsDie(data);
     this.regulateHappiness(data);
+
+    if (data.alive == 1 && data.ownedProperties.length > 0 && data.inPrison == 0) {
+      // let chanceOfBurglary = 5;
+      let chanceOfBurglary = 2;
+
+      if (chanceOfBurglary > data.shareService.randomAtoB(1, 100)) {
+        let numOfBurglars = data.shareService.randomAtoB(1, 2);
+
+        let oneOrTwo = "";
+        let oneOrTwo2 = "";
+        let oneOrTwo3 = "";
+        let oneOrTwo4 = "";
+        let buttonText = "";
+        if (numOfBurglars == 1) {
+          oneOrTwo = "Burglar";
+          oneOrTwo3 = "him";
+
+          buttonText = "Attack him";
+          oneOrTwo4 = "He";
+        } else {
+          oneOrTwo = "Burglars";
+          oneOrTwo2 = `<br>There are ${numOfBurglars} of them.`;
+          oneOrTwo3 = "them";
+
+          buttonText = "Attack them";
+
+          oneOrTwo4 = "They";
+        }
+
+        let textToAdd = "";
+
+        let chanceOfWeapon = 50;
+        if (chanceOfWeapon > data.shareService.randomAtoB(1, 100)) {
+          let weapons = ["pistol", "knife", "baseball bat", "knuckle duster", "taser"];
+          let weapon = weapons[data.shareService.randomAtoB(0, weapons.length - 1)];
+
+          if (numOfBurglars == 1) {
+            textToAdd += `<br>He is threatening you with a ${weapon}.`;
+          } else {
+            textToAdd += `<br>They are threatening you with a ${weapon}.`;
+          }
+        }
+
+        let alert = this.alertCtrl.create({
+          enableBackdropDismiss: false,
+          subTitle: 'Fight or flight',
+          message: `${oneOrTwo} broke into your home.${oneOrTwo2}${textToAdd}<br><br>What are you going to do?`,
+          buttons: [
+            {
+              text: buttonText,
+              handler: () => {
+                //console.log("I started High School");
+                //data.shareService.takeDrivingTest(data);
+                //console.log(pension);
+                //console.log("Retired");
+                // data.shareService.retire(data, pension);
+
+                let chanceOfGood = 43;
+
+                if (chanceOfGood > data.shareService.randomAtoB(1, 100)) {
+
+                  let textToAdd = ``;
+
+                  let isBroken = 60;
+                  if (isBroken > data.shareService.randomAtoB(1, 100)) {
+                    let brokens = ["arm", "leg", "hip", "jaw bone", "head", "finger", "ribs"];
+
+                    let broken = brokens[data.shareService.randomAtoB(0, brokens.length - 1)];
+
+                    textToAdd += `<br>I broke his ${broken}.`;
+                  }
+
+                  let text = `I managed to defend myself.<br>I attacked ${oneOrTwo3} unexpectedly.<br>${textToAdd}<br>${oneOrTwo4} escaped.`;
+
+                  let alert = this.alertCtrl.create({
+                    enableBackdropDismiss: false,
+                    subTitle: 'Take that!',
+                    message: text,
+                    buttons: [
+                      {
+                        text: 'Ok'
+                      }
+                    ]
+                  });
+                  alert.present();
+                } else {
+                  // let chanceOfDeath = 5;
+                  let chanceOfDeath = 10;
+                  if (chanceOfDeath > data.shareService.randomAtoB(1, 100)) {
+                    data.alive = 0;
+
+                    data.deathCause = "injuries";
+
+                    data.years[data.age].events.push(`I died in the fight with the ${oneOrTwo.toLowerCase()}.`);
+
+                    data.shareService.saveGame(data);
+                  } else {
+                    let brokens = ["arm", "leg", "hip", "jaw bone", "head", "finger", "ribs"];
+
+                    let id = data.shareService.randomAtoB(0, brokens.length - 1);
+                    let broken = brokens[id];
+
+                    brokens.splice(id, 1);
+
+                    let textToAdd = `<br><br>${oneOrTwo4} broke my ${broken}`;
+                    if (data.shareService.randomAtoB(1, 100) < 50) {
+                      let id2 = data.shareService.randomAtoB(0, brokens.length - 1);
+                      let broken2 = brokens[id2];
+
+                      textToAdd += ` and ${broken2}.`;
+                    } else {
+                      textToAdd += `.`;
+                    }
+
+                    let money: number = Math.abs(data.finance) * data.shareService.randomAtoB(1, 100) / data.shareService.randomAtoB(300, 600);
+
+                    if (money > 1000000000) money /= data.shareService.randomAtoB(2, 10);
+                    else if (money > 10000000) money /= data.shareService.randomAtoB(1, 4);
+
+                    data.finance -= money;
+
+                    textToAdd += `<br><br>${oneOrTwo4} stole $${data.shareService.formatMoney(money)} worth of items and money from me.`;
+
+                    let text = `I attacked ${oneOrTwo3}.<br>${oneOrTwo4} overcame me.${textToAdd}`;
+
+                    let alert = this.alertCtrl.create({
+                      enableBackdropDismiss: false,
+                      subTitle: 'Uh-oh!',
+                      message: text,
+                      buttons: [
+                        {
+                          text: 'Ok'
+                        }
+                      ]
+                    });
+                    alert.present();
+                  }
+
+                }
+
+              }
+            },
+            {
+              text: 'Surrender',
+              handler: () => {
+                let money: number = Math.abs(data.finance) * data.shareService.randomAtoB(1, 100) / data.shareService.randomAtoB(300, 600);
+
+                data.finance -= money;
+
+                textToAdd = `${oneOrTwo4} stole $${data.shareService.formatMoney(money)} worth of items and money from me.`;
+
+                let text = `${textToAdd}`;
+
+                let alert = this.alertCtrl.create({
+                  enableBackdropDismiss: false,
+                  subTitle: 'Uh-oh!',
+                  message: text,
+                  buttons: [
+                    {
+                      text: 'Ok'
+                    }
+                  ]
+                });
+                alert.present();
+              }
+            }
+          ]
+        });
+        alert.present();
+      }
+    }
 
     if (data.havePartner == 1) {
       data.shareService.handleStability(data, "+", data.shareService.randomAtoB(0, 4));

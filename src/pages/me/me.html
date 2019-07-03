@@ -226,8 +226,10 @@
             <ion-item *ngIf="data.posjedi.length == 0">
               <ion-label>{{data.livingText}}</ion-label>
             </ion-item>
-            <button ion-item *ngFor="let property of data.posjedi">
+            <button ion-item *ngFor="let property of data.posjedi" (click)="data.shareService.propertyInfoModal(data, property)" class="propertyButton">
+
               <ion-icon [name]="(property[0] == 'House')? 'ios-home-outline':'quicklife-apartment'" item-start></ion-icon>
+              
               <div *ngIf="property[0] == 'House'" class="propertyInfo">
                 <b>{{property[0]}}</b>
                 <br> {{property[1] == 1? "1 bedroom":(property[1] + " bedrooms")}}
@@ -236,15 +238,14 @@
                 <br> Value: ${{data.shareService.formatMoney(property[4])}}
               </div>
 
-              <div *ngIf="property[0] == 'Apartment' || property[0] == 'Condo'" class="propertyInfo">
+              <div *ngIf="property[0] == 'Apartment' || property[0] == 'Condo'" class="propertyInfo" (click)="data.shareService.propertyInfoModal(data, property)">
                 <b>{{property[0]}}</b>
                 <br> {{property[1] == 1? "1 bedroom":(property[1] + " bedrooms")}}
                 <br> Parking: {{property[2]}}
                 <br> Value: ${{data.shareService.formatMoney(property[3])}}
               </div>
 
-              <ion-icon (click)="data.shareService.moveTo(data, property)" [name]="property[property.length - 1] == data.livingIn?'md-checkbox-outline':'md-square-outline'"
-                item-end class="checkbox-icon"></ion-icon>
+              <ion-icon [name]="property[property.length - 1] == data.livingIn?'md-checkbox-outline':'md-square-outline'" item-end class="checkbox-icon propertyButtonIcon"></ion-icon>
             </button>
           </ion-list>
         </ion-card>
@@ -460,13 +461,13 @@
 <ion-footer no-shadow [hidden]="meTabs != 'Assets'">
   <ion-toolbar position="bottom" [hidden]="data.meAssets != 'House'">
     <button ion-button full round color="royal-v1" (click)="data.shareService.propertyListings(data)">Property listings
-      <ion-icon id="clockIcon" name="quicklife-city"></ion-icon>
+      <ion-icon id="clockIcon" name="color-skyline"></ion-icon>
     </button>
   </ion-toolbar>
 
   <ion-toolbar position="bottom" [hidden]="data.meAssets != 'Car'">
     <button ion-button full round color="royal-v1" (click)="data.shareService.carsForSale(data)">Cars for sale
-      <ion-icon id="clockIcon" name="quicklife-buy-car"></ion-icon>
+      <ion-icon id="clockIcon" name="color-car-sale"></ion-icon>
     </button>
   </ion-toolbar>
 </ion-footer>

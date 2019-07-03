@@ -1,0 +1,44 @@
+<ion-scroll scrollX="false" scrollY="true" style="width: 100%; height: 100%; word-wrap: break-word;">
+  <div class="modalOverlay" (click)="dismiss()"></div>
+
+  <div class="modalContent marginTop10">
+    <ion-card>
+      <ion-card-header>
+        <b class="gurniDolje">{{pet}}</b>
+        <button ion-button (click)="dismiss()" class="buttonright" color="danger" small>
+          <ion-icon name="md-close"></ion-icon>
+        </button>
+      </ion-card-header>
+    </ion-card>
+    <ion-list>
+
+      <ion-card>
+        <ion-card-content>
+          <ion-card-header>
+            <!-- Friendship Strength: {{friend.strength}}%
+            <br>
+            <div class="progressBar">
+              <div class="progress-bar">
+                <span class="progress-bar-fill progressBarDanger" [ngStyle]="{'width': friend.strength + '%'}"></span>
+              </div>
+            </div> -->
+          </ion-card-header>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-list>
+          <ion-item-divider color="light">
+            <b>Activities</b>
+          </ion-item-divider>
+
+          <button ion-item class="button-ion-item bottomLine" *ngIf="data.age > 15">
+            <ion-icon name="color-coffee-cup" class="miscListIcon"></ion-icon>
+            <span class="absolutePosition">Invite for a coffee</span>
+          </button>
+        </ion-list>
+      </ion-card>
+
+    </ion-list>
+  </div>
+</ion-scroll>

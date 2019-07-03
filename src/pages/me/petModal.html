@@ -22,8 +22,9 @@
                         Name: {{pet.name}}
                         <br> Sex: {{data.shareService.capitalize(pet.sex)}}
                         <br> Breed: {{pet.breed}}
+                        <br> Age: {{pet.age}}
               
-                        <button ion-button class="buttonright smallPadding" color="secondary" small>
+                        <button ion-button class="buttonright smallPadding" color="secondary" small (click)="data.shareService.adoptPet(data, pet)">
                           Adopt
                         </button>
                 </ion-card-content>

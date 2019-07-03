@@ -67,7 +67,7 @@ export class ShareService {
         storage.get("achievements").then((val) => {
             console.log('Achievements', val);
 
-            let currectVersion = "0.2.6.";
+            let currectVersion = "0.2.8.";
 
             storage.get("appVersion").then((appVersionStorage) => {
                 let resetAchievement = 0;
@@ -76,8 +76,8 @@ export class ShareService {
                 if (currectVersion != appVersionStorage) {
                     storage.set("appVersion", currectVersion);
                     let alert = this.alertCtrl.create({
-                        subTitle: "QuickLife updated to 0.2.6!",
-                        message: `Here is what's new:<br><br>* Bug fixes`,
+                        subTitle: "QuickLife updated to 0.2.8!",
+                        message: `Here is what's new:<br><br>- Added pets<br>- Random Burglary occurrences<br>- Fixed bug with not being able to have a lot money<br>- Fixed bug with selling more albums than existing people on Earth<br>- Other Bug fixes`,
                         buttons: [
                             {
                                 text: 'Okay',
@@ -226,14 +226,14 @@ export class ShareService {
         data.holidayModal.present();
     }
 
-    petModal(data) {
-        data.petModal = this.modalCtrl.create(petModal, { data: data }, {
+    myPetModal(data) {
+        data.myPetModal = this.modalCtrl.create(myPetModal, { data: data }, {
             showBackdrop: false,
             enableBackdropDismiss: true,
             /* enterAnimation: 'modal-scale-up-enter',
             leaveAnimation: 'modal-scale-up-leave' */
         });
-        data.petModal.present();
+        data.myPetModal.present();
     }
 
 
@@ -278,7 +278,7 @@ export class ShareService {
             textToAdd += "I'm healthy.";
         }
         for (let i = 0; i < data.diseases.length; i++) {
-            console.log(data.diseases[i]);
+            // console.log(data.diseases[i]);
             let chance = 0;
             if (data.curableStd.indexOf(data.diseases[i]) > -1) {
                 chance = 35;
@@ -368,6 +368,14 @@ export class ShareService {
         data.myFriendModal.present();
     }
 
+    petModal(data, friend) {
+        data.petModal = this.modalCtrl.create(petModal, { data: data, friend: friend }, {
+            showBackdrop: false,
+            enableBackdropDismiss: true,
+        });
+        data.petModal.present();
+    }
+
     carInfoModal(data, car) {
         data.carInfoModal = this.modalCtrl.create(carInfoModal, { data: data, car: car }, {
             showBackdrop: false,
@@ -376,6 +384,16 @@ export class ShareService {
             leaveAnimation: 'modal-scale-up-leave' */
         });
         data.carInfoModal.present();
+    }
+
+    propertyInfoModal(data, property) {
+        data.propertyInfoModal = this.modalCtrl.create(propertyInfoModal, { data: data, property: property }, {
+            showBackdrop: false,
+            enableBackdropDismiss: true,
+            /* enterAnimation: 'modal-scale-up-enter',
+            leaveAnimation: 'modal-scale-up-leave' */
+        });
+        data.propertyInfoModal.present();
     }
 
     bandNameModal(data) {
@@ -617,6 +635,44 @@ export class ShareService {
                 data.years[data.age].events.push(`I sold my car for $${this.formatMoney(car["value"])}.`);
                 this.events.publish("goToHome");
                 continue;
+            }
+        }
+    }
+
+    sellProperty(data, property) {
+        console.log(data.posjedi);
+
+        let id = "";
+        let toAdd = 0;
+        if (property[0] == "House") {
+            id = property[5];
+            toAdd = 1;
+        } else {
+            id = property[4];
+        }
+
+        for (let i = 0; i < data.ownedProperties.length; i++) {
+            if (data.ownedProperties[i] == id) {
+                data.propertyInfoModal.dismiss();
+                data.ownedProperties.splice(i, 1);
+
+                let money = property[3 + toAdd];
+
+                data.years[data.age].events.push(`I sold my ${property[0].toLowerCase()} for a $${data.shareService.formatMoney(money)}.`);
+                this.update(data);
+
+                data.outcome -= property.maintenance;
+                data.finance += money;
+
+                for (let j = 0; j < data.posjedi.length; j++) {
+                    if (data.posjedi[j][4 + toAdd] == id) {
+                        data.posjedi.splice(j, 1);
+
+                        data.livingIn = data.posjedi[0][4 + toAdd];
+                    }
+                }
+
+                this.events.publish("goToHome");
             }
         }
     }
@@ -1315,9 +1371,9 @@ export class ShareService {
         data.sociability = this.random1to100();
         data.fitness = this.randomAtoB(1, 100);
         data.musicality = this.randomAtoB(1, 100);
-        // data.painting = this.randomAtoB(1, 100);
+        data.painting = this.randomAtoB(1, 100);
 
-        data.painting = 100;
+        // data.painting = 100;
 
         // Happiness player has at the beggining of game
         data.happiness = this.randomAtoB(50, 100);
@@ -1326,6 +1382,7 @@ export class ShareService {
         // data.finance = 100;
         // data.finance = 100;
 
+        // let finance: number = 100;
         let finance: number = 100;
         data.finance = finance;
 
@@ -1860,6 +1917,8 @@ export class ShareService {
                 data.lastChoosenBand = saveData["lastChoosenBand"];
                 data.genres = saveData["genres"];
                 data.years = saveData["years"];
+                data.pets = saveData["pets"];
+                data.painting = saveData["painting"];
             }
         });
 
@@ -3172,6 +3231,19 @@ export class ShareService {
         this.propertyListingModal(data, posjedi);
     }
 
+    adoptPet(data, pet) {
+        // console.log(pet);
+
+        data.petModal.dismiss();
+
+        data.pets.push(pet);
+        data.years[data.age].events.push(`I adopted a ${pet.specie.toLowerCase()} named ${pet.name}.`);
+        this.update(data);
+        this.events.publish("goToHome");
+
+        this.saveGame(data);
+    }
+
     showFlirtFriend(data, friend) {
         let condition = true;
 
@@ -3405,6 +3477,8 @@ export class ShareService {
         saveData["years"] = data.years;
 
         this.storage.set("lifeSave", saveData);
+
+        console.log(saveData);
     }
 
     checkSaveGame() {
@@ -3428,6 +3502,8 @@ export class ShareService {
 
             let saveData = val;
 
+            console.log(saveData);
+
             data.lifeId = saveData["lifeId"];
             data.name = saveData["name"];
             data.surname = saveData["surname"];
@@ -3436,7 +3512,6 @@ export class ShareService {
             data.city = saveData["city"];
             data.nationality = saveData["nationality"];
             data.hisOrHers = saveData["hisOrHers"];
-            data.painting = saveData["painting"];
             data.age = saveData["age"];
             data.alive = saveData["alive"];
             data.appearance = saveData["appearance"];
@@ -3458,7 +3533,6 @@ export class ShareService {
             data.goingToCollege = saveData["goingToCollege"];
             data.currentCollegeMajor = saveData["currentCollegeMajor"];
             data.myMajors = saveData["myMajors"];
-            data.pets = saveData["pets"];
             data.listOfColleges = saveData["listOfColleges"];
             data.highSchoolGrade = saveData["highSchoolGrade"];
             data.inDebt = saveData["inDebt"];
@@ -3539,6 +3613,11 @@ export class ShareService {
             data.selfiesPerYear = saveData["selfiesPerYear"];
             data.brokeLegLastYear = saveData["brokeLegLastYear"];
             data.brokeArmLastYear = saveData["brokeArmLastYear"];
+            data.numOfPaintings = saveData["numOfPaintings"];
+            data.numOfSoldPaintings = saveData["numOfSoldPaintings"];
+            data.paintingsThisYear = saveData["paintingsThisYear"];
+            data.paintings = saveData["paintings"];
+            data.paintEarn = saveData["paintEarn"];
             data.selectedBandObject = saveData["selectedBandObject"];
             data.selectedBand = saveData["selectedBand"];
             data.isFamous = saveData["isFamous"];
@@ -3550,6 +3629,8 @@ export class ShareService {
             data.lastChoosenBand = saveData["lastChoosenBand"];
             data.genres = saveData["genres"];
             data.years = saveData["years"];
+            data.pets = saveData["pets"];
+            data.painting = saveData["painting"];
 
 
         });
@@ -3692,6 +3773,10 @@ export class ShareService {
         if (data.livingIn != property[valueIndex]) {
             data.livingIn = property[valueIndex];
             data.years[data.age].events.push(`I moved in to my ${property[0].toLowerCase()}.`);
+
+            data.propertyInfoModal.dismiss();
+            this.update(data);
+            this.events.publish("goToHome");
         }
     }
 
@@ -4634,6 +4719,30 @@ export class myFriendModal {
 }
 
 @Component({
+    templateUrl: '../../pages/me/myPet.html'
+})
+export class myPetModal {
+    data: object;
+    pet: object;
+
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
+        this.data = shareService.getData();
+        this.pet = params.get("pet");
+
+        console.log(this.pet);
+
+    }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+@Component({
     templateUrl: '../../pages/me/child.html'
 })
 export class childModal {
@@ -4673,6 +4782,26 @@ export class carInfoModal {
         console.log(this.car)
         //console.log(this.child);
         //console.log();
+    }
+
+    backButtonAction() {
+        this.viewCtrl.dismiss();
+    }
+
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+}
+
+@Component({
+    templateUrl: '../../pages/me/propertyInfo.html'
+})
+export class propertyInfoModal {
+    data: object;
+    property: object;
+    constructor(params: NavParams, shareService: ShareService, public viewCtrl: ViewController) {
+        this.data = shareService.getData();
+        this.property = params.get("property");
     }
 
     backButtonAction() {
@@ -5018,6 +5147,7 @@ export class petModal {
         let randomSpecie = "";
         let mOrF = 0;
         let sex = "";
+        let age = 0;
 
         for (let i = 0; i < 10; i++) {
             let tmpPet: object = {};
@@ -5028,19 +5158,23 @@ export class petModal {
                 sex = "female";
             }
 
+            age = this.data["shareService"].randomAtoB(1, 5);
+            if (age == 5) {
+                age = this.data["shareService"].randomAtoB(1, 9);
+            }
+
             randomSpecie = petSpecies[this.data["shareService"].randomAtoB(0, petSpecies.length - 1)];
 
             tmpPet["name"] = this.data["allPets"][randomSpecie][sex][this.data["shareService"].randomAtoB(0, this.data["allPets"][randomSpecie][sex].length - 1)];
             tmpPet["sex"] = sex;
             tmpPet["specie"] = randomSpecie;
             tmpPet["breed"] = this.data["allPets"][randomSpecie]["species"][this.data["shareService"].randomAtoB(0, this.data["allPets"][randomSpecie]["species"].length - 1)];
-
+            tmpPet["age"] = age;
             tmpPet["icon"] = "color-" + randomSpecie.toLowerCase();
 
             this.pets.push(tmpPet);
             // console.log(randomSpecie);
         }
-        console.log(this.pets);
 
         // console.log(this.data["allPets"]);
     }
